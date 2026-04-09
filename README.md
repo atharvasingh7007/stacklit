@@ -1,44 +1,40 @@
-# stacklit
+<div align="center">
+  <h1>Stacklit</h1>
+  <p><b>Your codebase, in 1,500 tokens.</b></p>
+  <p>One command generates a committed JSON index that any AI agent can read. No server, no setup.</p>
 
-**Stop burning tokens. Start knowing your codebase.**
+  <a href="https://github.com/glincker/stacklit/actions"><img src="https://github.com/glincker/stacklit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/glincker/stacklit/releases"><img src="https://img.shields.io/github/v/release/glincker/stacklit" alt="Release"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
+</div>
 
-stacklit generates `stacklit.json` — a token-efficient, machine-readable index of any codebase. One command. Committed to the repo. Readable by any AI agent without running a server.
+---
 
-Think of it like `.gitignore` tells git what to ignore, `stacklit.json` tells AI agents how to navigate your code.
+AI coding agents burn most of their context window just figuring out where things live. Reading one 2,000-line file to find a function signature costs ~6,000 tokens. Five agents on the same repo each rebuild the same mental model from scratch. Every session starts at zero.
 
-## The problem
-
-AI coding agents spend most of their time just searching a codebase to build context before writing code. A 2,000-line file read just to find one function signature wastes ~6,000 tokens. Five parallel agents on the same repo tokenize the same files independently. Every new session starts from zero.
-
-## The solution
+`stacklit init` generates a `stacklit.json` that maps your entire codebase in ~1,500 tokens -- modules, dependencies, exports, types, what changed recently. Commit it to git. Now every agent that opens the repo already knows what goes where.
 
 ```bash
-npx stacklit init   # or: go install github.com/glincker/stacklit/cmd/stacklit@latest
+npx stacklit init
 ```
 
-One command generates three files:
+<!-- TODO: replace with actual terminal recording -->
+<!-- ![demo](https://github.com/glincker/stacklit/assets/demo.gif) -->
 
-| File | Purpose | Committed? |
-|------|---------|------------|
-| `stacklit.json` | Machine-readable codebase index (~1,500 tokens for a 500-file repo) | Yes |
-| `stacklit.mmd` | Mermaid dependency diagram (renders in GitHub) | Yes |
-| `stacklit.html` | Interactive visual map (4 views) | No (gitignored) |
+## What you get
 
-## What stacklit.json looks like
+| File | What it does | Committed? |
+|------|-------------|------------|
+| `stacklit.json` | Machine-readable codebase index | Yes |
+| `stacklit.mmd` | Mermaid dependency diagram (renders on GitHub) | Yes |
+| `stacklit.html` | Interactive visual map with 4 views | No (gitignored) |
+
+## stacklit.json
 
 ```json
 {
-  "$schema": "https://stacklit.dev/schema/v1.json",
-  "version": "1",
-  "project": {
-    "name": "my-app",
-    "type": "monorepo",
-    "workspaces": ["packages/api", "packages/web"]
-  },
-  "tech": {
-    "primary_language": "typescript",
-    "languages": { "typescript": { "files": 120, "lines": 18000 } }
-  },
+  "project": { "name": "my-app", "type": "monorepo" },
+  "tech": { "primary_language": "typescript" },
   "modules": {
     "src/auth": {
       "purpose": "Authentication and session management",
@@ -46,13 +42,8 @@ One command generates three files:
       "lines": 1200,
       "exports": ["AuthProvider", "useSession", "loginAction"],
       "depends_on": ["src/db", "src/config"],
-      "depended_by": ["src/api"],
       "activity": "high"
     }
-  },
-  "dependencies": {
-    "edges": [["src/api", "src/auth"], ["src/auth", "src/db"]],
-    "most_depended": ["src/db", "src/config"]
   },
   "hints": {
     "add_feature": "Create handler in src/api/, add route in src/index.ts",
@@ -61,117 +52,69 @@ One command generates three files:
 }
 ```
 
-A 500-file repo produces ~1,500 tokens of index. That's what an agent wastes reading ONE large file today.
+A 500-file repo produces ~1,500 tokens of index. That is what an agent wastes reading ONE large file today.
 
-## Interactive visual map
+## Visual map
 
-`stacklit.html` includes 4 views — open it with `stacklit view`:
+`stacklit view` opens an interactive HTML with four tabs:
 
-- **Graph** — Force-directed dependency map. See how modules relate at a glance.
-- **Tree** — Collapsible directory hierarchy with file counts and line counts.
-- **Table** — Sortable module table. Find where the complexity lives.
-- **Flow** — Top-down directed dependency flow. Trace imports from entrypoints to leaves.
+- **Graph** -- Force-directed dependency map. Click a node to see its exports, types, and files.
+- **Tree** -- Collapsible directory hierarchy with file and line counts.
+- **Table** -- Sortable module table. Find where the complexity lives.
+- **Flow** -- Top-down dependency flow from entrypoints to leaf modules.
 
-Self-contained HTML. Works offline. No server needed.
+Self-contained HTML. Works offline. No CDN, no framework.
 
-## Language support
+## MCP server
 
-| Language | Parser | Accuracy |
-|----------|--------|----------|
-| Go | stdlib `go/parser` (AST) | High |
-| TypeScript / JavaScript | Regex | Good |
-| Python | Regex | Good |
-| Rust, Java, C#, Ruby, PHP, Swift, Kotlin, C/C++ | Generic (line count only) | Basic |
-
-Tree-sitter support planned for Phase 2.
-
-## Monorepo support
-
-stacklit auto-detects monorepo structures:
-
-- pnpm workspaces
-- npm/yarn workspaces
-- Go workspaces (`go.work`)
-- Turborepo, Nx, Lerna
-- Cargo workspaces
-- Convention-based (`apps/`, `packages/`, `services/`)
-
-Each workspace is detected and reported in `stacklit.json`.
-
-## CLI commands
-
-```
-stacklit init                    # Scan codebase, generate all outputs
-stacklit init --hook             # Also install git post-commit hook
-stacklit init --workspace <path> # Scan specific monorepo workspace
-
-stacklit generate                # Regenerate from current source
-stacklit generate --quiet        # Silent mode (for hooks/CI)
-
-stacklit view                    # Regenerate HTML and open in browser
-
-stacklit --version
-stacklit --help
-```
-
-## AI agent integration
-
-### Claude Code
-
-Add to your project's `CLAUDE.md`:
-
-```markdown
-## Codebase Index
-This repo has a stacklit.json. Read it before exploring files.
-Use the modules section to locate code. Use hints for conventions.
-```
-
-### Cursor / Copilot
-
-Add to `.cursorrules` or `.github/copilot-instructions.md`:
-
-```
-This repo has a stacklit.json index at the root.
-Read it first to understand the codebase structure before exploring files.
-```
-
-### Any MCP-compatible agent
-
-stacklit.json is a plain JSON file. Any agent that can read files can use it. No special integration needed.
-
-## Git integration
-
-### Post-commit hook
+Stacklit includes an MCP server so AI agents can query your codebase index directly.
 
 ```bash
-stacklit init --hook
+stacklit serve
 ```
 
-Installs a post-commit hook that auto-regenerates `stacklit.json` and `stacklit.mmd` when source files change. Uses Merkle hashing to skip regeneration when only docs/configs changed.
+Six tools: `get_overview`, `get_module`, `find_module`, `get_dependencies`, `get_hot_files`, `get_hints`.
 
-### GitHub Action
+### Claude Desktop / Claude Code
 
-```yaml
-name: Update Stacklit Index
-on:
-  push:
-    branches: [main]
-    paths-ignore: ['stacklit.json', 'stacklit.mmd', '**.md']
+Add to your MCP config:
 
-jobs:
-  stacklit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: go install github.com/glincker/stacklit/cmd/stacklit@latest
-      - run: stacklit generate --quiet
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: update stacklit index"
-          file_pattern: "stacklit.json stacklit.mmd"
+```json
+{
+  "mcpServers": {
+    "stacklit": {
+      "command": "stacklit",
+      "args": ["serve"]
+    }
+  }
+}
 ```
+
+### Cursor
+
+Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "stacklit": {
+      "command": "stacklit",
+      "args": ["serve"]
+    }
+  }
+}
+```
+
+The agent calls `get_overview()` once instead of reading 10 files to build context.
 
 ## Install
+
+### npm (recommended)
+
+```bash
+npx stacklit init          # run directly
+npm install -g stacklit    # or install globally
+```
 
 ### Go
 
@@ -183,41 +126,158 @@ go install github.com/glincker/stacklit/cmd/stacklit@latest
 
 ```bash
 git clone https://github.com/glincker/stacklit.git
-cd stacklit
-make build
+cd stacklit && make build
 ```
 
-npm and Homebrew distribution coming soon.
+### Binary releases
+
+Download from [GitHub Releases](https://github.com/glincker/stacklit/releases). Binaries available for macOS (arm64, amd64), Linux (amd64, arm64), and Windows.
+
+## CLI
+
+```
+stacklit init                    # scan, generate all outputs, open HTML
+stacklit init --hook             # also install git post-commit hook
+stacklit init --multi repos.txt  # polyrepo: scan multiple repos
+
+stacklit generate                # regenerate from current source
+stacklit generate --quiet        # silent mode for hooks/CI
+
+stacklit view                    # regenerate HTML and open in browser
+stacklit diff                    # check if index is stale (Merkle hash)
+stacklit serve                   # start MCP server (stdio)
+```
+
+## Agent integration
+
+### Claude Code
+
+Add to `CLAUDE.md`:
+
+```markdown
+## Codebase index
+Read stacklit.json before exploring files. Use modules to locate code, hints for conventions.
+```
+
+### Cursor / Copilot
+
+Add to `.cursorrules` or `.github/copilot-instructions.md`:
+
+```
+Read stacklit.json first to understand codebase structure before exploring files.
+```
+
+### Any agent
+
+`stacklit.json` is a plain JSON file. Any agent that reads files can use it without special integration.
+
+## Language support
+
+| Language | Parser | What it extracts |
+|----------|--------|------------------|
+| Go | stdlib AST (`go/parser`) | imports, exports, types, struct fields |
+| TypeScript / JavaScript | Regex | imports, exports, framework detection |
+| Python | Regex | imports, classes, functions, entrypoints |
+| Rust | Regex | use statements, pub items |
+| Java | Regex | imports, public classes/methods |
+| Generic fallback | Line count | file count per module |
+
+Tree-sitter parsers are planned for more accurate extraction across all languages.
+
+## Monorepo support
+
+Stacklit auto-detects workspace layouts:
+
+- pnpm, npm, yarn workspaces
+- Go workspaces (`go.work`)
+- Turborepo, Nx, Lerna
+- Cargo workspaces
+- Convention directories (`apps/`, `packages/`, `services/`)
+
+## Git integration
+
+### Post-commit hook
+
+```bash
+stacklit init --hook
+```
+
+Auto-regenerates `stacklit.json` and `stacklit.mmd` on commit. Merkle hashing skips regeneration when only docs or configs changed.
+
+### GitHub Action
+
+```yaml
+name: Update stacklit index
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['stacklit.json', 'stacklit.mmd', '**.md']
+
+jobs:
+  stacklit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+      - run: go install github.com/glincker/stacklit/cmd/stacklit@latest
+      - run: stacklit generate --quiet
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update stacklit index"
+          file_pattern: "stacklit.json stacklit.mmd"
+```
+
+## Configuration
+
+Create a `stacklit.toml` in your project root to customize behavior:
+
+```toml
+# Extra paths to ignore (on top of .gitignore)
+ignore = ["vendor/", "generated/"]
+
+# Module detection depth (default: 4)
+max_depth = 3
+
+# Output file paths
+[output]
+json = "stacklit.json"
+mermaid = "stacklit.mmd"
+html = "stacklit.html"
+```
 
 ## How it works
 
-1. **Walk** — Finds all source files, respects `.gitignore` + built-in ignore list
-2. **Parse** — Extracts imports, exports, and metadata per file (Go AST, regex for TS/Python)
-3. **Graph** — Groups files into modules by directory, resolves cross-module dependencies
-4. **Detect** — Identifies monorepo structure, frameworks, entry points
-5. **Git** — Analyzes commit history for file activity heatmap
-6. **Render** — Writes `stacklit.json`, `stacklit.mmd`, and `stacklit.html`
+1. **Walk** -- Find source files, respect `.gitignore` + built-in skip list
+2. **Parse** -- Extract imports, exports, types per file (Go AST, regex for others)
+3. **Graph** -- Group files into modules by directory, resolve dependencies
+4. **Detect** -- Identify monorepo structure, frameworks, entrypoints, env vars
+5. **Git** -- Analyze 90-day commit history for file activity heatmap
+6. **Render** -- Write JSON, Mermaid, and HTML outputs
 
-Total time: under 100ms for most repos. Under 3 seconds for 10,000+ file repos.
+Runs in under 100ms for most repos. Under 7 seconds for 20,000+ file repos.
 
-## Why not just use Repomix / code2prompt?
+## Compared to alternatives
 
-Those tools dump your entire codebase into one file. A 500-file repo becomes 500,000+ tokens. stacklit produces a 1,500-token index of the same repo.
-
-stacklit understands structure. It knows which modules depend on which, what's actively changing, and where to add new features. A flat dump doesn't.
-
-## Why not use Codebase Memory MCP / Axon?
-
-Those are runtime MCP servers that require installing and running a process. stacklit produces a committed JSON file that travels with the repo via git. No server, no setup, no per-machine configuration.
+| | Stacklit | Repomix | Aider repo-map | Codebase Memory MCP |
+|---|---|---|---|---|
+| Output | ~1,500 token JSON | 500k+ token dump | Ephemeral text | SQLite DB |
+| Committed to repo | Yes | Too large | No | No |
+| Dependency graph | Yes | No | Yes | Yes |
+| Visual output | HTML (4 views) | No | No | No |
+| MCP server | Yes | No | No | Yes |
+| Monorepo aware | Yes | No | No | No |
+| Runtime needed | No | No | Yes (Python) | Yes (C server) |
+| Single binary | Yes (Go) | No (Node) | No (Python) | Yes (C) |
 
 ## Contributing
 
-PRs welcome. See the existing code structure — it's straightforward Go with no external dependencies beyond cobra and go-gitignore.
+PRs welcome. The codebase is straightforward Go with two external deps (cobra, go-gitignore).
 
 ```bash
-make build   # Build binary
-make test    # Run all tests
-make clean   # Remove build artifacts
+make build   # build binary
+make test    # run all tests
 ```
 
 ## License
