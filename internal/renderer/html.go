@@ -17,5 +17,6 @@ func WriteHTML(idx *schema.Index, path string) error {
 		return err
 	}
 	html := strings.Replace(assets.TemplateHTML, "{{STACKLIT_DATA}}", string(dataJSON), 1)
+	html = strings.Replace(html, "{{LANG_ICONS_JS}}", assets.LangIconsJS, 1)
 	return os.WriteFile(path, []byte(html), 0644)
 }
