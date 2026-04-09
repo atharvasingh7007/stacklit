@@ -18,8 +18,25 @@ AI coding agents burn most of their context window just figuring out where thing
 npx stacklit init
 ```
 
-<!-- TODO: replace with actual terminal recording -->
+```
+$ stacklit init
+[stacklit] found 342 files
+[stacklit] parsed 342 files (0 errors)
+[stacklit] done in 89ms — wrote stacklit.json, stacklit.mmd, stacklit.html
+
+Opening visual map...
+```
+
+<!-- TODO: replace with terminal recording GIF -->
 <!-- ![demo](https://github.com/glincker/stacklit/assets/demo.gif) -->
+
+### Without stacklit
+
+Agent reads 8-12 files to build context. ~400,000 tokens. 45 seconds of exploration before writing a single line.
+
+### With stacklit
+
+Agent reads `stacklit.json`. ~1,500 tokens. Knows every module, dependency, and convention instantly.
 
 ## What you get
 
