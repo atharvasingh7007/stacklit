@@ -89,16 +89,19 @@ type MultiIndex struct {
 	Version     string        `json:"version"`
 	Type        string        `json:"type"` // "polyrepo"
 	GeneratedAt string        `json:"generated_at"`
+	TotalFiles  int           `json:"total_files"`
+	TotalLines  int           `json:"total_lines"`
+	TotalModules int          `json:"total_modules"`
 	Repos       []RepoSummary `json:"repos"`
 }
 
 type RepoSummary struct {
-	Name            string   `json:"name"`
-	Path            string   `json:"path"`
-	PrimaryLanguage string   `json:"primary_language"`
-	TotalFiles      int      `json:"total_files"`
-	TotalLines      int      `json:"total_lines"`
-	Modules         int      `json:"modules"`
-	Frameworks      []string `json:"frameworks,omitempty"`
-	Entrypoints     []string `json:"entrypoints,omitempty"`
+	Name            string                `json:"name"`
+	Path            string                `json:"path"`
+	PrimaryLanguage string                `json:"primary_language"`
+	TotalFiles      int                   `json:"total_files"`
+	TotalLines      int                   `json:"total_lines"`
+	Modules         map[string]ModuleInfo `json:"modules"`
+	Frameworks      []string              `json:"frameworks,omitempty"`
+	Entrypoints     []string              `json:"entrypoints,omitempty"`
 }

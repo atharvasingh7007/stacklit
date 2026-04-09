@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T20:40:23Z",
+  "generated_at": "2026-04-09T22:21:13Z",
   "stacklit_version": "dev",
-  "merkle_hash": "ab5fb49c8c730f92997abf6271d53c85983edfcfec297938fc36dd891124f4fc",
+  "merkle_hash": "dbf1968b555b90f2eb497376531e8b6e6da14588b79e47ff5a836f9e4432287d",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 48,
-        "lines": 5631
+        "lines": 5650
       },
       "java": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 59,
-    "total_lines": 5847
+    "total_lines": 5866
   },
   "modules": {
     "assets": {
@@ -158,7 +158,7 @@
       "purpose": "Core orchestration engine",
       "language": "go",
       "files": 1,
-      "lines": 538,
+      "lines": 554,
       "file_list": [
         "engine.go"
       ],
@@ -368,7 +368,7 @@
       "purpose": "Data schema definitions",
       "language": "go",
       "files": 1,
-      "lines": 104,
+      "lines": 107,
       "file_list": [
         "schema.go"
       ],
@@ -385,16 +385,16 @@
         "type Project"
       ],
       "type_defs": {
+        "Architecture": "Pattern string, Summary string",
+        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
+        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
-        "LangStats": "Files int, Lines int",
-        "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
-        "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, Repos []RepoSummary",
+        "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
-        "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules int, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
-        "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
+        "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string"
       },
       "depended_by": [
         "internal/cli",
@@ -582,11 +582,11 @@
       },
       {
         "path": "stacklit.json",
-        "commits_90d": 8
+        "commits_90d": 9
       },
       {
         "path": "stacklit.mmd",
-        "commits_90d": 8
+        "commits_90d": 9
       },
       {
         "path": "assets/template.html",
@@ -658,6 +658,8 @@
       }
     ],
     "recent": [
+      "stacklit.json",
+      "stacklit.mmd",
       "internal/graph/graph_test.go",
       "internal/cli/diff.go",
       "internal/cli/init.go",
@@ -665,9 +667,7 @@
       "internal/config/config_test.go",
       "internal/engine/engine.go",
       "internal/graph/graph.go",
-      "internal/schema/schema.go",
-      "internal/walker/walker.go",
-      "internal/walker/walker_test.go"
+      "internal/schema/schema.go"
     ],
     "stable": [
       ".github/workflows/ci.yml",

@@ -81,7 +81,13 @@ func inferPurpose(name string) string {
 	if base == "." || base == "" || base == "root" {
 		return "Root package"
 	}
-	return strings.Title(strings.ReplaceAll(base, "_", " ")) //nolint:staticcheck
+	words := strings.Fields(strings.ReplaceAll(base, "_", " "))
+	for i, w := range words {
+		if len(w) > 0 {
+			words[i] = strings.ToUpper(w[:1]) + w[1:]
+		}
+	}
+	return strings.Join(words, " ")
 }
 
 // generateAddFeatureHint returns a hint string describing where to add a new feature.
@@ -306,12 +312,18 @@ func RunMulti(opts MultiOptions) (*MultiResult, error) {
 
 	// 5. Write to stacklit-multi.json in current directory.
 	outputPath := "stacklit-multi.json"
-	multiData, _ := json.MarshalIndent(multi, "", "  ")
-	os.WriteFile(outputPath, append(multiData, '\n'), 0644) //nolint:errcheck
+	multiData, err := json.MarshalIndent(multi, "", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("marshaling multi-index: %w", err)
+	}
+	if err := os.WriteFile(outputPath, append(multiData, '\n'), 0644); err != nil {
+		return nil, fmt.Errorf("writing %s: %w", outputPath, err)
+	}
 
 	dur := time.Since(start)
 	if !opts.Quiet {
-		fmt.Printf("[stacklit] multi-repo scan done in %s — %d repos indexed\n", dur.Round(time.Millisecond), len(indices))
+		fmt.Printf("[stacklit] multi-repo scan done in %s — %d repos, %d modules, %d files\n",
+			dur.Round(time.Millisecond), len(indices), multi.TotalModules, multi.TotalFiles)
 	}
 
 	return &MultiResult{OutputPath: outputPath, RepoCount: len(indices), Duration: dur}, nil
@@ -327,13 +339,17 @@ func buildMultiIndex(indices []*schema.Index) *schema.MultiIndex {
 	}
 
 	for _, idx := range indices {
+		multi.TotalFiles += idx.Structure.TotalFiles
+		multi.TotalLines += idx.Structure.TotalLines
+		multi.TotalModules += len(idx.Modules)
+
 		multi.Repos = append(multi.Repos, schema.RepoSummary{
 			Name:            idx.Project.Name,
 			Path:            idx.Project.Root,
 			PrimaryLanguage: idx.Tech.PrimaryLanguage,
 			TotalFiles:      idx.Structure.TotalFiles,
 			TotalLines:      idx.Structure.TotalLines,
-			Modules:         len(idx.Modules),
+			Modules:         idx.Modules,
 			Frameworks:      idx.Tech.Frameworks,
 			Entrypoints:     idx.Structure.Entrypoints,
 		})

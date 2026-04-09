@@ -405,17 +405,17 @@
   }
 
   .sidebar-section {
-    padding: 14px 16px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--border);
   }
 
   .sidebar-section h2 {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
 
   /* Module detail */
@@ -433,42 +433,73 @@
     font-weight: 600;
     color: var(--accent);
     word-break: break-all;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   #module-purpose {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
-    line-height: 1.5;
-    margin-bottom: 10px;
+    line-height: 1.4;
+    margin-bottom: 8px;
   }
 
-  .meta-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid var(--border);
+  /* Meta grid: 2x2 compact layout */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .meta-cell {
+    background: var(--surface);
+    padding: 6px 8px;
+    text-align: center;
+  }
+  .meta-cell-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  .meta-cell-value {
     font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
   }
+  .meta-cell-value img { vertical-align: middle; margin-right: 3px; }
 
-  .meta-row:last-child { border-bottom: none; }
-  .meta-label { color: var(--text-muted); }
-  .meta-value { color: var(--text); font-weight: 500; }
+  /* Activity badge */
+  .activity-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .activity-high   { background: #23352a; color: #56d364; }
+  .activity-medium { background: #2d2f1e; color: #c9a928; }
+  .activity-low    { background: #1c2028; color: #6e7681; }
 
+  /* Dep tags */
   .dep-list {
-    margin-top: 8px;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-top: 4px;
   }
 
   .dep-tag {
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 3px 8px;
-    font-size: 11px;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
     color: var(--text-muted);
     word-break: break-all;
     cursor: pointer;
@@ -479,6 +510,96 @@
     color: var(--accent);
     border-color: var(--accent);
   }
+
+  /* Collapsible sections */
+  .collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 0;
+  }
+  .collapsible-header:hover h2 { color: var(--text); }
+  .collapsible-arrow {
+    font-size: 9px;
+    color: var(--text-muted);
+    transition: transform 0.15s;
+  }
+  .collapsible-arrow.open { transform: rotate(90deg); }
+  .collapsible-body {
+    overflow: hidden;
+  }
+  .collapsible-body.collapsed { display: none; }
+
+  /* Exports list */
+  .export-item {
+    font-size: 10px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--text);
+    padding: 2px 6px;
+    margin: 1px 0;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+    cursor: default;
+  }
+  .export-item:hover {
+    white-space: normal;
+    word-break: break-all;
+  }
+  .export-item.is-type {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* File list */
+  .file-item {
+    font-size: 10px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--text-muted);
+    padding: 1px 6px;
+    margin: 1px 0;
+    background: var(--bg);
+    border-radius: 3px;
+    line-height: 1.35;
+  }
+
+  /* Type defs */
+  .typedef-block {
+    margin: 3px 0;
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 4px 7px;
+    border-left: 2px solid var(--accent);
+  }
+  .typedef-name {
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--accent);
+    margin-bottom: 1px;
+  }
+  .typedef-field {
+    font-size: 9px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    color: var(--text-muted);
+    padding: 0 0 0 6px;
+    line-height: 1.4;
+  }
+
+  /* Show more / less toggle */
+  .show-toggle {
+    font-size: 10px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 0;
+    text-align: center;
+  }
+  .show-toggle:hover { color: var(--accent); }
 
   #module-empty {
     text-align: center;
@@ -679,8 +800,11 @@
             <div id="module-name"></div>
             <div id="module-purpose"></div>
             <div id="module-meta"></div>
-            <div id="module-deps-out" style="margin-top:10px"></div>
-            <div id="module-deps-in" style="margin-top:10px"></div>
+            <div id="module-deps-out"></div>
+            <div id="module-deps-in"></div>
+            <div id="module-exports"></div>
+            <div id="module-typedefs"></div>
+            <div id="module-files"></div>
           </div>
         </div>
       </div>
@@ -814,6 +938,19 @@
     const mod   = modules[k] || {};
     const files = mod.files || 1;
     const lang  = langForModule(k);
+
+    // Richness score: how much useful data this module has
+    var expCount  = (mod.exports || []).length;
+    var typeCount = Object.keys(mod.type_defs || {}).length;
+    var depsIn    = (mod.depended_by || []).length;
+    var depsOut   = (mod.depends_on || []).length;
+    var connections = depsIn + depsOut;
+    // 0 = empty leaf, 1 = minimal, 2 = moderate, 3 = rich hub
+    var richness = 0;
+    if (expCount > 0 || typeCount > 0) richness = 1;
+    if (expCount > 2 || typeCount > 0 || connections > 2) richness = 2;
+    if ((expCount > 4 || typeCount > 1) && connections > 2) richness = 3;
+
     nodeArr.push({
       id:     k,
       x: 0, y: 0,
@@ -824,6 +961,7 @@
       files:  files,
       lines:  mod.lines || 0,
       mod:    mod,
+      richness: richness,
     });
     nodeIdx[k] = ni++;
   });
@@ -862,43 +1000,32 @@
     metaEl.innerHTML = '';
     const langIconSrc = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[node.lang]) ? LANG_ICONS[node.lang] : '';
     const langIconHtml = langIconSrc
-      ? '<img src="' + langIconSrc + '" class="lang-icon" width="16" height="16" style="vertical-align:middle;margin-right:4px">'
+      ? '<img src="' + langIconSrc + '" width="14" height="14"> '
       : '';
-    const metaRows = [
-      { label: 'Files',    value: node.files },
-      { label: 'Lines',    value: node.lines || '-' },
-      { label: 'Language', value: langIconHtml + node.lang, isHtml: true },
-      { label: 'Activity', value: mod.activity || '-' },
-    ];
-    metaRows.forEach(function (row) {
-      const div = document.createElement('div');
-      div.className = 'meta-row';
-      const valueSpan = document.createElement('span');
-      valueSpan.className = 'meta-value';
-      if (row.isHtml) {
-        valueSpan.innerHTML = row.value;
-      } else {
-        valueSpan.textContent = row.value;
-      }
-      div.innerHTML = '<span class="meta-label">' + row.label + '</span>';
-      div.appendChild(valueSpan);
-      metaEl.appendChild(div);
-    });
+    const activity = mod.activity || 'low';
+    const activityClass = 'activity-' + activity;
+
+    metaEl.className = 'meta-grid';
+    metaEl.innerHTML =
+      '<div class="meta-cell"><div class="meta-cell-label">Files</div><div class="meta-cell-value">' + node.files + '</div></div>' +
+      '<div class="meta-cell"><div class="meta-cell-label">Lines</div><div class="meta-cell-value">' + (node.lines || '-') + '</div></div>' +
+      '<div class="meta-cell"><div class="meta-cell-label">Language</div><div class="meta-cell-value">' + langIconHtml + node.lang + '</div></div>' +
+      '<div class="meta-cell"><div class="meta-cell-label">Activity</div><div class="meta-cell-value"><span class="activity-badge ' + activityClass + '">' + activity + '</span></div></div>';
 
     function buildDepSection(elId, label, deps) {
       const el = document.getElementById(elId);
       el.innerHTML = '';
       if (deps && deps.length) {
-        const h = document.createElement('div');
-        h.className = 'sidebar-section';
-        h.style.cssText = 'padding:8px 0;border:none;margin:0';
-        h.innerHTML = '<h2 style="margin-bottom:6px">' + label + '</h2>';
-        const list = document.createElement('div');
+        var h = document.createElement('div');
+        h.style.cssText = 'padding:4px 0;margin:0';
+        h.innerHTML = '<h2 style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:4px">' + label + ' <span style="font-weight:400">(' + deps.length + ')</span></h2>';
+        var list = document.createElement('div');
         list.className = 'dep-list';
         deps.forEach(function (dep) {
-          const tag = document.createElement('div');
+          var tag = document.createElement('div');
           tag.className = 'dep-tag';
-          tag.textContent = dep;
+          tag.textContent = dep.split('/').pop();
+          tag.title = dep;
           tag.addEventListener('click', function () { showModuleInfo(dep); });
           list.appendChild(tag);
         });
@@ -909,6 +1036,170 @@
 
     buildDepSection('module-deps-out', 'Depends on', mod.depends_on);
     buildDepSection('module-deps-in',  'Used by',    mod.depended_by);
+
+    // ── Exports + Types (combined smart section) ────────────────────────
+    var exportsEl = document.getElementById('module-exports');
+    exportsEl.innerHTML = '';
+    var allExports = mod.exports || [];
+    var typeDefs = mod.type_defs || {};
+    var typeKeys = Object.keys(typeDefs);
+
+    // Split exports into functions and types
+    var fnExports = allExports.filter(function (e) { return !e.startsWith('type '); });
+    var typeExports = allExports.filter(function (e) { return e.startsWith('type '); });
+
+    // Show types section first if we have type_defs (richer data)
+    var typedefsEl = document.getElementById('module-typedefs');
+    typedefsEl.innerHTML = '';
+    if (typeKeys.length) {
+      var tdWrapper = document.createElement('div');
+      tdWrapper.style.cssText = 'padding:6px 0;margin:0';
+
+      var tdHeader = document.createElement('div');
+      tdHeader.className = 'collapsible-header';
+      tdHeader.innerHTML = '<h2 style="margin-bottom:0">Types <span style="font-size:10px;color:var(--text-muted);font-weight:400">(' + typeKeys.length + ')</span></h2><span class="collapsible-arrow open">&#9654;</span>';
+      tdWrapper.appendChild(tdHeader);
+
+      var tdBody = document.createElement('div');
+      tdBody.className = 'collapsible-body';
+      typeKeys.forEach(function (name) {
+        var block = document.createElement('div');
+        block.className = 'typedef-block';
+
+        var nameEl = document.createElement('div');
+        nameEl.className = 'typedef-name';
+        nameEl.textContent = name;
+        block.appendChild(nameEl);
+
+        var fields = typeDefs[name].split(',');
+        fields.forEach(function (f) {
+          var fEl = document.createElement('div');
+          fEl.className = 'typedef-field';
+          fEl.textContent = f.trim();
+          block.appendChild(fEl);
+        });
+        tdBody.appendChild(block);
+      });
+      tdWrapper.appendChild(tdBody);
+
+      tdHeader.addEventListener('click', function () {
+        tdHeader.querySelector('.collapsible-arrow').classList.toggle('open');
+        tdBody.classList.toggle('collapsed');
+      });
+      typedefsEl.appendChild(tdWrapper);
+    }
+
+    // Show function exports
+    if (fnExports.length) {
+      var MAX_SHOW = 6;
+      var wrapper = document.createElement('div');
+      wrapper.style.cssText = 'padding:6px 0;margin:0';
+
+      var header = document.createElement('div');
+      header.className = 'collapsible-header';
+      var countLabel = typeKeys.length ? 'Functions' : 'Exports';
+      header.innerHTML = '<h2 style="margin-bottom:0">' + countLabel + ' <span style="font-size:10px;color:var(--text-muted);font-weight:400">(' + fnExports.length + ')</span></h2><span class="collapsible-arrow open">&#9654;</span>';
+      wrapper.appendChild(header);
+
+      var body = document.createElement('div');
+      body.className = 'collapsible-body';
+      fnExports.forEach(function (exp, i) {
+        var div = document.createElement('div');
+        div.className = 'export-item';
+        if (i >= MAX_SHOW) div.style.display = 'none';
+        div.setAttribute('data-overflow', i >= MAX_SHOW ? '1' : '0');
+        // Split "FuncName(params) return" into name + signature
+        var parenIdx = exp.indexOf('(');
+        if (parenIdx > 0) {
+          div.innerHTML = '<span style="color:var(--text);font-weight:500">' +
+            exp.substring(0, parenIdx) +
+            '</span><span style="color:var(--text-muted)">' +
+            exp.substring(parenIdx) + '</span>';
+        } else {
+          div.textContent = exp;
+        }
+        div.title = exp;
+        body.appendChild(div);
+      });
+      if (fnExports.length > MAX_SHOW) {
+        var toggle = document.createElement('div');
+        toggle.className = 'show-toggle';
+        toggle.textContent = '+ ' + (fnExports.length - MAX_SHOW) + ' more';
+        var expanded = false;
+        toggle.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          expanded = !expanded;
+          body.querySelectorAll('[data-overflow="1"]').forEach(function (el) {
+            el.style.display = expanded ? '' : 'none';
+          });
+          toggle.textContent = expanded ? 'show less' : '+ ' + (fnExports.length - MAX_SHOW) + ' more';
+        });
+        body.appendChild(toggle);
+      }
+      wrapper.appendChild(body);
+
+      header.addEventListener('click', function () {
+        header.querySelector('.collapsible-arrow').classList.toggle('open');
+        body.classList.toggle('collapsed');
+      });
+      exportsEl.appendChild(wrapper);
+    }
+
+    // Show bare type exports if no type_defs (non-Go languages)
+    if (typeExports.length && !typeKeys.length) {
+      var teWrapper = document.createElement('div');
+      teWrapper.style.cssText = 'padding:6px 0;margin:0';
+      var teHeader = document.createElement('div');
+      teHeader.className = 'collapsible-header';
+      teHeader.innerHTML = '<h2 style="margin-bottom:0">Types <span style="font-size:10px;color:var(--text-muted);font-weight:400">(' + typeExports.length + ')</span></h2><span class="collapsible-arrow open">&#9654;</span>';
+      teWrapper.appendChild(teHeader);
+      var teBody = document.createElement('div');
+      teBody.className = 'collapsible-body';
+      typeExports.forEach(function (exp) {
+        var div = document.createElement('div');
+        div.className = 'export-item is-type';
+        div.textContent = exp.replace(/^type /, '');
+        teBody.appendChild(div);
+      });
+      teWrapper.appendChild(teBody);
+      teHeader.addEventListener('click', function () {
+        teHeader.querySelector('.collapsible-arrow').classList.toggle('open');
+        teBody.classList.toggle('collapsed');
+      });
+      exportsEl.appendChild(teWrapper);
+    }
+
+    // ── File list ──────────────────────────────────────────────────────────
+    var filesEl = document.getElementById('module-files');
+    filesEl.innerHTML = '';
+    var fileList = mod.file_list || [];
+    if (fileList.length) {
+      var fWrapper = document.createElement('div');
+      fWrapper.style.cssText = 'padding:6px 0;margin:0';
+
+      var fHeader = document.createElement('div');
+      fHeader.className = 'collapsible-header';
+      fHeader.innerHTML = '<h2 style="margin-bottom:0">Files <span style="font-size:10px;color:var(--text-muted);font-weight:400">(' + fileList.length + ')</span></h2><span class="collapsible-arrow open">&#9654;</span>';
+      fWrapper.appendChild(fHeader);
+
+      var fBody = document.createElement('div');
+      fBody.className = 'collapsible-body';
+      fileList.forEach(function (f) {
+        var div = document.createElement('div');
+        div.className = 'file-item';
+        div.textContent = f;
+        fBody.appendChild(div);
+      });
+      fWrapper.appendChild(fBody);
+
+      fHeader.addEventListener('click', function () {
+        var arrow = fHeader.querySelector('.collapsible-arrow');
+        arrow.classList.toggle('open');
+        fBody.classList.toggle('collapsed');
+      });
+
+      filesEl.appendChild(fWrapper);
+    }
   }
 
   // ── Tab switching ──────────────────────────────────────────────────────────
@@ -980,12 +1271,16 @@
   let graphSimRunning = true;
   let graphSimTick = 0;
   const SIM_MAX_TICKS = 400;
+  const DPR = window.devicePixelRatio || 1;
 
   function graphResize() {
     gW = graphWrap.clientWidth;
     gH = graphWrap.clientHeight;
-    graphCanvas.width  = gW;
-    graphCanvas.height = gH;
+    graphCanvas.width  = gW * DPR;
+    graphCanvas.height = gH * DPR;
+    graphCanvas.style.width  = gW + 'px';
+    graphCanvas.style.height = gH + 'px';
+    graphCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
 
   window.addEventListener('resize', function () {
@@ -1105,28 +1400,57 @@
       }
     }
 
-    // Nodes
+    // Nodes — richness controls opacity and ring
+    // 0=dim leaf  1=basic  2=moderate  3=rich hub
+    const RICHNESS_ALPHA = ['55', '99', 'CC', 'FF'];
+    const RICHNESS_STROKE = ['#21262d', '#30363d', '#484f58', '#6e7681'];
+    const RICHNESS_LABEL  = ['#484f58', '#6e7681', '#8b949e', '#c9d1d9'];
+
     for (let i = 0; i < nodeArr.length; i++) {
       const n = nodeArr[i];
       const [sx, sy] = worldToScreen(n.x, n.y);
       const r = n.radius * scale;
       if (sx + r < 0 || sx - r > gW || sy + r < 0 || sy - r > gH) continue;
       const isSel = (i === selectedNode);
-      if (isSel) { graphCtx.shadowColor = n.color; graphCtx.shadowBlur = 14; }
+      const rich  = n.richness;
+
+      // Glow for selected or rich hubs
+      if (isSel) {
+        graphCtx.shadowColor = n.color;
+        graphCtx.shadowBlur = 16;
+      } else if (rich >= 3 && scale > 0.4) {
+        graphCtx.shadowColor = n.color;
+        graphCtx.shadowBlur = 6;
+      }
+
+      // Fill circle
       graphCtx.beginPath();
       graphCtx.arc(sx, sy, Math.max(r, 2), 0, Math.PI * 2);
-      graphCtx.fillStyle = isSel ? n.color : n.color + 'CC';
+      graphCtx.fillStyle = isSel ? n.color : n.color + RICHNESS_ALPHA[rich];
       graphCtx.fill();
-      graphCtx.strokeStyle = isSel ? '#ffffff44' : '#00000044';
-      graphCtx.lineWidth   = isSel ? 2 : 1;
+
+      // Stroke — richer nodes get brighter rings
+      graphCtx.strokeStyle = isSel ? '#e6edf3' : RICHNESS_STROKE[rich];
+      graphCtx.lineWidth   = isSel ? 2 : (rich >= 2 ? 1.5 : 0.5);
       graphCtx.stroke();
       graphCtx.shadowBlur = 0;
+
+      // Outer ring for rich hubs (richness 3)
+      if (!isSel && rich >= 3 && r > 3) {
+        graphCtx.beginPath();
+        graphCtx.arc(sx, sy, r + 3 * scale, 0, Math.PI * 2);
+        graphCtx.strokeStyle = n.color + '33';
+        graphCtx.lineWidth = 1;
+        graphCtx.stroke();
+      }
+
+      // Label
       if (scale > 0.45 && r > 4) {
         const label = n.id.split('/').pop() || n.id;
         graphCtx.font         = Math.min(11, Math.max(9, r * 0.7)) + 'px -apple-system,system-ui,sans-serif';
         graphCtx.textAlign    = 'center';
         graphCtx.textBaseline = 'middle';
-        graphCtx.fillStyle    = isSel ? '#e6edf3' : '#8b949e';
+        graphCtx.fillStyle    = isSel ? '#e6edf3' : RICHNESS_LABEL[rich];
         graphCtx.fillText(label, sx, sy + r + 10 * scale);
       }
     }
@@ -1145,13 +1469,15 @@
   let panStart   = null;
   let panStartPX = 0, panStartPY = 0;
   let hasDragged = false;
+  let mouseDownX = 0, mouseDownY = 0;
+  const DRAG_THRESHOLD = 4;
 
   function nodeAtScreen(sx, sy) {
     const [wx, wy] = screenToWorld(sx, sy);
     for (let i = nodeArr.length - 1; i >= 0; i--) {
       const n  = nodeArr[i];
       const dx = n.x - wx, dy = n.y - wy;
-      const hit = n.radius + 4 / scale;
+      const hit = n.radius + Math.max(8, 12 / scale);
       if (dx * dx + dy * dy < hit * hit) return i;
     }
     return -1;
@@ -1159,6 +1485,8 @@
 
   graphCanvas.addEventListener('mousedown', function (e) {
     hasDragged = false;
+    mouseDownX = e.clientX;
+    mouseDownY = e.clientY;
     const hit = nodeAtScreen(e.clientX, e.clientY);
     if (hit >= 0) {
       dragNode = nodeArr[hit];
@@ -1178,25 +1506,24 @@
   });
 
   window.addEventListener('mousemove', function (e) {
-    if (dragNode) {
+    if (dragNode || panStart) {
+      const dx = e.clientX - mouseDownX, dy = e.clientY - mouseDownY;
+      if (!hasDragged && dx * dx + dy * dy < DRAG_THRESHOLD * DRAG_THRESHOLD) return;
       hasDragged = true;
+    }
+    if (dragNode) {
       graphSimRunning = true;
       graphSimTick = 0;
       const [wx, wy] = screenToWorld(e.clientX, e.clientY);
       dragNode.x = wx + dragOffX;
       dragNode.y = wy + dragOffY;
     } else if (panStart) {
-      hasDragged = true;
       panX = e.clientX - panStartPX;
       panY = e.clientY - panStartPY;
     }
   });
 
-  window.addEventListener('mouseup', function (e) {
-    if (!hasDragged && !dragNode) {
-      const hit = nodeAtScreen(e.clientX, e.clientY);
-      if (hit < 0) { selectedNode = null; showModuleEmpty(); }
-    }
+  window.addEventListener('mouseup', function () {
     dragNode = null; panStart = null;
     graphCanvas.classList.remove('dragging');
     graphCanvas.style.cursor = 'default';
@@ -1238,8 +1565,10 @@
       tooltip.style.left    = (e.clientX + 12) + 'px';
       tooltip.style.top     = (e.clientY - 8)  + 'px';
       tooltip.textContent   = n.id + ' (' + n.files + ' file' + (n.files !== 1 ? 's' : '') + ')';
+      if (!dragNode && !panStart) graphCanvas.style.cursor = 'pointer';
     } else {
       tooltip.style.display = 'none';
+      if (!dragNode && !panStart) graphCanvas.style.cursor = 'default';
     }
   });
 
@@ -1560,8 +1889,11 @@
   function flowResize() {
     fW = flowWrap.clientWidth;
     fH = flowWrap.clientHeight;
-    flowCanvas.width  = fW;
-    flowCanvas.height = fH;
+    flowCanvas.width  = fW * DPR;
+    flowCanvas.height = fH * DPR;
+    flowCanvas.style.width  = fW + 'px';
+    flowCanvas.style.height = fH + 'px';
+    flowCtx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
 
   function buildFlowLayout() {
