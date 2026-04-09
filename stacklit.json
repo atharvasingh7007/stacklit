@@ -1,0 +1,413 @@
+{
+  "$schema": "https://stacklit.dev/schema/v1.json",
+  "version": "1",
+  "generated_at": "2026-04-09T18:22:38Z",
+  "stacklit_version": "dev",
+  "merkle_hash": "7087ad798fd210e3c1780226b682c1ed3fc084aaccad0618a0ef3e21e6bb8a26",
+  "project": {
+    "name": "stacklit",
+    "root": ".",
+    "type": "single"
+  },
+  "tech": {
+    "primary_language": "go",
+    "languages": {
+      "go": {
+        "files": 35,
+        "lines": 3635
+      },
+      "python": {
+        "files": 1,
+        "lines": 20
+      },
+      "typescript": {
+        "files": 5,
+        "lines": 24
+      }
+    }
+  },
+  "structure": {
+    "entrypoints": [
+      "cmd/stacklit/main.go"
+    ],
+    "total_files": 41,
+    "total_lines": 3679
+  },
+  "modules": {
+    "assets": {
+      "purpose": "Static assets",
+      "files": 1,
+      "lines": 6,
+      "exports": [
+        "TemplateHTML"
+      ],
+      "depended_by": [
+        "internal/renderer"
+      ],
+      "activity": "low"
+    },
+    "cmd/stacklit": {
+      "purpose": "Stacklit",
+      "files": 1,
+      "lines": 15,
+      "depends_on": [
+        "internal/cli"
+      ],
+      "activity": "low"
+    },
+    "internal/cli": {
+      "purpose": "Command-line interface",
+      "files": 4,
+      "lines": 144,
+      "exports": [
+        "Execute",
+        "Version"
+      ],
+      "depends_on": [
+        "internal/engine",
+        "internal/renderer",
+        "internal/schema"
+      ],
+      "depended_by": [
+        "cmd/stacklit"
+      ],
+      "activity": "low"
+    },
+    "internal/engine": {
+      "purpose": "Core orchestration engine",
+      "files": 1,
+      "lines": 335,
+      "exports": [
+        "Options",
+        "Result",
+        "Run"
+      ],
+      "depends_on": [
+        "internal/git",
+        "internal/graph",
+        "internal/monorepo",
+        "internal/parser",
+        "internal/renderer",
+        "internal/schema",
+        "internal/walker"
+      ],
+      "depended_by": [
+        "internal/cli"
+      ],
+      "activity": "low"
+    },
+    "internal/git": {
+      "purpose": "Git integration",
+      "files": 4,
+      "lines": 395,
+      "exports": [
+        "Activity",
+        "ComputeMerkle",
+        "FileActivity",
+        "GetActivity",
+        "InstallHook"
+      ],
+      "depended_by": [
+        "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/graph": {
+      "purpose": "Dependency graph",
+      "files": 2,
+      "lines": 374,
+      "exports": [
+        "Build",
+        "Edge",
+        "Edges",
+        "Entrypoints",
+        "Graph",
+        "Module",
+        "Modules",
+        "MostDepended"
+      ],
+      "depends_on": [
+        "internal/parser"
+      ],
+      "depended_by": [
+        "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/monorepo": {
+      "purpose": "Monorepo detection",
+      "files": 2,
+      "lines": 599,
+      "exports": [
+        "Detect",
+        "Result"
+      ],
+      "depended_by": [
+        "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/parser": {
+      "purpose": "Source code parsers",
+      "files": 9,
+      "lines": 1023,
+      "exports": [
+        "CanParse",
+        "FileInfo",
+        "GenericParser",
+        "GoParser",
+        "Parse",
+        "ParseAll",
+        "ParseFile",
+        "Parser",
+        "PythonParser",
+        "TypeScriptParser"
+      ],
+      "depended_by": [
+        "internal/engine",
+        "internal/graph"
+      ],
+      "activity": "low"
+    },
+    "internal/renderer": {
+      "purpose": "Output renderers",
+      "files": 5,
+      "lines": 370,
+      "exports": [
+        "WriteHTML",
+        "WriteJSON",
+        "WriteMermaid"
+      ],
+      "depends_on": [
+        "assets",
+        "internal/schema"
+      ],
+      "depended_by": [
+        "internal/cli",
+        "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/schema": {
+      "purpose": "Data schema definitions",
+      "files": 1,
+      "lines": 76,
+      "exports": [
+        "Dependencies",
+        "GitInfo",
+        "Hints",
+        "HotFile",
+        "Index",
+        "LangStats",
+        "ModuleInfo",
+        "Project",
+        "Structure",
+        "Tech"
+      ],
+      "depended_by": [
+        "internal/cli",
+        "internal/engine",
+        "internal/renderer"
+      ],
+      "activity": "low"
+    },
+    "internal/walker": {
+      "purpose": "File system walker",
+      "files": 2,
+      "lines": 274,
+      "exports": [
+        "Walk"
+      ],
+      "depended_by": [
+        "internal/engine"
+      ],
+      "activity": "low"
+    }
+  },
+  "dependencies": {
+    "edges": [
+      [
+        "cmd/stacklit",
+        "internal/cli"
+      ],
+      [
+        "internal/cli",
+        "internal/engine"
+      ],
+      [
+        "internal/cli",
+        "internal/renderer"
+      ],
+      [
+        "internal/cli",
+        "internal/schema"
+      ],
+      [
+        "internal/engine",
+        "internal/git"
+      ],
+      [
+        "internal/engine",
+        "internal/graph"
+      ],
+      [
+        "internal/engine",
+        "internal/monorepo"
+      ],
+      [
+        "internal/engine",
+        "internal/parser"
+      ],
+      [
+        "internal/engine",
+        "internal/renderer"
+      ],
+      [
+        "internal/engine",
+        "internal/schema"
+      ],
+      [
+        "internal/engine",
+        "internal/walker"
+      ],
+      [
+        "internal/graph",
+        "internal/parser"
+      ],
+      [
+        "internal/renderer",
+        "assets"
+      ],
+      [
+        "internal/renderer",
+        "internal/schema"
+      ]
+    ],
+    "entrypoints": [
+      "cmd/stacklit/main.go"
+    ],
+    "most_depended": [
+      "internal/schema",
+      "internal/parser",
+      "internal/renderer",
+      "assets",
+      "internal/cli",
+      "internal/engine",
+      "internal/git",
+      "internal/graph",
+      "internal/monorepo",
+      "internal/walker"
+    ]
+  },
+  "git": {
+    "hot_files": [
+      {
+        "path": "assets/template.html",
+        "commits_90d": 3
+      },
+      {
+        "path": "go.mod",
+        "commits_90d": 2
+      },
+      {
+        "path": "go.sum",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/cli/generate.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/cli/init.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/cli/view.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/engine/engine.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/renderer/mermaid.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "testdata/go-project/internal/handler.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "testdata/go-project/main.go",
+        "commits_90d": 2
+      },
+      {
+        "path": ".gitignore",
+        "commits_90d": 1
+      },
+      {
+        "path": "Makefile",
+        "commits_90d": 1
+      },
+      {
+        "path": "assets/embed.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "cmd/stacklit/main.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/cli/root.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/git/activity.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/git/activity_test.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/git/hooks.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/git/merkle.go",
+        "commits_90d": 1
+      },
+      {
+        "path": "internal/graph/graph.go",
+        "commits_90d": 1
+      }
+    ],
+    "recent": [
+      "assets/template.html",
+      "internal/engine/engine.go",
+      "internal/renderer/mermaid.go",
+      "assets/embed.go",
+      "internal/cli/generate.go",
+      "internal/cli/init.go",
+      "internal/cli/view.go",
+      "internal/renderer/html.go",
+      "internal/renderer/json.go",
+      "internal/renderer/json_test.go"
+    ],
+    "stable": [
+      ".gitignore",
+      "Makefile",
+      "assets/embed.go",
+      "cmd/stacklit/main.go",
+      "internal/cli/root.go",
+      "internal/git/activity.go",
+      "internal/git/activity_test.go",
+      "internal/git/hooks.go",
+      "internal/git/merkle.go",
+      "internal/graph/graph.go"
+    ]
+  },
+  "hints": {
+    "test_command": "go test ./..."
+  }
+}

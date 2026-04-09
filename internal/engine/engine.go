@@ -246,12 +246,27 @@ func assembleIndex(
 		if len(exports) > 15 {
 			exports = exports[:15]
 		}
+		// Compute activity level from git hot files
+		activityLevel := "low"
+		for _, hf := range activity.HotFiles {
+			if strings.HasPrefix(hf.Path, mod.Name+"/") {
+				if hf.Commits90d > 10 {
+					activityLevel = "high"
+					break
+				} else if hf.Commits90d > 3 {
+					activityLevel = "medium"
+				}
+			}
+		}
+
 		modules[mod.Name] = schema.ModuleInfo{
 			Purpose:    inferPurpose(mod.Name),
 			Files:      mod.FileCount,
+			Lines:      mod.LineCount,
 			Exports:    exports,
 			DependsOn:  mod.DependsOn,
 			DependedBy: mod.DependedBy,
+			Activity:   activityLevel,
 		}
 	}
 

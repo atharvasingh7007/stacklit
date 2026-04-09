@@ -739,10 +739,10 @@
   document.getElementById('proj-name').textContent = DATA.project?.name || '(unknown)';
 
   const pills = [
-    { label: 'files', value: DATA.structure?.total_files ?? '—' },
-    { label: 'lines', value: DATA.structure?.total_lines?.toLocaleString() ?? '—' },
-    { label: 'lang',  value: DATA.tech?.primary_language ?? '—' },
-    { label: 'date',  value: (DATA.generated_at || '').slice(0, 10) || '—' },
+    { label: 'files', value: DATA.structure?.total_files ?? '-' },
+    { label: 'lines', value: DATA.structure?.total_lines?.toLocaleString() ?? '-' },
+    { label: 'lang',  value: DATA.tech?.primary_language ?? '-' },
+    { label: 'date',  value: (DATA.generated_at || '').slice(0, 10) || '-' },
   ];
 
   const pillsEl = document.getElementById('stat-pills');
@@ -843,9 +843,9 @@
     metaEl.innerHTML = '';
     const metaRows = [
       { label: 'Files',    value: node.files },
-      { label: 'Lines',    value: node.lines || '—' },
+      { label: 'Lines',    value: node.lines || '-' },
       { label: 'Language', value: node.lang   },
-      { label: 'Activity', value: mod.activity || '—' },
+      { label: 'Activity', value: mod.activity || '-' },
     ];
     metaRows.forEach(function (row) {
       const div = document.createElement('div');
@@ -1472,7 +1472,7 @@
       const mod = n.mod || {};
       const act = mod.activity || '';
       const actClass = act === 'high' ? 'activity-high' : act === 'medium' ? 'activity-medium' : 'activity-low';
-      const actLabel = act || '—';
+      const actLabel = act || '-';
 
       const tr = document.createElement('tr');
       if (selectedTableRow === n.id) tr.classList.add('selected');
@@ -1480,10 +1480,10 @@
       tr.innerHTML =
         '<td title="' + n.id + '">' + n.id + '</td>' +
         '<td>' + n.files + '</td>' +
-        '<td>' + (n.lines ? n.lines.toLocaleString() : '—') + '</td>' +
-        '<td>' + ((mod.exports || []).length || '—') + '</td>' +
-        '<td>' + ((mod.depends_on || []).length || '—') + '</td>' +
-        '<td>' + ((mod.depended_by || []).length || '—') + '</td>' +
+        '<td>' + (n.lines ? n.lines.toLocaleString() : '-') + '</td>' +
+        '<td>' + ((mod.exports || []).length || '-') + '</td>' +
+        '<td>' + ((mod.depends_on || []).length || '-') + '</td>' +
+        '<td>' + ((mod.depended_by || []).length || '-') + '</td>' +
         '<td><span class="activity-badge ' + actClass + '">' + actLabel + '</span></td>';
 
       tr.addEventListener('click', function () {

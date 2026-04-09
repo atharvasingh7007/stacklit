@@ -1,0 +1,29 @@
+graph LR
+  classDef go fill:#e6edf3,color:#0d1117,stroke:#e6edf3
+  classDef typescript fill:#c9d1d9,color:#0d1117,stroke:#c9d1d9
+  classDef python fill:#b1bac4,color:#0d1117,stroke:#b1bac4
+  internal_schema["internal/schema\nData schema definitions"]:::go
+  internal_walker["internal/walker\nFile system walker"]:::go
+  assets["assets\nStatic assets"]:::go
+  internal_engine["internal/engine\nCore orchestration engine"]:::go
+  internal_monorepo["internal/monorepo\nMonorepo detection"]:::go
+  cmd_stacklit["cmd/stacklit\nStacklit"]:::go
+  internal_cli["internal/cli\nCommand-line interface"]:::go
+  internal_git["internal/git\nGit integration"]:::go
+  internal_graph["internal/graph\nDependency graph"]:::go
+  internal_parser["internal/parser\nSource code parsers"]:::go
+  internal_renderer["internal/renderer\nOutput renderers"]:::go
+  cmd_stacklit --> internal_cli
+  internal_cli --> internal_engine
+  internal_cli --> internal_renderer
+  internal_cli --> internal_schema
+  internal_engine --> internal_git
+  internal_engine --> internal_graph
+  internal_engine --> internal_monorepo
+  internal_engine --> internal_parser
+  internal_engine --> internal_renderer
+  internal_engine --> internal_schema
+  internal_engine --> internal_walker
+  internal_graph --> internal_parser
+  internal_renderer --> assets
+  internal_renderer --> internal_schema

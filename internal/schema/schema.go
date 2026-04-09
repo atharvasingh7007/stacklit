@@ -43,6 +43,7 @@ type Structure struct {
 type ModuleInfo struct {
 	Purpose    string   `json:"purpose"`
 	Files      int      `json:"files"`
+	Lines      int      `json:"lines"`
 	Exports    []string `json:"exports,omitempty"`
 	DependsOn  []string `json:"depends_on,omitempty"`
 	DependedBy []string `json:"depended_by,omitempty"`
