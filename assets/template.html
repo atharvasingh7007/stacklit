@@ -95,6 +95,38 @@
     border-color: var(--text-muted);
   }
 
+  /* ── Tab bar ── */
+  #tabbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 0;
+    flex-shrink: 0;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 8px 14px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover {
+    color: var(--text);
+  }
+
+  .tab-btn.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+
   /* ── Main layout ── */
   #main {
     display: flex;
@@ -102,19 +134,38 @@
     overflow: hidden;
   }
 
-  /* ── Canvas area ── */
-  #canvas-wrap {
+  /* ── View containers ── */
+  #view-area {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .view {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .view.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Canvas area (Graph + Flow views) ── */
+  .canvas-wrap {
     flex: 1;
     position: relative;
     overflow: hidden;
   }
 
-  #graph-canvas {
+  .view-canvas {
     display: block;
     cursor: grab;
   }
 
-  #graph-canvas.dragging {
+  .view-canvas.dragging {
     cursor: grabbing;
   }
 
@@ -141,6 +192,192 @@
     font-size: 10px;
     color: var(--text);
   }
+
+  /* ── Tree view ── */
+  #view-tree {
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  #view-tree::-webkit-scrollbar { width: 4px; }
+  #view-tree::-webkit-scrollbar-track { background: transparent; }
+  #view-tree::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .tree-root {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .tree-dir {
+    margin-bottom: 2px;
+  }
+
+  .tree-dir-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+
+  .tree-dir-header:hover {
+    background: var(--surface);
+  }
+
+  .tree-toggle {
+    color: var(--text-muted);
+    font-size: 11px;
+    width: 14px;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+
+  .tree-dir.collapsed .tree-toggle {
+    transform: rotate(-90deg);
+  }
+
+  .tree-dir-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tree-dir-meta {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  .tree-dir-purpose {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-style: italic;
+    margin-left: 8px;
+  }
+
+  .tree-children {
+    padding-left: 22px;
+    border-left: 1px solid var(--border);
+    margin-left: 13px;
+    overflow: hidden;
+  }
+
+  .tree-dir.collapsed .tree-children {
+    display: none;
+  }
+
+  .tree-module {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .tree-module:hover {
+    background: var(--surface);
+  }
+
+  .tree-module.selected {
+    background: var(--border);
+  }
+
+  .tree-module-name {
+    color: var(--text-muted);
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .tree-module-stats {
+    color: #6e7681;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* ── Table view ── */
+  #view-table {
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  #view-table::-webkit-scrollbar { width: 4px; }
+  #view-table::-webkit-scrollbar-track { background: transparent; }
+  #view-table::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  #mod-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  #mod-table thead th {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    position: sticky;
+    text-align: left;
+    text-transform: uppercase;
+    top: 0;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  #mod-table thead th:hover {
+    color: var(--text);
+  }
+
+  #mod-table thead th.sort-asc::after { content: ' ↑'; }
+  #mod-table thead th.sort-desc::after { content: ' ↓'; }
+
+  #mod-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  #mod-table tbody tr:hover {
+    background: var(--surface);
+  }
+
+  #mod-table tbody tr.selected {
+    background: var(--border);
+  }
+
+  #mod-table tbody td {
+    padding: 8px 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  #mod-table tbody td:first-child {
+    color: var(--text);
+    font-size: 13px;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .activity-badge {
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+
+  .activity-high   { background: rgba(63,185,80,0.15);  color: var(--success); }
+  .activity-medium { background: rgba(139,148,158,0.15); color: var(--text-muted); }
+  .activity-low    { background: rgba(48,54,61,0.5);     color: #6e7681; }
 
   /* ── Sidebar ── */
   #sidebar {
@@ -363,19 +600,67 @@
   <div class="stat-pills" id="stat-pills"></div>
   <div id="topbar-actions">
     <button class="btn" id="btn-fit" title="Fit to view (F)">Fit</button>
-    <button class="btn" id="btn-reset" title="Reset zoom (R)">Reset</button>
+    <button class="btn" id="btn-reset" title="Reset view (R)">Reset</button>
     <button class="btn" id="btn-sidebar" title="Toggle sidebar (S)">Sidebar</button>
   </div>
 </div>
 
+<!-- Tab bar -->
+<div id="tabbar">
+  <button class="tab-btn active" data-tab="graph">Graph</button>
+  <button class="tab-btn" data-tab="tree">Tree</button>
+  <button class="tab-btn" data-tab="table">Table</button>
+  <button class="tab-btn" data-tab="flow">Flow</button>
+</div>
+
 <!-- Main -->
 <div id="main">
-  <div id="canvas-wrap">
-    <canvas id="graph-canvas"></canvas>
-    <div id="canvas-hint">
-      Drag to pan &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Click node for details &nbsp;·&nbsp;
-      <kbd>S</kbd> sidebar &nbsp;<kbd>R</kbd> reset &nbsp;<kbd>F</kbd> fit
+  <div id="view-area">
+
+    <!-- View 1: Graph (force-directed) -->
+    <div id="view-graph" class="view active">
+      <div class="canvas-wrap" id="graph-wrap">
+        <canvas id="graph-canvas" class="view-canvas"></canvas>
+        <div id="canvas-hint">
+          Drag to pan &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Click node for details &nbsp;·&nbsp;
+          <kbd>1-4</kbd> tabs &nbsp;<kbd>S</kbd> sidebar &nbsp;<kbd>R</kbd> reset &nbsp;<kbd>F</kbd> fit
+        </div>
+      </div>
     </div>
+
+    <!-- View 2: Directory Tree -->
+    <div id="view-tree" class="view">
+      <div id="tree-root" class="tree-root"></div>
+    </div>
+
+    <!-- View 3: Table -->
+    <div id="view-table" class="view">
+      <table id="mod-table">
+        <thead>
+          <tr>
+            <th data-col="id">Module</th>
+            <th data-col="files">Files</th>
+            <th data-col="lines">Lines</th>
+            <th data-col="exports">Exports</th>
+            <th data-col="deps_out">Deps On</th>
+            <th data-col="deps_in">Used By</th>
+            <th data-col="activity">Activity</th>
+          </tr>
+        </thead>
+        <tbody id="mod-table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- View 4: Flow (layered DAG) -->
+    <div id="view-flow" class="view">
+      <div class="canvas-wrap" id="flow-wrap">
+        <canvas id="flow-canvas" class="view-canvas"></canvas>
+        <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(13,17,23,0.85);border:1px solid var(--border);border-radius:20px;padding:4px 14px;font-size:11px;color:var(--text-muted);pointer-events:none;white-space:nowrap;">
+          Dependency flow — entrypoints at top &nbsp;·&nbsp; Drag to pan &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; <kbd style="background:var(--border);border-radius:3px;padding:1px 5px;font-size:10px;color:var(--text);font-family:inherit">F</kbd> fit
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div id="sidebar">
@@ -422,12 +707,12 @@
 
   // ── Constants ──────────────────────────────────────────────────────────────
   const LANG_COLORS = {
-    go:         '#e6edf3',   // white-ish
-    typescript: '#c9d1d9',   // light gray
-    javascript: '#c9d1d9',   // light gray
-    python:     '#b1bac4',   // medium gray
-    rust:       '#a5b3bf',   // gray
-    java:       '#8b949e',   // muted gray
+    go:         '#e6edf3',
+    typescript: '#c9d1d9',
+    javascript: '#c9d1d9',
+    python:     '#b1bac4',
+    rust:       '#a5b3bf',
+    java:       '#8b949e',
     csharp:     '#8b949e',
     ruby:       '#8b949e',
     php:        '#8b949e',
@@ -435,7 +720,7 @@
     kotlin:     '#8b949e',
     c:          '#8b949e',
     cpp:        '#8b949e',
-    default:    '#6e7681',   // dim gray
+    default:    '#6e7681',
   };
 
   const MIN_RADIUS = 6;
@@ -472,11 +757,9 @@
   const modules = DATA.modules || {};
   const edges   = DATA.dependencies?.edges || [];
 
-  // Collect all node keys (from modules map + any edge endpoints not in modules)
   const nodeKeys = new Set(Object.keys(modules));
   edges.forEach(function (e) { nodeKeys.add(e[0]); nodeKeys.add(e[1]); });
 
-  // Determine file-count range for radius scaling
   let minFiles = Infinity, maxFiles = 0;
   nodeKeys.forEach(function (k) {
     const f = (modules[k] && modules[k].files) ? modules[k].files : 1;
@@ -491,11 +774,9 @@
     return MIN_RADIUS + t * (MAX_RADIUS - MIN_RADIUS);
   }
 
-  // Assign language color based on primary_language or guess from module key
   const primaryLang = (DATA.tech?.primary_language || '').toLowerCase();
 
   function langForModule(key) {
-    // Heuristic: check for file extension in key or fall back to project primary
     if (/\.ts$|\.tsx$/.test(key)) return 'typescript';
     if (/\.js$|\.jsx$/.test(key)) return 'javascript';
     if (/\.py$/.test(key)) return 'python';
@@ -509,54 +790,183 @@
   // Nodes
   const nodeArr = [];
   const nodeIdx = {};
-  let i = 0;
+  let ni = 0;
   nodeKeys.forEach(function (k) {
-    const mod = modules[k] || {};
+    const mod   = modules[k] || {};
     const files = mod.files || 1;
     const lang  = langForModule(k);
     nodeArr.push({
       id:     k,
-      x:      0, y: 0,
-      vx:     0, vy: 0,
+      x: 0, y: 0,
+      vx: 0, vy: 0,
       radius: scaleRadius(files),
       color:  LANG_COLORS[lang] || LANG_COLORS.default,
       lang:   lang,
       files:  files,
+      lines:  mod.lines || 0,
       mod:    mod,
     });
-    nodeIdx[k] = i++;
+    nodeIdx[k] = ni++;
   });
 
   // Links
   const linkArr = edges.map(function (e) {
-    return { source: nodeIdx[e[0]], target: nodeIdx[e[1]] };
+    return { source: nodeIdx[e[0]], target: nodeIdx[e[1]], srcId: e[0], tgtId: e[1] };
   }).filter(function (l) {
     return l.source !== undefined && l.target !== undefined;
   });
 
-  // ── Canvas & viewport ─────────────────────────────────────────────────────
-  const canvas  = document.getElementById('graph-canvas');
-  const ctx     = canvas.getContext('2d');
-  const wrap    = document.getElementById('canvas-wrap');
-
-  let W = 0, H = 0;
-  let panX = 0, panY = 0;
-  let scale = 1;
-
-  function resize() {
-    W = wrap.clientWidth;
-    H = wrap.clientHeight;
-    canvas.width  = W;
-    canvas.height = H;
+  // ── Shared sidebar helpers ─────────────────────────────────────────────────
+  function showModuleEmpty() {
+    document.getElementById('module-empty').style.display = '';
+    document.getElementById('module-info').style.display  = 'none';
   }
 
-  window.addEventListener('resize', function () { resize(); });
-  resize();
+  function showModuleInfo(nodeOrKey) {
+    let node;
+    if (typeof nodeOrKey === 'string') {
+      const idx = nodeIdx[nodeOrKey];
+      if (idx === undefined) return;
+      node = nodeArr[idx];
+    } else {
+      node = nodeOrKey;
+    }
 
-  // ── Scatter nodes on first layout ─────────────────────────────────────────
+    document.getElementById('module-empty').style.display = 'none';
+    document.getElementById('module-info').style.display  = '';
+
+    const mod = node.mod || {};
+    document.getElementById('module-name').textContent    = node.id;
+    document.getElementById('module-purpose').textContent = mod.purpose || '';
+
+    const metaEl = document.getElementById('module-meta');
+    metaEl.innerHTML = '';
+    const metaRows = [
+      { label: 'Files',    value: node.files },
+      { label: 'Lines',    value: node.lines || '—' },
+      { label: 'Language', value: node.lang   },
+      { label: 'Activity', value: mod.activity || '—' },
+    ];
+    metaRows.forEach(function (row) {
+      const div = document.createElement('div');
+      div.className = 'meta-row';
+      div.innerHTML = '<span class="meta-label">' + row.label + '</span>' +
+                      '<span class="meta-value">' + row.value + '</span>';
+      metaEl.appendChild(div);
+    });
+
+    function buildDepSection(elId, label, deps) {
+      const el = document.getElementById(elId);
+      el.innerHTML = '';
+      if (deps && deps.length) {
+        const h = document.createElement('div');
+        h.className = 'sidebar-section';
+        h.style.cssText = 'padding:8px 0;border:none;margin:0';
+        h.innerHTML = '<h2 style="margin-bottom:6px">' + label + '</h2>';
+        const list = document.createElement('div');
+        list.className = 'dep-list';
+        deps.forEach(function (dep) {
+          const tag = document.createElement('div');
+          tag.className = 'dep-tag';
+          tag.textContent = dep;
+          tag.addEventListener('click', function () { showModuleInfo(dep); });
+          list.appendChild(tag);
+        });
+        h.appendChild(list);
+        el.appendChild(h);
+      }
+    }
+
+    buildDepSection('module-deps-out', 'Depends on', mod.depends_on);
+    buildDepSection('module-deps-in',  'Used by',    mod.depended_by);
+  }
+
+  // ── Tab switching ──────────────────────────────────────────────────────────
+  const TABS = ['graph', 'tree', 'table', 'flow'];
+  let activeTab = 'graph';
+  let flowRendered = false;
+  let treeBuilt = false;
+  let tableBuilt = false;
+
+  function switchTab(name) {
+    if (!TABS.includes(name)) return;
+    activeTab = name;
+
+    document.querySelectorAll('.tab-btn').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.tab === name);
+    });
+
+    document.querySelectorAll('.view').forEach(function (v) {
+      v.classList.remove('active');
+    });
+
+    const viewEl = document.getElementById('view-' + name);
+    if (viewEl) viewEl.classList.add('active');
+
+    // Show/hide Fit button (only relevant for canvas views)
+    const fitBtn = document.getElementById('btn-fit');
+    fitBtn.style.display = (name === 'graph' || name === 'flow') ? '' : 'none';
+
+    if (name === 'graph') {
+      // Resume graph simulation if needed
+      graphSimRunning = true;
+      setTimeout(function () { graphResize(); }, 10);
+    }
+
+    if (name === 'tree' && !treeBuilt) {
+      buildTreeView();
+      treeBuilt = true;
+    }
+
+    if (name === 'table' && !tableBuilt) {
+      buildTableView();
+      tableBuilt = true;
+    }
+
+    if (name === 'flow') {
+      setTimeout(function () {
+        flowResize();
+        if (!flowRendered) {
+          buildFlowLayout();
+          flowRendered = true;
+        }
+        drawFlow();
+      }, 10);
+    }
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { switchTab(btn.dataset.tab); });
+  });
+
+  // ── VIEW 1: Force graph ───────────────────────────────────────────────────
+  const graphCanvas = document.getElementById('graph-canvas');
+  const graphCtx    = graphCanvas.getContext('2d');
+  const graphWrap   = document.getElementById('graph-wrap');
+
+  let gW = 0, gH = 0;
+  let panX = 0, panY = 0;
+  let scale = 1;
+  let graphSimRunning = true;
+  let graphSimTick = 0;
+  const SIM_MAX_TICKS = 400;
+
+  function graphResize() {
+    gW = graphWrap.clientWidth;
+    gH = graphWrap.clientHeight;
+    graphCanvas.width  = gW;
+    graphCanvas.height = gH;
+  }
+
+  window.addEventListener('resize', function () {
+    graphResize();
+    if (activeTab === 'flow') { flowResize(); drawFlow(); }
+  });
+  graphResize();
+
   function initPositions() {
-    const cx = W / 2, cy = H / 2;
-    const r0 = Math.min(W, H) * 0.35;
+    const cx = gW / 2, cy = gH / 2;
+    const r0 = Math.min(gW, gH) * 0.35;
     nodeArr.forEach(function (n, idx) {
       if (nodeArr.length === 1) {
         n.x = cx; n.y = cy;
@@ -567,139 +977,101 @@
       }
     });
   }
-
   initPositions();
 
-  // ── Force simulation ───────────────────────────────────────────────────────
-  const REPULSION    = 2800;
-  const SPRING_LEN   = 120;
-  const SPRING_K     = 0.04;
-  const GRAVITY      = 0.008;
-  const DAMPING      = 0.82;
-  const TICK_DT      = 1;
+  const REPULSION  = 2800;
+  const SPRING_LEN = 120;
+  const SPRING_K   = 0.04;
+  const GRAVITY    = 0.008;
+  const DAMPING    = 0.82;
 
-  let simRunning   = true;
-  let simTickCount = 0;
-  const SIM_MAX_TICKS = 400;
+  function graphTick() {
+    if (!graphSimRunning) return;
+    graphSimTick++;
+    if (graphSimTick > SIM_MAX_TICKS) { graphSimRunning = false; return; }
 
-  function tick() {
-    if (!simRunning) return;
-    simTickCount++;
-    if (simTickCount > SIM_MAX_TICKS) { simRunning = false; return; }
-
-    const cx = W / 2, cy = H / 2;
+    const cx = gW / 2, cy = gH / 2;
     const n  = nodeArr.length;
 
-    // Reset forces
-    for (let i = 0; i < n; i++) {
-      nodeArr[i].fx = 0;
-      nodeArr[i].fy = 0;
-    }
+    for (let i = 0; i < n; i++) { nodeArr[i].fx = 0; nodeArr[i].fy = 0; }
 
-    // Repulsion (O(n^2) — fine for <500 nodes)
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
         const ni = nodeArr[i], nj = nodeArr[j];
-        let dx = ni.x - nj.x;
-        let dy = ni.y - nj.y;
+        let dx = ni.x - nj.x, dy = ni.y - nj.y;
         let dist2 = dx * dx + dy * dy;
         if (dist2 < 1) dist2 = 1;
-        const dist = Math.sqrt(dist2);
+        const dist  = Math.sqrt(dist2);
         const force = REPULSION / dist2;
-        const fx = (dx / dist) * force;
-        const fy = (dy / dist) * force;
+        const fx = (dx / dist) * force, fy = (dy / dist) * force;
         ni.fx += fx; ni.fy += fy;
         nj.fx -= fx; nj.fy -= fy;
       }
     }
 
-    // Spring attraction along edges
     for (let k = 0; k < linkArr.length; k++) {
       const l  = linkArr[k];
       const ns = nodeArr[l.source], nt = nodeArr[l.target];
       const dx = nt.x - ns.x, dy = nt.y - ns.y;
       const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const displacement = dist - SPRING_LEN;
-      const force = SPRING_K * displacement;
-      const fx = (dx / dist) * force;
-      const fy = (dy / dist) * force;
+      const force = SPRING_K * (dist - SPRING_LEN);
+      const fx = (dx / dist) * force, fy = (dy / dist) * force;
       ns.fx += fx; ns.fy += fy;
       nt.fx -= fx; nt.fy -= fy;
     }
 
-    // Gravity toward center
     for (let i = 0; i < n; i++) {
-      const ni = nodeArr[i];
-      ni.fx += (cx - ni.x) * GRAVITY;
-      ni.fy += (cy - ni.y) * GRAVITY;
+      nodeArr[i].fx += (cx - nodeArr[i].x) * GRAVITY;
+      nodeArr[i].fy += (cy - nodeArr[i].y) * GRAVITY;
     }
 
-    // Integrate
     for (let i = 0; i < n; i++) {
-      const ni = nodeArr[i];
-      if (ni === dragNode) continue;
-      ni.vx = (ni.vx + ni.fx * TICK_DT) * DAMPING;
-      ni.vy = (ni.vy + ni.fy * TICK_DT) * DAMPING;
-      ni.x += ni.vx;
-      ni.y += ni.vy;
+      const nd = nodeArr[i];
+      if (nd === dragNode) continue;
+      nd.vx = (nd.vx + nd.fx) * DAMPING;
+      nd.vy = (nd.vy + nd.fy) * DAMPING;
+      nd.x += nd.vx;
+      nd.y += nd.vy;
     }
   }
 
-  // ── Rendering ─────────────────────────────────────────────────────────────
-  function worldToScreen(x, y) {
-    return [ x * scale + panX, y * scale + panY ];
-  }
-
-  function screenToWorld(sx, sy) {
-    return [ (sx - panX) / scale, (sy - panY) / scale ];
-  }
+  function worldToScreen(x, y) { return [x * scale + panX, y * scale + panY]; }
+  function screenToWorld(sx, sy) { return [(sx - panX) / scale, (sy - panY) / scale]; }
 
   let selectedNode = null;
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    ctx.fillStyle = '#0d1117';
-    ctx.fillRect(0, 0, W, H);
+  function drawGraph() {
+    graphCtx.clearRect(0, 0, gW, gH);
+    graphCtx.fillStyle = '#0d1117';
+    graphCtx.fillRect(0, 0, gW, gH);
 
     // Edges
-    ctx.lineWidth = 1;
     for (let k = 0; k < linkArr.length; k++) {
       const l  = linkArr[k];
       const ns = nodeArr[l.source], nt = nodeArr[l.target];
       const [sx, sy] = worldToScreen(ns.x, ns.y);
       const [tx, ty] = worldToScreen(nt.x, nt.y);
-
-      // Highlight edges connected to selected node
       const isSelected = (l.source === selectedNode || l.target === selectedNode);
-      ctx.strokeStyle = isSelected ? 'rgba(88,166,255,0.5)' : 'rgba(48,54,61,0.8)';
-      ctx.lineWidth   = isSelected ? 1.5 : 1;
-      ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(tx, ty);
-      ctx.stroke();
+      graphCtx.strokeStyle = isSelected ? 'rgba(88,166,255,0.5)' : 'rgba(48,54,61,0.8)';
+      graphCtx.lineWidth   = isSelected ? 1.5 : 1;
+      graphCtx.beginPath();
+      graphCtx.moveTo(sx, sy);
+      graphCtx.lineTo(tx, ty);
+      graphCtx.stroke();
 
-      // Arrow head for directed edges
       if (scale > 0.5) {
-        const angle = Math.atan2(ty - sy, tx - sx);
+        const angle    = Math.atan2(ty - sy, tx - sx);
         const arrowLen = 7 * scale;
-        const arrowWidth = 0.35;
-        const endX = tx - (nodeArr[l.target].radius * scale + 2) * Math.cos(angle);
-        const endY = ty - (nodeArr[l.target].radius * scale + 2) * Math.sin(angle);
-        ctx.fillStyle = isSelected ? 'rgba(88,166,255,0.5)' : 'rgba(48,54,61,0.8)';
-        ctx.beginPath();
-        ctx.moveTo(endX, endY);
-        ctx.lineTo(
-          endX - arrowLen * Math.cos(angle - arrowWidth),
-          endY - arrowLen * Math.sin(angle - arrowWidth)
-        );
-        ctx.lineTo(
-          endX - arrowLen * Math.cos(angle + arrowWidth),
-          endY - arrowLen * Math.sin(angle + arrowWidth)
-        );
-        ctx.closePath();
-        ctx.fill();
+        const arrowW   = 0.35;
+        const endX = tx - (nt.radius * scale + 2) * Math.cos(angle);
+        const endY = ty - (nt.radius * scale + 2) * Math.sin(angle);
+        graphCtx.fillStyle = isSelected ? 'rgba(88,166,255,0.5)' : 'rgba(48,54,61,0.8)';
+        graphCtx.beginPath();
+        graphCtx.moveTo(endX, endY);
+        graphCtx.lineTo(endX - arrowLen * Math.cos(angle - arrowW), endY - arrowLen * Math.sin(angle - arrowW));
+        graphCtx.lineTo(endX - arrowLen * Math.cos(angle + arrowW), endY - arrowLen * Math.sin(angle + arrowW));
+        graphCtx.closePath();
+        graphCtx.fill();
       }
     }
 
@@ -708,56 +1080,36 @@
       const n = nodeArr[i];
       const [sx, sy] = worldToScreen(n.x, n.y);
       const r = n.radius * scale;
-
-      // Skip offscreen nodes
-      if (sx + r < 0 || sx - r > W || sy + r < 0 || sy - r > H) continue;
-
-      const isSelected = (i === selectedNode);
-
-      // Glow for selected
-      if (isSelected) {
-        ctx.shadowColor = n.color;
-        ctx.shadowBlur  = 14;
-      }
-
-      // Node circle
-      ctx.beginPath();
-      ctx.arc(sx, sy, Math.max(r, 2), 0, Math.PI * 2);
-      ctx.fillStyle = isSelected ? n.color : n.color + 'CC';
-      ctx.fill();
-
-      // Border
-      ctx.strokeStyle = isSelected ? '#ffffff44' : '#00000044';
-      ctx.lineWidth   = isSelected ? 2 : 1;
-      ctx.stroke();
-
-      ctx.shadowBlur = 0;
-
-      // Labels — only draw when scale is big enough
+      if (sx + r < 0 || sx - r > gW || sy + r < 0 || sy - r > gH) continue;
+      const isSel = (i === selectedNode);
+      if (isSel) { graphCtx.shadowColor = n.color; graphCtx.shadowBlur = 14; }
+      graphCtx.beginPath();
+      graphCtx.arc(sx, sy, Math.max(r, 2), 0, Math.PI * 2);
+      graphCtx.fillStyle = isSel ? n.color : n.color + 'CC';
+      graphCtx.fill();
+      graphCtx.strokeStyle = isSel ? '#ffffff44' : '#00000044';
+      graphCtx.lineWidth   = isSel ? 2 : 1;
+      graphCtx.stroke();
+      graphCtx.shadowBlur = 0;
       if (scale > 0.45 && r > 4) {
         const label = n.id.split('/').pop() || n.id;
-        ctx.font      = `${Math.min(11, Math.max(9, r * 0.7))}px -apple-system,system-ui,sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // Label below node
-        const ly = sy + r + 10 * scale;
-        ctx.fillStyle = isSelected ? '#e6edf3' : '#8b949e';
-        ctx.fillText(label, sx, ly);
+        graphCtx.font         = Math.min(11, Math.max(9, r * 0.7)) + 'px -apple-system,system-ui,sans-serif';
+        graphCtx.textAlign    = 'center';
+        graphCtx.textBaseline = 'middle';
+        graphCtx.fillStyle    = isSel ? '#e6edf3' : '#8b949e';
+        graphCtx.fillText(label, sx, sy + r + 10 * scale);
       }
     }
   }
 
-  // ── RAF loop ───────────────────────────────────────────────────────────────
-  function loop() {
-    tick();
-    draw();
-    requestAnimationFrame(loop);
+  function graphLoop() {
+    graphTick();
+    drawGraph();
+    requestAnimationFrame(graphLoop);
   }
+  requestAnimationFrame(graphLoop);
 
-  requestAnimationFrame(loop);
-
-  // ── Mouse interactions ─────────────────────────────────────────────────────
+  // Graph mouse interactions
   let dragNode   = null;
   let dragOffX   = 0, dragOffY = 0;
   let panStart   = null;
@@ -766,7 +1118,6 @@
 
   function nodeAtScreen(sx, sy) {
     const [wx, wy] = screenToWorld(sx, sy);
-    // Iterate in reverse so topmost (last drawn) is hit first
     for (let i = nodeArr.length - 1; i >= 0; i--) {
       const n  = nodeArr[i];
       const dx = n.x - wx, dy = n.y - wy;
@@ -776,7 +1127,7 @@
     return -1;
   }
 
-  canvas.addEventListener('mousedown', function (e) {
+  graphCanvas.addEventListener('mousedown', function (e) {
     hasDragged = false;
     const hit = nodeAtScreen(e.clientX, e.clientY);
     if (hit >= 0) {
@@ -784,22 +1135,21 @@
       const [wx, wy] = screenToWorld(e.clientX, e.clientY);
       dragOffX = dragNode.x - wx;
       dragOffY = dragNode.y - wy;
-      dragNode.vx = 0;
-      dragNode.vy = 0;
-      canvas.classList.add('dragging');
+      dragNode.vx = 0; dragNode.vy = 0;
+      graphCanvas.classList.add('dragging');
     } else {
       panStart   = true;
       panStartPX = e.clientX - panX;
       panStartPY = e.clientY - panY;
-      canvas.classList.add('dragging');
+      graphCanvas.classList.add('dragging');
     }
   });
 
   window.addEventListener('mousemove', function (e) {
     if (dragNode) {
       hasDragged = true;
-      simRunning = true;
-      simTickCount = 0;
+      graphSimRunning = true;
+      graphSimTick = 0;
       const [wx, wy] = screenToWorld(e.clientX, e.clientY);
       dragNode.x = wx + dragOffX;
       dragNode.y = wy + dragOffY;
@@ -812,48 +1162,37 @@
 
   window.addEventListener('mouseup', function (e) {
     if (!hasDragged && !dragNode) {
-      // click on background — deselect
       const hit = nodeAtScreen(e.clientX, e.clientY);
-      if (hit < 0) {
-        selectedNode = null;
-        showModuleEmpty();
-      }
+      if (hit < 0) { selectedNode = null; showModuleEmpty(); }
     }
-    dragNode  = null;
-    panStart  = null;
-    canvas.classList.remove('dragging');
+    dragNode = null; panStart = null;
+    graphCanvas.classList.remove('dragging');
   });
 
-  canvas.addEventListener('click', function (e) {
+  graphCanvas.addEventListener('click', function (e) {
     if (hasDragged) return;
     const hit = nodeAtScreen(e.clientX, e.clientY);
     if (hit >= 0) {
       selectedNode = hit;
       showModuleInfo(nodeArr[hit]);
-      // Re-run simulation a bit for visual feedback
-      simRunning   = true;
-      simTickCount = 0;
+      graphSimRunning = true;
+      graphSimTick = 0;
     } else {
       selectedNode = null;
       showModuleEmpty();
     }
   });
 
-  // Scroll to zoom
-  canvas.addEventListener('wheel', function (e) {
+  graphCanvas.addEventListener('wheel', function (e) {
     e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
-    const mx = e.clientX, my = e.clientY;
-    panX = mx - (mx - panX) * zoomFactor;
-    panY = my - (my - panY) * zoomFactor;
-    scale *= zoomFactor;
-    scale = Math.min(Math.max(scale, 0.1), 5);
+    const zf = e.deltaY < 0 ? 1.1 : 0.9;
+    panX = e.clientX - (e.clientX - panX) * zf;
+    panY = e.clientY - (e.clientY - panY) * zf;
+    scale = Math.min(Math.max(scale * zf, 0.1), 5);
   }, { passive: false });
 
-  // Tooltip on hover
   const tooltip = document.getElementById('tooltip');
-
-  canvas.addEventListener('mousemove', function (e) {
+  graphCanvas.addEventListener('mousemove', function (e) {
     const hit = nodeAtScreen(e.clientX, e.clientY);
     if (hit >= 0 && !dragNode) {
       const n = nodeArr[hit];
@@ -866,108 +1205,615 @@
     }
   });
 
-  canvas.addEventListener('mouseleave', function () {
-    tooltip.style.display = 'none';
+  graphCanvas.addEventListener('mouseleave', function () { tooltip.style.display = 'none'; });
+
+  function fitToView() {
+    if (activeTab === 'graph') { fitGraph(); }
+    else if (activeTab === 'flow') { flowFitToView(); drawFlow(); }
+  }
+
+  function fitGraph() {
+    if (nodeArr.length === 0) return;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    nodeArr.forEach(function (n) {
+      if (n.x - n.radius < minX) minX = n.x - n.radius;
+      if (n.x + n.radius > maxX) maxX = n.x + n.radius;
+      if (n.y - n.radius < minY) minY = n.y - n.radius;
+      if (n.y + n.radius > maxY) maxY = n.y + n.radius;
+    });
+    const pad = 40;
+    const gw  = maxX - minX + pad * 2;
+    const gh  = maxY - minY + pad * 2;
+    scale = Math.min(gW / gw, gH / gh, 3);
+    panX  = (gW - (minX + maxX) * scale) / 2;
+    panY  = (gH - (minY + maxY) * scale) / 2;
+  }
+
+  document.getElementById('btn-fit').addEventListener('click', fitToView);
+
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    if (activeTab === 'graph') {
+      scale = 1; panX = 0; panY = 0;
+      initPositions();
+      graphSimRunning = true;
+      graphSimTick = 0;
+    } else if (activeTab === 'flow') {
+      flowPanX = 0; flowPanY = 0; flowScale = 1;
+      drawFlow();
+    }
   });
 
-  // ── Sidebar module detail ──────────────────────────────────────────────────
-  function showModuleEmpty() {
-    document.getElementById('module-empty').style.display = '';
-    document.getElementById('module-info').style.display  = 'none';
+  let sidebarVisible = true;
+  document.getElementById('btn-sidebar').addEventListener('click', toggleSidebar);
+
+  function toggleSidebar() {
+    sidebarVisible = !sidebarVisible;
+    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarVisible);
+    setTimeout(function () { graphResize(); if (activeTab === 'flow') { flowResize(); drawFlow(); } }, 220);
   }
 
-  function showModuleInfo(node) {
-    document.getElementById('module-empty').style.display = 'none';
-    document.getElementById('module-info').style.display  = '';
+  setTimeout(fitGraph, 600);
 
-    const mod = node.mod || {};
-    document.getElementById('module-name').textContent    = node.id;
-    document.getElementById('module-purpose').textContent = mod.purpose || '';
+  // ── VIEW 2: Directory Tree ─────────────────────────────────────────────────
+  function buildTreeView() {
+    const root = document.getElementById('tree-root');
+    root.innerHTML = '';
 
-    // Meta rows
-    const metaEl = document.getElementById('module-meta');
-    metaEl.innerHTML = '';
-    const metaRows = [
-      { label: 'Files',    value: node.files },
-      { label: 'Language', value: node.lang   },
-      { label: 'Activity', value: mod.activity || '—' },
-    ];
-    metaRows.forEach(function (row) {
-      const div = document.createElement('div');
-      div.className = 'meta-row';
-      div.innerHTML = '<span class="meta-label">' + row.label + '</span>' +
-                      '<span class="meta-value">' + row.value + '</span>';
-      metaEl.appendChild(div);
+    // Group modules by first path segment
+    const tree = {};
+    nodeArr.forEach(function (n) {
+      const parts = n.id.split('/');
+      if (parts.length === 1) {
+        // top-level module
+        if (!tree['']) tree[''] = [];
+        tree[''].push(n);
+      } else {
+        const dir = parts[0];
+        if (!tree[dir]) tree[dir] = [];
+        tree[dir].push(n);
+      }
     });
 
-    // Depends on
-    const depsOutEl = document.getElementById('module-deps-out');
-    depsOutEl.innerHTML = '';
-    if (mod.depends_on && mod.depends_on.length) {
-      const h = document.createElement('div');
-      h.className = 'sidebar-section';
-      h.style.cssText = 'padding:8px 0;border:none;margin:0';
-      h.innerHTML = '<h2 style="margin-bottom:6px">Depends on</h2>';
-      const list = document.createElement('div');
-      list.className = 'dep-list';
-      mod.depends_on.forEach(function (dep) {
-        const tag = document.createElement('div');
-        tag.className = 'dep-tag';
-        tag.textContent = dep;
-        tag.addEventListener('click', function () { navigateTo(dep); });
-        list.appendChild(tag);
+    // Build nested structure recursively
+    function buildSubtree(prefix, nodes, parentEl) {
+      // Group by next segment
+      const subDirs = {};
+      const leaves  = [];
+
+      nodes.forEach(function (n) {
+        const rel = prefix ? n.id.slice(prefix.length + 1) : n.id;
+        const parts = rel.split('/');
+        if (parts.length === 1) {
+          leaves.push(n);
+        } else {
+          const dir = parts[0];
+          if (!subDirs[dir]) subDirs[dir] = [];
+          subDirs[dir].push(n);
+        }
       });
-      h.appendChild(list);
-      depsOutEl.appendChild(h);
+
+      // Render subdirectories
+      Object.keys(subDirs).sort().forEach(function (dir) {
+        const children = subDirs[dir];
+        const fullPath = prefix ? prefix + '/' + dir : dir;
+
+        // Aggregate stats
+        let totalFiles = 0, totalLines = 0, purposeText = '';
+        children.forEach(function (n) {
+          totalFiles += n.files;
+          totalLines += n.lines || 0;
+          if (!purposeText && n.mod && n.mod.purpose) purposeText = n.mod.purpose;
+        });
+
+        const dirEl = document.createElement('div');
+        dirEl.className = 'tree-dir';
+
+        const header = document.createElement('div');
+        header.className = 'tree-dir-header';
+        header.innerHTML =
+          '<span class="tree-toggle">▼</span>' +
+          '<span class="tree-dir-name">' + dir + '/</span>' +
+          '<span class="tree-dir-meta">' + children.length + ' module' + (children.length !== 1 ? 's' : '') +
+          (totalLines > 0 ? ' · ' + totalLines.toLocaleString() + ' lines' : '') + '</span>' +
+          (purposeText ? '<span class="tree-dir-purpose">' + purposeText + '</span>' : '');
+
+        const childrenEl = document.createElement('div');
+        childrenEl.className = 'tree-children';
+
+        header.addEventListener('click', function () {
+          dirEl.classList.toggle('collapsed');
+        });
+
+        dirEl.appendChild(header);
+        dirEl.appendChild(childrenEl);
+        parentEl.appendChild(dirEl);
+
+        buildSubtree(fullPath, children, childrenEl);
+      });
+
+      // Render leaf modules
+      leaves.sort(function (a, b) { return a.id.localeCompare(b.id); }).forEach(function (n) {
+        const short = n.id.split('/').pop();
+        const moduleEl = document.createElement('div');
+        moduleEl.className = 'tree-module';
+        moduleEl.dataset.key = n.id;
+        moduleEl.innerHTML =
+          '<span class="tree-module-name">' + short + '</span>' +
+          '<span class="tree-module-stats">' + n.files + 'f' + (n.lines ? ' · ' + n.lines.toLocaleString() + 'l' : '') + '</span>';
+        moduleEl.addEventListener('click', function () {
+          document.querySelectorAll('.tree-module').forEach(function (el) { el.classList.remove('selected'); });
+          moduleEl.classList.add('selected');
+          showModuleInfo(n);
+        });
+        parentEl.appendChild(moduleEl);
+      });
     }
 
-    // Depended by
-    const depsInEl = document.getElementById('module-deps-in');
-    depsInEl.innerHTML = '';
-    if (mod.depended_by && mod.depended_by.length) {
-      const h = document.createElement('div');
-      h.className = 'sidebar-section';
-      h.style.cssText = 'padding:8px 0;border:none;margin:0';
-      h.innerHTML = '<h2 style="margin-bottom:6px">Used by</h2>';
-      const list = document.createElement('div');
-      list.className = 'dep-list';
-      mod.depended_by.forEach(function (dep) {
-        const tag = document.createElement('div');
-        tag.className = 'dep-tag';
-        tag.textContent = dep;
-        tag.addEventListener('click', function () { navigateTo(dep); });
-        list.appendChild(tag);
+    // Top-level: collect all unique first segments
+    const topDirs = {};
+    const topLeaves = [];
+    nodeArr.forEach(function (n) {
+      const parts = n.id.split('/');
+      if (parts.length === 1) {
+        topLeaves.push(n);
+      } else {
+        const dir = parts[0];
+        if (!topDirs[dir]) topDirs[dir] = [];
+        topDirs[dir].push(n);
+      }
+    });
+
+    // Directories
+    Object.keys(topDirs).sort().forEach(function (dir) {
+      const children = topDirs[dir];
+      let totalFiles = 0, totalLines = 0, purposeText = '';
+      children.forEach(function (n) {
+        totalFiles += n.files;
+        totalLines += n.lines || 0;
+        if (!purposeText && n.mod && n.mod.purpose) purposeText = n.mod.purpose;
       });
-      h.appendChild(list);
-      depsInEl.appendChild(h);
-    }
+
+      const dirEl = document.createElement('div');
+      dirEl.className = 'tree-dir';
+
+      const header = document.createElement('div');
+      header.className = 'tree-dir-header';
+      header.innerHTML =
+        '<span class="tree-toggle">▼</span>' +
+        '<span class="tree-dir-name">' + dir + '/</span>' +
+        '<span class="tree-dir-meta">' + totalFiles + ' file' + (totalFiles !== 1 ? 's' : '') +
+        (totalLines > 0 ? ' · ' + totalLines.toLocaleString() + ' lines' : '') + '</span>' +
+        (purposeText ? '<span class="tree-dir-purpose">' + purposeText + '</span>' : '');
+
+      const childrenEl = document.createElement('div');
+      childrenEl.className = 'tree-children';
+
+      header.addEventListener('click', function () {
+        dirEl.classList.toggle('collapsed');
+      });
+
+      dirEl.appendChild(header);
+      dirEl.appendChild(childrenEl);
+      root.appendChild(dirEl);
+
+      buildSubtree(dir, children, childrenEl);
+    });
+
+    // Top-level leaves
+    topLeaves.sort(function (a, b) { return a.id.localeCompare(b.id); }).forEach(function (n) {
+      const moduleEl = document.createElement('div');
+      moduleEl.className = 'tree-module';
+      moduleEl.dataset.key = n.id;
+      moduleEl.innerHTML =
+        '<span class="tree-module-name">' + n.id + '</span>' +
+        '<span class="tree-module-stats">' + n.files + 'f' + (n.lines ? ' · ' + n.lines.toLocaleString() + 'l' : '') + '</span>';
+      moduleEl.addEventListener('click', function () {
+        document.querySelectorAll('.tree-module').forEach(function (el) { el.classList.remove('selected'); });
+        moduleEl.classList.add('selected');
+        showModuleInfo(n);
+      });
+      root.appendChild(moduleEl);
+    });
   }
 
-  function navigateTo(id) {
-    const idx = nodeIdx[id];
-    if (idx === undefined) return;
-    selectedNode = idx;
-    showModuleInfo(nodeArr[idx]);
-    // Pan to node
-    const n = nodeArr[idx];
-    panX = W / 2 - n.x * scale;
-    panY = H / 2 - n.y * scale;
+  // ── VIEW 3: Table ─────────────────────────────────────────────────────────
+  let tableSortCol = 'lines';
+  let tableSortDir = -1; // -1 = desc
+  let selectedTableRow = null;
+
+  function buildTableView() {
+    renderTable();
+
+    document.querySelectorAll('#mod-table thead th').forEach(function (th) {
+      th.addEventListener('click', function () {
+        const col = th.dataset.col;
+        if (tableSortCol === col) {
+          tableSortDir *= -1;
+        } else {
+          tableSortCol = col;
+          tableSortDir = col === 'id' ? 1 : -1;
+        }
+        renderTable();
+      });
+    });
   }
+
+  function renderTable() {
+    // Update header classes
+    document.querySelectorAll('#mod-table thead th').forEach(function (th) {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (th.dataset.col === tableSortCol) {
+        th.classList.add(tableSortDir === 1 ? 'sort-asc' : 'sort-desc');
+      }
+    });
+
+    // Sort nodes
+    const sorted = nodeArr.slice().sort(function (a, b) {
+      let av, bv;
+      const col = tableSortCol;
+      if (col === 'id')       { av = a.id; bv = b.id; }
+      else if (col === 'files')    { av = a.files;                               bv = b.files; }
+      else if (col === 'lines')    { av = a.lines || 0;                          bv = b.lines || 0; }
+      else if (col === 'exports')  { av = (a.mod.exports || []).length;           bv = (b.mod.exports || []).length; }
+      else if (col === 'deps_out') { av = (a.mod.depends_on || []).length;        bv = (b.mod.depends_on || []).length; }
+      else if (col === 'deps_in')  { av = (a.mod.depended_by || []).length;       bv = (b.mod.depended_by || []).length; }
+      else if (col === 'activity') { av = activityScore(a.mod.activity);           bv = activityScore(b.mod.activity); }
+      else { av = 0; bv = 0; }
+
+      if (av < bv) return -tableSortDir;
+      if (av > bv) return tableSortDir;
+      return 0;
+    });
+
+    const tbody = document.getElementById('mod-table-body');
+    tbody.innerHTML = '';
+
+    sorted.forEach(function (n) {
+      const mod = n.mod || {};
+      const act = mod.activity || '';
+      const actClass = act === 'high' ? 'activity-high' : act === 'medium' ? 'activity-medium' : 'activity-low';
+      const actLabel = act || '—';
+
+      const tr = document.createElement('tr');
+      if (selectedTableRow === n.id) tr.classList.add('selected');
+
+      tr.innerHTML =
+        '<td title="' + n.id + '">' + n.id + '</td>' +
+        '<td>' + n.files + '</td>' +
+        '<td>' + (n.lines ? n.lines.toLocaleString() : '—') + '</td>' +
+        '<td>' + ((mod.exports || []).length || '—') + '</td>' +
+        '<td>' + ((mod.depends_on || []).length || '—') + '</td>' +
+        '<td>' + ((mod.depended_by || []).length || '—') + '</td>' +
+        '<td><span class="activity-badge ' + actClass + '">' + actLabel + '</span></td>';
+
+      tr.addEventListener('click', function () {
+        document.querySelectorAll('#mod-table-body tr').forEach(function (r) { r.classList.remove('selected'); });
+        tr.classList.add('selected');
+        selectedTableRow = n.id;
+        showModuleInfo(n);
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function activityScore(act) {
+    if (act === 'high')   return 3;
+    if (act === 'medium') return 2;
+    if (act === 'low')    return 1;
+    return 0;
+  }
+
+  // ── VIEW 4: Flow (layered DAG) ─────────────────────────────────────────────
+  const flowCanvas = document.getElementById('flow-canvas');
+  const flowCtx    = flowCanvas.getContext('2d');
+  const flowWrap   = document.getElementById('flow-wrap');
+
+  let fW = 0, fH = 0;
+  let flowPanX = 0, flowPanY = 0, flowScale = 1;
+  let flowNodes = []; // {id, layer, x, y, w, h, color, mod}
+  let flowEdges = []; // {src, tgt} indices into flowNodes
+
+  function flowResize() {
+    fW = flowWrap.clientWidth;
+    fH = flowWrap.clientHeight;
+    flowCanvas.width  = fW;
+    flowCanvas.height = fH;
+  }
+
+  function buildFlowLayout() {
+    // BFS to assign layers
+    // Build adjacency
+    const outEdges = {}; // src -> [tgt]
+    const inDegree = {};
+    nodeArr.forEach(function (n) { outEdges[n.id] = []; inDegree[n.id] = 0; });
+    edges.forEach(function (e) {
+      const s = e[0], t = e[1];
+      if (!outEdges[s]) outEdges[s] = [];
+      outEdges[s].push(t);
+      if (inDegree[t] === undefined) inDegree[t] = 0;
+      inDegree[t] = (inDegree[t] || 0) + 1;
+    });
+
+    // Entrypoints: nodes with no incoming edges (or no deps_on)
+    const layer = {};
+    const queue = [];
+    nodeKeys.forEach(function (k) {
+      if ((inDegree[k] || 0) === 0) {
+        layer[k] = 0;
+        queue.push(k);
+      }
+    });
+
+    // BFS
+    let qi = 0;
+    while (qi < queue.length) {
+      const cur = queue[qi++];
+      const curLayer = layer[cur];
+      (outEdges[cur] || []).forEach(function (tgt) {
+        if (layer[tgt] === undefined || layer[tgt] <= curLayer) {
+          layer[tgt] = curLayer + 1;
+          queue.push(tgt);
+        }
+      });
+    }
+
+    // Nodes not reached (cycles) get layer = max+1
+    const maxLayer = Object.values(layer).reduce(function (m, v) { return Math.max(m, v); }, 0);
+    nodeKeys.forEach(function (k) {
+      if (layer[k] === undefined) layer[k] = maxLayer + 1;
+    });
+
+    // Group by layer
+    const byLayer = {};
+    nodeKeys.forEach(function (k) {
+      const l = layer[k];
+      if (!byLayer[l]) byLayer[l] = [];
+      byLayer[l].push(k);
+    });
+
+    const numLayers = Object.keys(byLayer).length;
+    const NODE_W = 150, NODE_H = 36, H_GAP = 24, V_GAP = 60;
+    const totalHeight = numLayers * (NODE_H + V_GAP) - V_GAP;
+
+    // Position nodes
+    const posMap = {};
+    Object.keys(byLayer).sort(function (a, b) { return +a - +b; }).forEach(function (l) {
+      const layerNodes = byLayer[l];
+      const layerW = layerNodes.length * (NODE_W + H_GAP) - H_GAP;
+      layerNodes.forEach(function (k, i) {
+        posMap[k] = {
+          x: i * (NODE_W + H_GAP) - layerW / 2,
+          y: +l * (NODE_H + V_GAP) - totalHeight / 2,
+        };
+      });
+    });
+
+    // Build flowNodes
+    flowNodes = [];
+    const flowIdx = {};
+    let fi = 0;
+    nodeArr.forEach(function (n) {
+      const pos = posMap[n.id] || { x: 0, y: 0 };
+      flowNodes.push({
+        id: n.id,
+        x:  pos.x,
+        y:  pos.y,
+        w:  NODE_W,
+        h:  NODE_H,
+        color: n.color,
+        mod:   n.mod,
+        node:  n,
+      });
+      flowIdx[n.id] = fi++;
+    });
+
+    flowEdges = edges
+      .map(function (e) { return { src: flowIdx[e[0]], tgt: flowIdx[e[1]] }; })
+      .filter(function (e) { return e.src !== undefined && e.tgt !== undefined; });
+
+    flowFitToView();
+  }
+
+  function flowFitToView() {
+    if (flowNodes.length === 0) return;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    flowNodes.forEach(function (n) {
+      if (n.x < minX) minX = n.x;
+      if (n.x + n.w > maxX) maxX = n.x + n.w;
+      if (n.y < minY) minY = n.y;
+      if (n.y + n.h > maxY) maxY = n.y + n.h;
+    });
+    const pad = 40;
+    const gw  = maxX - minX + pad * 2;
+    const gh  = maxY - minY + pad * 2;
+    flowScale = Math.min(fW / gw, fH / gh, 2);
+    flowPanX  = (fW - (minX + maxX) * flowScale) / 2;
+    flowPanY  = (fH - (minY + maxY) * flowScale) / 2;
+  }
+
+  let selectedFlowNode = null;
+
+  function drawFlow() {
+    flowCtx.clearRect(0, 0, fW, fH);
+    flowCtx.fillStyle = '#0d1117';
+    flowCtx.fillRect(0, 0, fW, fH);
+
+    function fs(x, y) { return [x * flowScale + flowPanX, y * flowScale + flowPanY]; }
+
+    // Edges
+    flowCtx.lineWidth = 1;
+    flowEdges.forEach(function (e) {
+      const s = flowNodes[e.src], t = flowNodes[e.tgt];
+      if (!s || !t) return;
+      const isSel = (e.src === selectedFlowNode || e.tgt === selectedFlowNode);
+
+      // Start at bottom-center of source, end at top-center of target
+      const sx = s.x + s.w / 2, sy = s.y + s.h;
+      const tx = t.x + t.w / 2, ty = t.y;
+
+      const [ssx, ssy] = fs(sx, sy);
+      const [ttx, tty] = fs(tx, ty);
+
+      // Cubic bezier
+      const cp1y = ssy + (tty - ssy) * 0.4;
+      const cp2y = tty - (tty - ssy) * 0.4;
+
+      flowCtx.strokeStyle = isSel ? 'rgba(230,237,243,0.5)' : 'rgba(48,54,61,0.8)';
+      flowCtx.lineWidth   = isSel ? 1.5 : 1;
+      flowCtx.beginPath();
+      flowCtx.moveTo(ssx, ssy);
+      flowCtx.bezierCurveTo(ssx, cp1y, ttx, cp2y, ttx, tty);
+      flowCtx.stroke();
+
+      // Arrow pointing down into target
+      const angle = Math.PI / 2;
+      const arrowLen = 6 * flowScale;
+      flowCtx.fillStyle = isSel ? 'rgba(230,237,243,0.5)' : 'rgba(48,54,61,0.8)';
+      flowCtx.beginPath();
+      flowCtx.moveTo(ttx, tty);
+      flowCtx.lineTo(ttx - arrowLen * Math.cos(angle - 0.4), tty - arrowLen * Math.sin(angle - 0.4));
+      flowCtx.lineTo(ttx - arrowLen * Math.cos(angle + 0.4), tty - arrowLen * Math.sin(angle + 0.4));
+      flowCtx.closePath();
+      flowCtx.fill();
+    });
+
+    // Nodes
+    flowNodes.forEach(function (n, i) {
+      const isSel = (i === selectedFlowNode);
+      const [nx, ny] = fs(n.x, n.y);
+      const nw = n.w * flowScale;
+      const nh = n.h * flowScale;
+
+      // Background rect
+      flowCtx.fillStyle   = isSel ? '#21262d' : '#161b22';
+      flowCtx.strokeStyle = isSel ? n.color : '#30363d';
+      flowCtx.lineWidth   = isSel ? 1.5 : 1;
+      const rr = 4 * flowScale;
+      flowCtx.beginPath();
+      flowCtx.roundRect(nx, ny, nw, nh, rr);
+      flowCtx.fill();
+      flowCtx.stroke();
+
+      // Color stripe on left
+      flowCtx.fillStyle = n.color;
+      flowCtx.beginPath();
+      flowCtx.roundRect(nx, ny, 3 * flowScale, nh, [rr, 0, 0, rr]);
+      flowCtx.fill();
+
+      // Label
+      const label = n.id.split('/').pop() || n.id;
+      const fs2 = Math.min(12, Math.max(9, 11 * flowScale));
+      flowCtx.font         = fs2 + 'px -apple-system,system-ui,sans-serif';
+      flowCtx.textAlign    = 'left';
+      flowCtx.textBaseline = 'middle';
+      flowCtx.fillStyle    = isSel ? '#e6edf3' : '#8b949e';
+      flowCtx.fillText(label, nx + 8 * flowScale, ny + nh / 2, nw - 12 * flowScale);
+    });
+  }
+
+  // Flow mouse interactions
+  let flowDragPan = false;
+  let flowPanStartX = 0, flowPanStartY = 0;
+  let flowHasDragged = false;
+
+  function flowNodeAt(cx, cy) {
+    for (let i = flowNodes.length - 1; i >= 0; i--) {
+      const n = flowNodes[i];
+      const nx = n.x * flowScale + flowPanX;
+      const ny = n.y * flowScale + flowPanY;
+      const nw = n.w * flowScale;
+      const nh = n.h * flowScale;
+      if (cx >= nx && cx <= nx + nw && cy >= ny && cy <= ny + nh) return i;
+    }
+    return -1;
+  }
+
+  flowCanvas.addEventListener('mousedown', function (e) {
+    flowHasDragged = false;
+    const hit = flowNodeAt(e.clientX - flowCanvas.getBoundingClientRect().left,
+                            e.clientY - flowCanvas.getBoundingClientRect().top);
+    if (hit < 0) {
+      flowDragPan = true;
+      flowPanStartX = e.clientX - flowPanX;
+      flowPanStartY = e.clientY - flowPanY;
+      flowCanvas.classList.add('dragging');
+    }
+  });
+
+  flowCanvas.addEventListener('mousemove', function (e) {
+    const rect = flowCanvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+
+    if (flowDragPan) {
+      flowHasDragged = true;
+      flowPanX = e.clientX - flowPanStartX;
+      flowPanY = e.clientY - flowPanStartY;
+      drawFlow();
+      return;
+    }
+
+    // Tooltip
+    const hit = flowNodeAt(cx, cy);
+    if (hit >= 0) {
+      const n = flowNodes[hit];
+      tooltip.style.display = 'block';
+      tooltip.style.left    = (e.clientX + 12) + 'px';
+      tooltip.style.top     = (e.clientY - 8)  + 'px';
+      tooltip.textContent   = n.id + (n.mod && n.mod.purpose ? ' — ' + n.mod.purpose : '');
+    } else {
+      tooltip.style.display = 'none';
+    }
+  });
+
+  flowCanvas.addEventListener('mouseup', function () {
+    flowDragPan = false;
+    flowCanvas.classList.remove('dragging');
+  });
+
+  flowCanvas.addEventListener('mouseleave', function () {
+    tooltip.style.display = 'none';
+    flowDragPan = false;
+    flowCanvas.classList.remove('dragging');
+  });
+
+  flowCanvas.addEventListener('click', function (e) {
+    if (flowHasDragged) return;
+    const rect = flowCanvas.getBoundingClientRect();
+    const hit = flowNodeAt(e.clientX - rect.left, e.clientY - rect.top);
+    if (hit >= 0) {
+      selectedFlowNode = hit;
+      showModuleInfo(flowNodes[hit].node);
+      drawFlow();
+    } else {
+      selectedFlowNode = null;
+      showModuleEmpty();
+      drawFlow();
+    }
+  });
+
+  flowCanvas.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    const zf = e.deltaY < 0 ? 1.1 : 0.9;
+    flowPanX = e.clientX - (e.clientX - flowPanX) * zf;
+    flowPanY = e.clientY - (e.clientY - flowPanY) * zf;
+    flowScale = Math.min(Math.max(flowScale * zf, 0.1), 5);
+    drawFlow();
+  }, { passive: false });
 
   // ── Hot files heatmap ─────────────────────────────────────────────────────
-  const hotFiles  = (DATA.git && DATA.git.hot_files) ? DATA.git.hot_files : [];
-  const heatEl    = document.getElementById('heatmap-list');
+  const hotFiles   = (DATA.git && DATA.git.hot_files) ? DATA.git.hot_files : [];
+  const heatEl     = document.getElementById('heatmap-list');
   const maxCommits = hotFiles.reduce(function (m, f) { return Math.max(m, f.commits_90d); }, 1);
 
   if (hotFiles.length === 0) {
     heatEl.innerHTML = '<div id="no-hot-files">No git activity data</div>';
   } else {
     hotFiles.slice(0, 15).forEach(function (f) {
-      const pct  = (f.commits_90d / maxCommits) * 100;
-      const heat = Math.round((f.commits_90d / maxCommits) * 180) + 40;
+      const pct   = (f.commits_90d / maxCommits) * 100;
+      const heat  = Math.round((f.commits_90d / maxCommits) * 180) + 40;
       const color = 'rgb(' + heat + ',' + heat + ',' + heat + ')';
-
-      const row = document.createElement('div');
+      const row   = document.createElement('div');
       row.className = 'heatmap-row';
       row.innerHTML =
         '<div class="heatmap-bar-wrap">' +
@@ -983,7 +1829,6 @@
   const legendGrid = document.getElementById('legend-grid');
   const usedLangs  = new Set();
   nodeArr.forEach(function (n) { usedLangs.add(n.lang); });
-
   usedLangs.forEach(function (lang) {
     const color = LANG_COLORS[lang] || LANG_COLORS.default;
     const item  = document.createElement('div');
@@ -992,59 +1837,20 @@
     legendGrid.appendChild(item);
   });
 
-  // ── Camera controls ───────────────────────────────────────────────────────
-  function fitToView() {
-    if (nodeArr.length === 0) return;
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    nodeArr.forEach(function (n) {
-      const r = n.radius;
-      if (n.x - r < minX) minX = n.x - r;
-      if (n.x + r > maxX) maxX = n.x + r;
-      if (n.y - r < minY) minY = n.y - r;
-      if (n.y + r > maxY) maxY = n.y + r;
-    });
-    const pad = 40;
-    const gw  = maxX - minX + pad * 2;
-    const gh  = maxY - minY + pad * 2;
-    scale = Math.min(W / gw, H / gh, 3);
-    panX  = (W - (minX + maxX) * scale) / 2;
-    panY  = (H - (minY + maxY) * scale) / 2;
-  }
-
-  function resetZoom() {
-    scale = 1;
-    panX  = 0;
-    panY  = 0;
-  }
-
-  document.getElementById('btn-fit').addEventListener('click', fitToView);
-  document.getElementById('btn-reset').addEventListener('click', function () {
-    resetZoom();
-    initPositions();
-    simRunning   = true;
-    simTickCount = 0;
-  });
-
-  let sidebarVisible = true;
-  document.getElementById('btn-sidebar').addEventListener('click', toggleSidebar);
-
-  function toggleSidebar() {
-    sidebarVisible = !sidebarVisible;
-    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarVisible);
-    setTimeout(function () { resize(); }, 220);
-  }
-
   // ── Keyboard shortcuts ────────────────────────────────────────────────────
   window.addEventListener('keydown', function (e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     const key = e.key.toLowerCase();
-    if (key === 's') { toggleSidebar(); }
-    if (key === 'r') { resetZoom(); initPositions(); simRunning = true; simTickCount = 0; }
-    if (key === 'f') { fitToView(); }
+    if (key === '1') switchTab('graph');
+    else if (key === '2') switchTab('tree');
+    else if (key === '3') switchTab('table');
+    else if (key === '4') switchTab('flow');
+    else if (key === 's') toggleSidebar();
+    else if (key === 'r') {
+      if (activeTab === 'graph') { scale = 1; panX = 0; panY = 0; initPositions(); graphSimRunning = true; graphSimTick = 0; }
+      else if (activeTab === 'flow') { flowPanX = 0; flowPanY = 0; flowScale = 1; drawFlow(); }
+    } else if (key === 'f') fitToView();
   });
-
-  // ── Initial fit after a short settle ─────────────────────────────────────
-  setTimeout(fitToView, 600);
 
 })();
 </script>
