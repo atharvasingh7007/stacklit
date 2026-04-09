@@ -23,6 +23,7 @@ var initCmd = &cobra.Command{
 			Root:        ".",
 			Workspace:   initWorkspace,
 			InstallHook: initHook,
+			Summary:     initSummary,
 		})
 		if err != nil {
 			return err

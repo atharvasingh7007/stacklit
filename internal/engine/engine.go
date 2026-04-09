@@ -14,6 +14,7 @@ import (
 	"github.com/glincker/stacklit/internal/parser"
 	"github.com/glincker/stacklit/internal/renderer"
 	"github.com/glincker/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/summary"
 	"github.com/glincker/stacklit/internal/walker"
 )
 
@@ -23,6 +24,7 @@ type Options struct {
 	Workspace   string
 	InstallHook bool
 	Quiet       bool
+	Summary     bool
 }
 
 // Result holds the output paths and assembled index from a Run.
@@ -156,7 +158,20 @@ func Run(opts Options) (*Result, error) {
 	}
 	idx.MerkleHash = git.ComputeMerkle(files, contents)
 
-	// 9. Write outputs.
+	// 9. Generate AI summary if requested.
+	if opts.Summary {
+		if !opts.Quiet {
+			fmt.Println("[stacklit] generating AI summary...")
+		}
+		text, summaryErr := summary.Generate(idx)
+		if summaryErr != nil {
+			fmt.Printf("[stacklit] warning: summary failed: %v\n", summaryErr)
+		} else {
+			idx.Architecture = schema.Architecture{Summary: text}
+		}
+	}
+
+	// 10. Write outputs.
 	jsonPath := filepath.Join(root, "stacklit.json")
 	mmdPath := filepath.Join(root, "stacklit.mmd")
 	htmlPath := filepath.Join(root, "stacklit.html")

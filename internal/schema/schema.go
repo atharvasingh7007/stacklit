@@ -13,6 +13,12 @@ type Index struct {
 	Dependencies    Dependencies          `json:"dependencies"`
 	Git             GitInfo               `json:"git,omitempty"`
 	Hints           Hints                 `json:"hints,omitempty"`
+	Architecture    Architecture          `json:"architecture,omitempty"`
+}
+
+type Architecture struct {
+	Pattern string `json:"pattern,omitempty"`   // e.g. "Clean Architecture"
+	Summary string `json:"ai_summary,omitempty"` // AI-generated narrative
 }
 
 type Project struct {
