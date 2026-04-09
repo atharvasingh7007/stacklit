@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T20:29:29Z",
+  "generated_at": "2026-04-09T20:34:17Z",
   "stacklit_version": "dev",
-  "merkle_hash": "6564f144ad9ef2379aafef384f1d3df193d5f74b3bca91fcf6748c9e68b10b83",
+  "merkle_hash": "df7d8eb9979144c534154a7903c74e2d933a6a4102a3812be1446b7a5401aa8b",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 46,
-        "lines": 5310
+        "lines": 5306
       },
       "java": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 57,
-    "total_lines": 5526
+    "total_lines": 5522
   },
   "modules": {
     "assets": {
@@ -195,7 +195,7 @@
       "purpose": "Dependency graph",
       "language": "go",
       "files": 2,
-      "lines": 453,
+      "lines": 449,
       "file_list": [
         "graph.go",
         "graph_test.go"
@@ -355,11 +355,11 @@
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
         "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
         "LangStats": "Files int, Lines int",
+        "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "Project": "Name string, Root string, Type string, Workspaces []string",
         "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
@@ -546,11 +546,11 @@
       },
       {
         "path": "stacklit.json",
-        "commits_90d": 6
+        "commits_90d": 7
       },
       {
         "path": "stacklit.mmd",
-        "commits_90d": 6
+        "commits_90d": 7
       },
       {
         "path": "internal/graph/graph.go",
@@ -618,6 +618,8 @@
       }
     ],
     "recent": [
+      "stacklit.json",
+      "stacklit.mmd",
       "internal/detect/envvars.go",
       "internal/engine/engine.go",
       "internal/graph/graph.go",
@@ -625,8 +627,6 @@
       "internal/parser/golang_test.go",
       "internal/parser/parser.go",
       "internal/schema/schema.go",
-      "stacklit.json",
-      "stacklit.mmd",
       "internal/parser/python.go"
     ],
     "stable": [

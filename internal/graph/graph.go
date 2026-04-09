@@ -10,27 +10,23 @@ import (
 
 // maxModuleDepth is the maximum number of path segments a module name may have.
 // Deeper paths are collapsed to their ancestor at this depth.
-const maxModuleDepth = 3
+const maxModuleDepth = 4
 
 // skipModuleSegments is the set of path segment names that indicate a module
 // (or any ancestor) should be excluded from the graph.
 var skipModuleSegments = map[string]bool{
-	"test":        true,
-	"tests":       true,
-	"__tests__":   true,
-	"__test__":    true,
-	"testdata":    true,
-	"test_data":   true,
-	"fixtures":    true,
+	"test":         true,
+	"tests":        true,
+	"__tests__":    true,
+	"__test__":     true,
+	"testdata":     true,
+	"test_data":    true,
+	"fixtures":     true,
 	"__fixtures__": true,
-	"examples":    true,
-	"example":     true,
-	"docs_src":    true,
-	"e2e":         true,
-	"benchmarks":  true,
-	"bench":       true,
-	"scripts":     true,
-	".github":     true,
+	"docs_src":     true,
+	"e2e":          true,
+	"benchmarks":   true,
+	"bench":        true,
 }
 
 // shouldSkipModule returns true if any segment of the module path matches a
