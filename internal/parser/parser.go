@@ -31,6 +31,8 @@ func init() {
 		&GoParser{},
 		&TypeScriptParser{},
 		&PythonParser{},
+		&RustParser{},
+		&JavaParser{},
 		&GenericParser{},
 	}
 }

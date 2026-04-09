@@ -1,0 +1,134 @@
+package parser
+
+import (
+	"os"
+	"testing"
+)
+
+func TestRustParserCanParse(t *testing.T) {
+	p := &RustParser{}
+
+	cases := []struct {
+		filename string
+		want     bool
+	}{
+		{"main.rs", true},
+		{"lib.rs", true},
+		{"mod.rs", true},
+		{"main.go", false},
+		{"index.ts", false},
+		{"app.py", false},
+	}
+
+	for _, tc := range cases {
+		got := p.CanParse(tc.filename)
+		if got != tc.want {
+			t.Errorf("CanParse(%q) = %v, want %v", tc.filename, got, tc.want)
+		}
+	}
+}
+
+func TestRustParserParse_Imports(t *testing.T) {
+	p := &RustParser{}
+
+	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	info, err := p.Parse("../../testdata/rust-project/src/main.rs", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	if info.Language != "rust" {
+		t.Errorf("Language = %q, want %q", info.Language, "rust")
+	}
+
+	wantImports := []string{"std::collections", "serde", "crate::config"}
+	for _, want := range wantImports {
+		found := false
+		for _, got := range info.Imports {
+			if got == want {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("import %q not found in %v", want, info.Imports)
+		}
+	}
+}
+
+func TestRustParserParse_Exports(t *testing.T) {
+	p := &RustParser{}
+
+	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	info, err := p.Parse("../../testdata/rust-project/src/main.rs", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	wantExports := []string{"AppState", "create_app"}
+	for _, want := range wantExports {
+		found := false
+		for _, got := range info.Exports {
+			if got == want {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("export %q not found in %v", want, info.Exports)
+		}
+	}
+
+	// Private function should NOT be exported
+	for _, got := range info.Exports {
+		if got == "internal_helper" {
+			t.Errorf("private fn %q should not be in exports", got)
+		}
+	}
+}
+
+func TestRustParserParse_Entrypoint(t *testing.T) {
+	p := &RustParser{}
+
+	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
+	if err != nil {
+		t.Fatalf("read fixture: %v", err)
+	}
+
+	info, err := p.Parse("../../testdata/rust-project/src/main.rs", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	if !info.IsEntrypoint {
+		t.Error("IsEntrypoint = false, want true for file with fn main()")
+	}
+}
+
+func TestRustParserParse_NoEntrypoint(t *testing.T) {
+	p := &RustParser{}
+
+	content := []byte(`pub fn helper() {}
+
+pub struct Foo {
+    x: i32,
+}
+`)
+
+	info, err := p.Parse("lib.rs", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	if info.IsEntrypoint {
+		t.Error("IsEntrypoint = true, want false for file without fn main()")
+	}
+}
