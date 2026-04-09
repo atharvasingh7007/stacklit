@@ -127,3 +127,52 @@ func TestGoParserParse_LineCount(t *testing.T) {
 		t.Errorf("LineCount = %d, want 3", info.LineCount)
 	}
 }
+
+func TestGoParserTypeDefs(t *testing.T) {
+	content := []byte(`package schema
+type Config struct {
+	Host     string
+	Port     int
+	Debug    bool
+	internal string
+}
+type Service interface {
+	Start() error
+	Stop()
+}
+`)
+	p := &GoParser{}
+	info, err := p.Parse("schema.go", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	if info.TypeDefs == nil {
+		t.Fatal("expected TypeDefs to be populated")
+	}
+
+	configDef, ok := info.TypeDefs["Config"]
+	if !ok {
+		t.Fatal("expected TypeDefs to contain 'Config'")
+	}
+	if !strings.Contains(configDef, "Host string") {
+		t.Errorf("expected Config to contain 'Host string', got: %s", configDef)
+	}
+	if !strings.Contains(configDef, "Port int") {
+		t.Errorf("expected Config to contain 'Port int', got: %s", configDef)
+	}
+	if strings.Contains(configDef, "internal") {
+		t.Errorf("should not include unexported fields, got: %s", configDef)
+	}
+
+	svcDef, ok := info.TypeDefs["Service"]
+	if !ok {
+		t.Fatal("expected TypeDefs to contain 'Service'")
+	}
+	if !strings.Contains(svcDef, "Start()") {
+		t.Errorf("expected Service to contain 'Start()', got: %s", svcDef)
+	}
+	if !strings.Contains(svcDef, "Stop()") {
+		t.Errorf("expected Service to contain 'Stop()', got: %s", svcDef)
+	}
+}

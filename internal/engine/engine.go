@@ -82,6 +82,36 @@ func inferPurpose(name string) string {
 	return strings.Title(strings.ReplaceAll(base, "_", " ")) //nolint:staticcheck
 }
 
+// generateAddFeatureHint returns a hint string describing where to add a new feature.
+func generateAddFeatureHint(modules map[string]schema.ModuleInfo, entrypoints []string) string {
+	for name := range modules {
+		base := filepath.Base(name)
+		if base == "api" || base == "handler" || base == "handlers" ||
+			strings.Contains(name, "/api") || strings.Contains(name, "/handler") {
+			if len(entrypoints) > 0 {
+				return fmt.Sprintf("Add handler in %s, register in %s", name, entrypoints[0])
+			}
+			return fmt.Sprintf("Add handler in %s", name)
+		}
+	}
+	if len(entrypoints) > 0 {
+		return fmt.Sprintf("Start from entrypoint %s", entrypoints[0])
+	}
+	return ""
+}
+
+// detectDoNotTouch returns paths that should generally not be modified by hand.
+func detectDoNotTouch(root string) []string {
+	candidates := []string{"migrations", "vendor", "generated", "proto", ".github"}
+	var paths []string
+	for _, c := range candidates {
+		if _, err := os.Stat(filepath.Join(root, c)); err == nil {
+			paths = append(paths, c+"/")
+		}
+	}
+	return paths
+}
+
 // detectTestCommand inspects root for well-known build files and returns the
 // appropriate test command string.
 func detectTestCommand(root string) string {
@@ -149,10 +179,7 @@ func Run(opts Options) (*Result, error) {
 		activity = &git.Activity{}
 	}
 
-	// 7. Assemble schema.Index.
-	idx := assembleIndex(root, mono, files, parsed, g, activity)
-
-	// 8. Compute Merkle hash.
+	// 7. Read file contents (needed for Merkle and env var detection).
 	contents := make(map[string][]byte, len(files))
 	for _, f := range files {
 		data, readErr := os.ReadFile(f)
@@ -160,9 +187,14 @@ func Run(opts Options) (*Result, error) {
 			contents[f] = data
 		}
 	}
+
+	// 8. Assemble schema.Index.
+	idx := assembleIndex(root, mono, files, parsed, g, activity, contents)
+
+	// 9. Compute Merkle hash.
 	idx.MerkleHash = git.ComputeMerkle(files, contents)
 
-	// 9. Generate AI summary if requested.
+	// 10. Generate AI summary if requested.
 	if opts.Summary {
 		if !opts.Quiet {
 			fmt.Println("[stacklit] generating AI summary...")
@@ -222,6 +254,7 @@ func assembleIndex(
 	parsed []*parser.FileInfo,
 	g *graph.Graph,
 	activity *git.Activity,
+	contents map[string][]byte,
 ) *schema.Index {
 	// --- Project ---
 	projectName := filepath.Base(root)
@@ -304,12 +337,29 @@ func assembleIndex(
 			}
 		}
 
+		// Cap type defs to 10 per module.
+		typeDefs := mod.TypeDefs
+		if len(typeDefs) > 10 {
+			trimmed := make(map[string]string, 10)
+			i := 0
+			for k, v := range typeDefs {
+				trimmed[k] = v
+				i++
+				if i >= 10 {
+					break
+				}
+			}
+			typeDefs = trimmed
+		}
+
 		modules[mod.Name] = schema.ModuleInfo{
 			Purpose:    inferPurpose(mod.Name),
+			Language:   mod.PrimaryLanguage,
 			Files:      mod.FileCount,
 			Lines:      mod.LineCount,
 			FileList:   fileList,
 			Exports:    exports,
+			TypeDefs:   typeDefs,
 			DependsOn:  mod.DependsOn,
 			DependedBy: mod.DependedBy,
 			Activity:   activityLevel,
@@ -339,6 +389,9 @@ func assembleIndex(
 
 	// --- Hints ---
 	testCmd := detectTestCommand(root)
+	envVars := detect.DetectEnvVars(root, contents)
+	addFeature := generateAddFeatureHint(modules, entrypoints)
+	doNotTouch := detectDoNotTouch(root)
 
 	// --- Workspaces ---
 	var workspaces []string
@@ -376,7 +429,10 @@ func assembleIndex(
 			Stable:   activity.StableFiles,
 		},
 		Hints: schema.Hints{
-			TestCmd: testCmd,
+			TestCmd:    testCmd,
+			EnvVars:    envVars,
+			AddFeature: addFeature,
+			DoNotTouch: doNotTouch,
 		},
 	}
 }

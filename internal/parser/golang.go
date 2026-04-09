@@ -133,6 +133,46 @@ func (g *GoParser) Parse(path string, content []byte) (*FileInfo, error) {
 				case *ast.TypeSpec:
 					if isExported(s.Name.Name) {
 						info.Exports = append(info.Exports, "type "+s.Name.Name)
+
+						// Extract struct fields or interface methods.
+						switch st := s.Type.(type) {
+						case *ast.StructType:
+							if st.Fields != nil {
+								var fields []string
+								for _, field := range st.Fields.List {
+									for _, name := range field.Names {
+										if name.IsExported() {
+											fields = append(fields, name.Name+" "+formatType(field.Type))
+										}
+									}
+								}
+								if len(fields) > 0 {
+									if info.TypeDefs == nil {
+										info.TypeDefs = map[string]string{}
+									}
+									def := strings.Join(fields, ", ")
+									if len(def) > 200 {
+										def = def[:197] + "..."
+									}
+									info.TypeDefs[s.Name.Name] = def
+								}
+							}
+						case *ast.InterfaceType:
+							if st.Methods != nil {
+								var methods []string
+								for _, method := range st.Methods.List {
+									for _, name := range method.Names {
+										methods = append(methods, name.Name+"()")
+									}
+								}
+								if len(methods) > 0 {
+									if info.TypeDefs == nil {
+										info.TypeDefs = map[string]string{}
+									}
+									info.TypeDefs[s.Name.Name] = "interface{" + strings.Join(methods, ", ") + "}"
+								}
+							}
+						}
 					}
 				case *ast.ValueSpec:
 					for _, name := range s.Names {

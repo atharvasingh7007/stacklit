@@ -8,12 +8,13 @@ import (
 
 // FileInfo holds the result of parsing a source file.
 type FileInfo struct {
-	Path         string   `json:"path"`
-	Language     string   `json:"language"`
-	Imports      []string `json:"imports,omitempty"`
-	Exports      []string `json:"exports,omitempty"`
-	LineCount    int      `json:"line_count"`
-	IsEntrypoint bool     `json:"is_entrypoint,omitempty"`
+	Path         string            `json:"path"`
+	Language     string            `json:"language"`
+	Imports      []string          `json:"imports,omitempty"`
+	Exports      []string          `json:"exports,omitempty"`
+	TypeDefs     map[string]string `json:"type_defs,omitempty"` // type name -> brief definition
+	LineCount    int               `json:"line_count"`
+	IsEntrypoint bool              `json:"is_entrypoint,omitempty"`
 }
 
 // Parser extracts structured information from a source file.

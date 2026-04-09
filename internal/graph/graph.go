@@ -47,14 +47,17 @@ func shouldSkipModule(name string) bool {
 
 // Module represents a logical grouping of source files by directory.
 type Module struct {
-	Name       string
-	FileCount  int
-	Files      []string // basenames of files in this module
-	Exports    []string
-	DependsOn  []string
-	DependedBy []string
-	Languages  []string
-	LineCount  int
+	Name            string
+	FileCount       int
+	Files           []string // basenames of files in this module
+	Exports         []string
+	TypeDefs        map[string]string
+	DependsOn       []string
+	DependedBy      []string
+	Languages       []string
+	PrimaryLanguage string
+	LineCount       int
+	langCounts      map[string]int // internal: file count per language
 }
 
 // Edge represents a dependency relationship between two modules.
@@ -91,7 +94,7 @@ func Build(files []*parser.FileInfo) *Graph {
 		}
 		m, ok := g.modules[mod]
 		if !ok {
-			m = &Module{Name: mod}
+			m = &Module{Name: mod, langCounts: map[string]int{}}
 			g.modules[mod] = m
 		}
 		m.FileCount++
@@ -99,6 +102,17 @@ func Build(files []*parser.FileInfo) *Graph {
 		m.Exports = appendUnique(m.Exports, f.Exports...)
 		m.Languages = appendUnique(m.Languages, f.Language)
 		m.Files = append(m.Files, filepath.Base(f.Path))
+		if f.Language != "" {
+			m.langCounts[f.Language]++
+		}
+		if len(f.TypeDefs) > 0 {
+			if m.TypeDefs == nil {
+				m.TypeDefs = map[string]string{}
+			}
+			for name, def := range f.TypeDefs {
+				m.TypeDefs[name] = def
+			}
+		}
 
 		if f.IsEntrypoint {
 			g.entrypoints = append(g.entrypoints, f.Path)
@@ -145,13 +159,23 @@ func Build(files []*parser.FileInfo) *Graph {
 		to.DependedBy = appendUnique(to.DependedBy, key.from)
 	}
 
-	// Sort all slice fields for determinism.
+	// Sort all slice fields for determinism and compute primary language.
 	for _, m := range g.modules {
 		sort.Strings(m.Exports)
 		sort.Strings(m.DependsOn)
 		sort.Strings(m.DependedBy)
 		sort.Strings(m.Languages)
 		sort.Strings(m.Files)
+
+		// Determine the language with the most files in this module.
+		bestLang, bestCount := "", 0
+		for lang, count := range m.langCounts {
+			if count > bestCount || (count == bestCount && lang < bestLang) {
+				bestLang = lang
+				bestCount = count
+			}
+		}
+		m.PrimaryLanguage = bestLang
 	}
 	sort.Strings(g.entrypoints)
 
