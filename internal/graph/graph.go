@@ -8,6 +8,43 @@ import (
 	"github.com/glincker/stacklit/internal/parser"
 )
 
+// maxModuleDepth is the maximum number of path segments a module name may have.
+// Deeper paths are collapsed to their ancestor at this depth.
+const maxModuleDepth = 3
+
+// skipModuleSegments is the set of path segment names that indicate a module
+// (or any ancestor) should be excluded from the graph.
+var skipModuleSegments = map[string]bool{
+	"test":        true,
+	"tests":       true,
+	"__tests__":   true,
+	"__test__":    true,
+	"testdata":    true,
+	"test_data":   true,
+	"fixtures":    true,
+	"__fixtures__": true,
+	"examples":    true,
+	"example":     true,
+	"docs_src":    true,
+	"e2e":         true,
+	"benchmarks":  true,
+	"bench":       true,
+	"scripts":     true,
+	".github":     true,
+}
+
+// shouldSkipModule returns true if any segment of the module path matches a
+// known non-essential directory name (tests, fixtures, examples, etc.).
+func shouldSkipModule(name string) bool {
+	parts := strings.Split(name, "/")
+	for _, part := range parts {
+		if skipModuleSegments[strings.ToLower(part)] {
+			return true
+		}
+	}
+	return false
+}
+
 // Module represents a logical grouping of source files by directory.
 type Module struct {
 	Name       string
@@ -48,6 +85,9 @@ func Build(files []*parser.FileInfo) *Graph {
 	// First pass: create modules and collect entrypoints.
 	for _, f := range files {
 		mod := detectModule(f.Path)
+		if shouldSkipModule(mod) {
+			continue
+		}
 		m, ok := g.modules[mod]
 		if !ok {
 			m = &Module{Name: mod}
@@ -72,11 +112,17 @@ func Build(files []*parser.FileInfo) *Graph {
 	// Second pass: resolve imports to edges.
 	for _, f := range files {
 		fromMod := detectModule(f.Path)
+		if shouldSkipModule(fromMod) {
+			continue
+		}
 		fileDir := filepath.Dir(f.Path)
 
 		for _, imp := range f.Imports {
 			toMod := resolveImport(imp, fileDir, knownModules)
 			if toMod == "" || toMod == fromMod {
+				continue
+			}
+			if shouldSkipModule(toMod) {
 				continue
 			}
 			key := edgeKey{from: fromMod, to: toMod}
@@ -165,14 +211,20 @@ func (g *Graph) Entrypoints() []string {
 	return g.entrypoints
 }
 
-// detectModule returns the parent directory of a file path as the module name.
-// Files at the root level return "root".
+// detectModule returns the parent directory of a file path as the module name,
+// collapsed to at most maxModuleDepth segments. Files at the root level return
+// "root".
 func detectModule(filePath string) string {
 	dir := filepath.Dir(filePath)
 	if dir == "." || dir == "" || dir == "/" {
 		return "root"
 	}
-	return dir
+	dir = filepath.ToSlash(dir)
+	parts := strings.Split(dir, "/")
+	if len(parts) > maxModuleDepth {
+		parts = parts[:maxModuleDepth]
+	}
+	return strings.Join(parts, "/")
 }
 
 // resolveImport attempts to match an import string to a known module name.

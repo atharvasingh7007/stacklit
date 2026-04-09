@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -261,14 +262,27 @@ func assembleIndex(
 	}
 
 	// --- Modules ---
+	// maxModules caps the total number of modules emitted to keep output lean.
+	const maxModules = 200
+
+	allMods := g.Modules()
+
+	// If we exceed the cap, keep the modules with the most files.
+	if len(allMods) > maxModules {
+		sort.SliceStable(allMods, func(i, j int) bool {
+			return allMods[i].FileCount > allMods[j].FileCount
+		})
+		allMods = allMods[:maxModules]
+	}
+
 	modules := map[string]schema.ModuleInfo{}
-	for _, mod := range g.Modules() {
+	for _, mod := range allMods {
 		if strings.HasPrefix(mod.Name, "testdata") {
 			continue
 		}
 		exports := mod.Exports
-		if len(exports) > 15 {
-			exports = exports[:15]
+		if len(exports) > 10 {
+			exports = exports[:10]
 		}
 		// Compute activity level from git hot files
 		activityLevel := "low"
