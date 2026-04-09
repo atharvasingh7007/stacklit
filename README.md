@@ -1,12 +1,13 @@
-<div align="center">
-  <h1>Stacklit</h1>
-  <p><b>Your codebase, in 1,500 tokens.</b></p>
-  <p>One command generates a committed JSON index that any AI agent can read. No server, no setup.</p>
+# Stacklit
 
-  <a href="https://github.com/glincker/stacklit/actions"><img src="https://github.com/glincker/stacklit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/glincker/stacklit/releases"><img src="https://img.shields.io/github/v/release/glincker/stacklit" alt="Release"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
-</div>
+**Your codebase, in 1,500 tokens.**
+
+One command generates a committed JSON index that any AI agent can read. No server, no setup.
+
+[![CI](https://github.com/glincker/stacklit/actions/workflows/ci.yml/badge.svg)](https://github.com/glincker/stacklit/actions)
+[![Release](https://img.shields.io/github/v/release/glincker/stacklit)](https://github.com/glincker/stacklit/releases)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![npm](https://img.shields.io/npm/v/stacklit)](https://www.npmjs.com/package/stacklit)
 
 ---
 
