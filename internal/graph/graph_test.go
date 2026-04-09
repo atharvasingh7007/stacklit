@@ -28,7 +28,7 @@ func TestDetectModules(t *testing.T) {
 		{Path: "src/api/routes.ts", Language: "TypeScript", Imports: []string{"src/auth", "src/db"}, LineCount: 80},
 	}
 
-	g := Build(files)
+	g := Build(files, BuildOptions{MaxDepth: 4})
 
 	mods := g.Modules()
 	if len(mods) != 3 {
@@ -50,7 +50,7 @@ func TestModuleExports(t *testing.T) {
 		{Path: "src/utils/validate.ts", Language: "TypeScript", Exports: []string{"validateEmail", "validatePhone"}, LineCount: 35},
 	}
 
-	g := Build(files)
+	g := Build(files, BuildOptions{MaxDepth: 4})
 
 	utilsMod := g.Module("src/utils")
 	if utilsMod == nil {
@@ -84,7 +84,7 @@ func TestDependencyEdges(t *testing.T) {
 		{Path: "src/db/pool.ts", Language: "TypeScript", Exports: []string{"Pool"}, LineCount: 30},
 	}
 
-	g := Build(files)
+	g := Build(files, BuildOptions{MaxDepth: 4})
 
 	edges := g.Edges()
 	if len(edges) != 3 {
@@ -120,7 +120,7 @@ func TestEntrypoints(t *testing.T) {
 		{Path: "src/api/index.ts", Language: "TypeScript", IsEntrypoint: true, LineCount: 15},
 	}
 
-	g := Build(files)
+	g := Build(files, BuildOptions{MaxDepth: 4})
 
 	eps := g.Entrypoints()
 	if len(eps) != 2 {
@@ -128,6 +128,20 @@ func TestEntrypoints(t *testing.T) {
 	}
 	assertStringSliceContains(t, eps, "src/main.ts")
 	assertStringSliceContains(t, eps, "src/api/index.ts")
+}
+
+// TestIsolatedModules verifies that modules with no edges are correctly identified.
+func TestIsolatedModules(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "src/api/handler.ts", Imports: []string{"../db/client"}, LineCount: 30},
+		{Path: "src/db/client.ts", LineCount: 120},
+		{Path: "src/scripts/migrate.ts", LineCount: 50}, // no imports, nobody imports it
+	}
+	g := Build(files, BuildOptions{MaxDepth: 4})
+	isolated := g.Isolated()
+	if len(isolated) != 1 || isolated[0] != "src/scripts" {
+		t.Errorf("expected [src/scripts] as isolated, got %v", isolated)
+	}
 }
 
 // moduleNames is a helper to extract names for error messages.
