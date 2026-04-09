@@ -27,8 +27,7 @@ $ stacklit init
 Opening visual map...
 ```
 
-<!-- TODO: replace with terminal recording GIF -->
-<!-- ![demo](https://github.com/glincker/stacklit/assets/demo.gif) -->
+![Stacklit demo](demo.gif)
 
 ### Without stacklit
 

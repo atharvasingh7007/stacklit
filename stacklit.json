@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T22:21:13Z",
+  "generated_at": "2026-04-09T23:56:36Z",
   "stacklit_version": "dev",
-  "merkle_hash": "dbf1968b555b90f2eb497376531e8b6e6da14588b79e47ff5a836f9e4432287d",
+  "merkle_hash": "fdac4b84e691421e649f3523cb688eb24554439ade7ccea2f27a3d3cb3466ae9",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 48,
-        "lines": 5650
+        "lines": 5697
       },
       "java": {
         "files": 1,
@@ -22,7 +22,7 @@
       },
       "javascript": {
         "files": 3,
-        "lines": 137
+        "lines": 133
       },
       "python": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 59,
-    "total_lines": 5866
+    "total_lines": 5909
   },
   "modules": {
     "assets": {
@@ -259,7 +259,7 @@
       "purpose": "MCP server for AI agents",
       "language": "go",
       "files": 1,
-      "lines": 187,
+      "lines": 234,
       "file_list": [
         "server.go"
       ],
@@ -386,15 +386,15 @@
       ],
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
-        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
         "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
-        "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
+        "LangStats": "Files int, Lines int",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string"
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
+        "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
         "internal/cli",
@@ -456,7 +456,7 @@
       "purpose": "Bin",
       "language": "javascript",
       "files": 1,
-      "lines": 23,
+      "lines": 19,
       "file_list": [
         "stacklit.js"
       ],
@@ -578,19 +578,19 @@
     "hot_files": [
       {
         "path": "internal/engine/engine.go",
-        "commits_90d": 11
+        "commits_90d": 12
       },
       {
         "path": "stacklit.json",
-        "commits_90d": 9
+        "commits_90d": 10
       },
       {
         "path": "stacklit.mmd",
-        "commits_90d": 9
+        "commits_90d": 10
       },
       {
         "path": "assets/template.html",
-        "commits_90d": 7
+        "commits_90d": 9
       },
       {
         "path": "internal/graph/graph.go",
@@ -598,18 +598,22 @@
       },
       {
         "path": "internal/schema/schema.go",
-        "commits_90d": 6
+        "commits_90d": 7
+      },
+      {
+        "path": "go.mod",
+        "commits_90d": 5
       },
       {
         "path": "internal/cli/init.go",
         "commits_90d": 5
       },
       {
-        "path": "go.mod",
+        "path": "go.sum",
         "commits_90d": 4
       },
       {
-        "path": "go.sum",
+        "path": "README.md",
         "commits_90d": 3
       },
       {
@@ -651,35 +655,31 @@
       {
         "path": "internal/walker/walker_test.go",
         "commits_90d": 3
-      },
-      {
-        "path": ".gitignore",
-        "commits_90d": 2
       }
     ],
     "recent": [
-      "stacklit.json",
-      "stacklit.mmd",
-      "internal/graph/graph_test.go",
-      "internal/cli/diff.go",
-      "internal/cli/init.go",
-      "internal/config/config.go",
-      "internal/config/config_test.go",
-      "internal/engine/engine.go",
-      "internal/graph/graph.go",
-      "internal/schema/schema.go"
-    ],
-    "stable": [
+      "npm/README.md",
+      "npm/bin/stacklit.js",
+      "npm/package.json",
+      "README.md",
+      "SKILL.md",
+      "assets/template.html",
       ".github/workflows/ci.yml",
       ".github/workflows/release.yml",
       ".goreleaser.yml",
+      "go.mod"
+    ],
+    "stable": [
       "LICENSE",
-      "README.md",
-      "SKILL.md",
       "action/action.yml",
       "assets/lang-icons.js",
       "internal/cli/serve.go",
-      "internal/config/config.go"
+      "internal/config/config.go",
+      "internal/config/config_test.go",
+      "internal/detect/envvars.go",
+      "internal/detect/frameworks.go",
+      "internal/detect/frameworks_test.go",
+      "internal/git/activity.go"
     ]
   },
   "hints": {

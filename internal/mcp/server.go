@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
+	"time"
 
 	sdkmcp "github.com/modelcontextprotocol/go-sdk/mcp"
 
@@ -13,12 +15,21 @@ import (
 )
 
 var cachedIndex *schema.Index
+var cachedIndexModTime time.Time
 
 func loadIndex() (*schema.Index, error) {
-	if cachedIndex != nil {
+	const indexFile = "stacklit.json"
+
+	info, err := os.Stat(indexFile)
+	if err != nil {
+		return nil, fmt.Errorf("stacklit.json not found — run 'stacklit init' first")
+	}
+
+	if cachedIndex != nil && !info.ModTime().After(cachedIndexModTime) {
 		return cachedIndex, nil
 	}
-	data, err := os.ReadFile("stacklit.json")
+
+	data, err := os.ReadFile(indexFile)
 	if err != nil {
 		return nil, fmt.Errorf("stacklit.json not found — run 'stacklit init' first")
 	}
@@ -27,6 +38,7 @@ func loadIndex() (*schema.Index, error) {
 		return nil, fmt.Errorf("failed to parse stacklit.json: %w", err)
 	}
 	cachedIndex = &idx
+	cachedIndexModTime = info.ModTime()
 	return cachedIndex, nil
 }
 
@@ -152,6 +164,41 @@ func StartServer() error {
 			"module": args.Module,
 			"edges":  edges,
 		})
+	})
+
+	// list_modules — all modules with summary info, sorted by name
+	sdkmcp.AddTool(s, &sdkmcp.Tool{
+		Name:        "list_modules",
+		Description: "List all modules with their purpose, file/line counts, and activity — sorted by name",
+	}, func(ctx context.Context, req *sdkmcp.CallToolRequest, _ emptyArgs) (*sdkmcp.CallToolResult, any, error) {
+		idx, err := loadIndex()
+		if err != nil {
+			return errResult(err)
+		}
+		type moduleSummary struct {
+			Name     string `json:"name"`
+			Purpose  string `json:"purpose"`
+			Files    int    `json:"files"`
+			Lines    int    `json:"lines"`
+			Activity string `json:"activity,omitempty"`
+		}
+		names := make([]string, 0, len(idx.Modules))
+		for name := range idx.Modules {
+			names = append(names, name)
+		}
+		sort.Strings(names)
+		summaries := make([]moduleSummary, 0, len(names))
+		for _, name := range names {
+			mod := idx.Modules[name]
+			summaries = append(summaries, moduleSummary{
+				Name:     name,
+				Purpose:  mod.Purpose,
+				Files:    mod.Files,
+				Lines:    mod.Lines,
+				Activity: mod.Activity,
+			})
+		}
+		return textResult(summaries)
 	})
 
 	// get_hot_files — git churn list

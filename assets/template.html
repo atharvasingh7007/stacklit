@@ -304,6 +304,28 @@
     padding: 16px;
   }
 
+  #table-search {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    outline: none;
+    padding: 4px 2px;
+    width: 100%;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  #table-search::placeholder {
+    color: var(--text-muted);
+  }
+
+  #table-search:focus {
+    border-bottom-color: var(--accent);
+  }
+
   #view-table::-webkit-scrollbar { width: 4px; }
   #view-table::-webkit-scrollbar-track { background: transparent; }
   #view-table::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -761,6 +783,7 @@
 
     <!-- View 3: Table -->
     <div id="view-table" class="view">
+      <input id="table-search" type="search" placeholder="Search modules..." autocomplete="off" spellcheck="false">
       <table id="mod-table">
         <thead>
           <tr>
@@ -1798,6 +1821,7 @@
   let tableSortCol = 'lines';
   let tableSortDir = -1; // -1 = desc
   let selectedTableRow = null;
+  let tableSearchQuery = '';
 
   function buildTableView() {
     renderTable();
@@ -1814,6 +1838,14 @@
         renderTable();
       });
     });
+
+    const searchInput = document.getElementById('table-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        tableSearchQuery = searchInput.value;
+        renderTable();
+      });
+    }
   }
 
   function renderTable() {
@@ -1825,8 +1857,18 @@
       }
     });
 
+    // Filter nodes by search query
+    const needle = tableSearchQuery.trim().toLowerCase();
+    const filtered = needle
+      ? nodeArr.filter(function (n) {
+          const name = (n.id || '').toLowerCase();
+          const purpose = ((n.mod && n.mod.purpose) || '').toLowerCase();
+          return name.indexOf(needle) !== -1 || purpose.indexOf(needle) !== -1;
+        })
+      : nodeArr;
+
     // Sort nodes
-    const sorted = nodeArr.slice().sort(function (a, b) {
+    const sorted = filtered.slice().sort(function (a, b) {
       let av, bv;
       const col = tableSortCol;
       if (col === 'id')       { av = a.id; bv = b.id; }
