@@ -1167,11 +1167,13 @@
       dragOffY = dragNode.y - wy;
       dragNode.vx = 0; dragNode.vy = 0;
       graphCanvas.classList.add('dragging');
+      graphCanvas.style.cursor = 'grabbing';
     } else {
       panStart   = true;
       panStartPX = e.clientX - panX;
       panStartPY = e.clientY - panY;
       graphCanvas.classList.add('dragging');
+      graphCanvas.style.cursor = 'move';
     }
   });
 
@@ -1197,6 +1199,7 @@
     }
     dragNode = null; panStart = null;
     graphCanvas.classList.remove('dragging');
+    graphCanvas.style.cursor = 'default';
   });
 
   graphCanvas.addEventListener('click', function (e) {
@@ -1215,10 +1218,15 @@
 
   graphCanvas.addEventListener('wheel', function (e) {
     e.preventDefault();
-    const zf = e.deltaY < 0 ? 1.1 : 0.9;
-    panX = e.clientX - (e.clientX - panX) * zf;
-    panY = e.clientY - (e.clientY - panY) * zf;
-    scale = Math.min(Math.max(scale * zf, 0.1), 5);
+    const isTrackpad = e.ctrlKey || Math.abs(e.deltaY) < 10;
+    const zoomSpeed  = isTrackpad ? 0.02 : 0.08;
+    const direction  = e.deltaY > 0 ? -1 : 1;
+    const zf         = 1 + direction * zoomSpeed;
+    const newScale   = scale * zf;
+    if (newScale < 0.1 || newScale > 10) return;
+    panX  = e.clientX - (e.clientX - panX) * (newScale / scale);
+    panY  = e.clientY - (e.clientY - panY) * (newScale / scale);
+    scale = newScale;
   }, { passive: false });
 
   const tooltip = document.getElementById('tooltip');
@@ -1830,10 +1838,18 @@
 
   flowCanvas.addEventListener('wheel', function (e) {
     e.preventDefault();
-    const zf = e.deltaY < 0 ? 1.1 : 0.9;
-    flowPanX = e.clientX - (e.clientX - flowPanX) * zf;
-    flowPanY = e.clientY - (e.clientY - flowPanY) * zf;
-    flowScale = Math.min(Math.max(flowScale * zf, 0.1), 5);
+    const isTrackpad  = e.ctrlKey || Math.abs(e.deltaY) < 10;
+    const zoomSpeed   = isTrackpad ? 0.02 : 0.08;
+    const direction   = e.deltaY > 0 ? -1 : 1;
+    const zf          = 1 + direction * zoomSpeed;
+    const newScale    = flowScale * zf;
+    if (newScale < 0.1 || newScale > 10) return;
+    const rect        = flowCanvas.getBoundingClientRect();
+    const mouseX      = e.clientX - rect.left;
+    const mouseY      = e.clientY - rect.top;
+    flowPanX  = mouseX - (mouseX - flowPanX) * (newScale / flowScale);
+    flowPanY  = mouseY - (mouseY - flowPanY) * (newScale / flowScale);
+    flowScale = newScale;
     drawFlow();
   }, { passive: false });
 
