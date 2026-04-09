@@ -574,6 +574,11 @@
     flex-shrink: 0;
   }
 
+  .lang-icon {
+    filter: brightness(0) invert(1);
+    opacity: 0.7;
+  }
+
   /* Tooltip */
   #tooltip {
     position: fixed;
@@ -855,17 +860,28 @@
 
     const metaEl = document.getElementById('module-meta');
     metaEl.innerHTML = '';
+    const langIconSrc = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[node.lang]) ? LANG_ICONS[node.lang] : '';
+    const langIconHtml = langIconSrc
+      ? '<img src="' + langIconSrc + '" class="lang-icon" width="16" height="16" style="vertical-align:middle;margin-right:4px">'
+      : '';
     const metaRows = [
       { label: 'Files',    value: node.files },
       { label: 'Lines',    value: node.lines || '-' },
-      { label: 'Language', value: node.lang   },
+      { label: 'Language', value: langIconHtml + node.lang, isHtml: true },
       { label: 'Activity', value: mod.activity || '-' },
     ];
     metaRows.forEach(function (row) {
       const div = document.createElement('div');
       div.className = 'meta-row';
-      div.innerHTML = '<span class="meta-label">' + row.label + '</span>' +
-                      '<span class="meta-value">' + row.value + '</span>';
+      const valueSpan = document.createElement('span');
+      valueSpan.className = 'meta-value';
+      if (row.isHtml) {
+        valueSpan.innerHTML = row.value;
+      } else {
+        valueSpan.textContent = row.value;
+      }
+      div.innerHTML = '<span class="meta-label">' + row.label + '</span>';
+      div.appendChild(valueSpan);
       metaEl.appendChild(div);
     });
 
@@ -1096,22 +1112,14 @@
       const r = n.radius * scale;
       if (sx + r < 0 || sx - r > gW || sy + r < 0 || sy - r > gH) continue;
       const isSel = (i === selectedNode);
-      const icon = iconImages[n.lang];
       if (isSel) { graphCtx.shadowColor = n.color; graphCtx.shadowBlur = 14; }
-      if (icon && icon.complete && icon.naturalWidth > 0) {
-        const size = Math.max(r * 2, 16);
-        graphCtx.globalAlpha = isSel ? 1.0 : 0.8;
-        graphCtx.drawImage(icon, sx - size / 2, sy - size / 2, size, size);
-        graphCtx.globalAlpha = 1.0;
-      } else {
-        graphCtx.beginPath();
-        graphCtx.arc(sx, sy, Math.max(r, 2), 0, Math.PI * 2);
-        graphCtx.fillStyle = isSel ? n.color : n.color + 'CC';
-        graphCtx.fill();
-        graphCtx.strokeStyle = isSel ? '#ffffff44' : '#00000044';
-        graphCtx.lineWidth   = isSel ? 2 : 1;
-        graphCtx.stroke();
-      }
+      graphCtx.beginPath();
+      graphCtx.arc(sx, sy, Math.max(r, 2), 0, Math.PI * 2);
+      graphCtx.fillStyle = isSel ? n.color : n.color + 'CC';
+      graphCtx.fill();
+      graphCtx.strokeStyle = isSel ? '#ffffff44' : '#00000044';
+      graphCtx.lineWidth   = isSel ? 2 : 1;
+      graphCtx.stroke();
       graphCtx.shadowBlur = 0;
       if (scale > 0.45 && r > 4) {
         const label = n.id.split('/').pop() || n.id;
@@ -1356,15 +1364,11 @@
       // Render leaf modules
       leaves.sort(function (a, b) { return a.id.localeCompare(b.id); }).forEach(function (n) {
         const short = n.id.split('/').pop();
-        const treeIconSrc = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[n.lang]) ? LANG_ICONS[n.lang] : '';
-        const treeIconHtml = treeIconSrc
-          ? '<img src="' + treeIconSrc + '" width="13" height="13" style="vertical-align:middle;margin-right:4px;opacity:0.8">'
-          : '';
         const moduleEl = document.createElement('div');
         moduleEl.className = 'tree-module';
         moduleEl.dataset.key = n.id;
         moduleEl.innerHTML =
-          '<span class="tree-module-name">' + treeIconHtml + short + '</span>' +
+          '<span class="tree-module-name">' + short + '</span>' +
           '<span class="tree-module-stats">' + n.files + 'f' + (n.lines ? ' · ' + n.lines.toLocaleString() + 'l' : '') + '</span>';
         moduleEl.addEventListener('click', function () {
           document.querySelectorAll('.tree-module').forEach(function (el) { el.classList.remove('selected'); });
@@ -1427,15 +1431,11 @@
 
     // Top-level leaves
     topLeaves.sort(function (a, b) { return a.id.localeCompare(b.id); }).forEach(function (n) {
-      const treeIconSrc2 = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[n.lang]) ? LANG_ICONS[n.lang] : '';
-      const treeIconHtml2 = treeIconSrc2
-        ? '<img src="' + treeIconSrc2 + '" width="13" height="13" style="vertical-align:middle;margin-right:4px;opacity:0.8">'
-        : '';
       const moduleEl = document.createElement('div');
       moduleEl.className = 'tree-module';
       moduleEl.dataset.key = n.id;
       moduleEl.innerHTML =
-        '<span class="tree-module-name">' + treeIconHtml2 + n.id + '</span>' +
+        '<span class="tree-module-name">' + n.id + '</span>' +
         '<span class="tree-module-stats">' + n.files + 'f' + (n.lines ? ' · ' + n.lines.toLocaleString() + 'l' : '') + '</span>';
       moduleEl.addEventListener('click', function () {
         document.querySelectorAll('.tree-module').forEach(function (el) { el.classList.remove('selected'); });
@@ -1507,9 +1507,10 @@
       const tr = document.createElement('tr');
       if (selectedTableRow === n.id) tr.classList.add('selected');
 
-      const tableIconSrc = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[n.lang]) ? LANG_ICONS[n.lang] : '';
+      const multiLang = DATA.tech && Object.keys(DATA.tech.languages || {}).length > 1;
+      const tableIconSrc = (multiLang && typeof LANG_ICONS !== 'undefined' && LANG_ICONS[n.lang]) ? LANG_ICONS[n.lang] : '';
       const tableIconHtml = tableIconSrc
-        ? '<img src="' + tableIconSrc + '" width="14" height="14" style="vertical-align:middle;margin-right:5px;opacity:0.85">'
+        ? '<img src="' + tableIconSrc + '" class="lang-icon" width="14" height="14" style="vertical-align:middle;margin-right:5px">'
         : '';
       tr.innerHTML =
         '<td title="' + n.id + '">' + tableIconHtml + n.id + '</td>' +
@@ -1735,20 +1736,8 @@
       flowCtx.roundRect(nx, ny, 3 * flowScale, nh, [rr, 0, 0, rr]);
       flowCtx.fill();
 
-      // Language icon (draw before label)
-      const flowIcon = n.node && iconImages[n.node.lang];
-      const iconSize = nh * 0.6;
-      const iconX = nx + 6 * flowScale;
-      const iconY = ny + (nh - iconSize) / 2;
-      let labelOffsetX = 8 * flowScale;
-      if (flowIcon && flowIcon.complete && flowIcon.naturalWidth > 0) {
-        flowCtx.globalAlpha = isSel ? 1.0 : 0.75;
-        flowCtx.drawImage(flowIcon, iconX, iconY, iconSize, iconSize);
-        flowCtx.globalAlpha = 1.0;
-        labelOffsetX = 6 * flowScale + iconSize + 4 * flowScale;
-      }
-
       // Label
+      const labelOffsetX = 8 * flowScale;
       const label = n.id.split('/').pop() || n.id;
       const fs2 = Math.min(12, Math.max(9, 11 * flowScale));
       flowCtx.font         = fs2 + 'px -apple-system,system-ui,sans-serif';
@@ -1882,7 +1871,7 @@
     item.className = 'legend-item';
     const iconSrc = (typeof LANG_ICONS !== 'undefined' && LANG_ICONS[lang]) ? LANG_ICONS[lang] : '';
     const iconEl = iconSrc
-      ? '<img src="' + iconSrc + '" width="14" height="14" style="vertical-align:middle;margin-right:4px;opacity:0.85">'
+      ? '<img src="' + iconSrc + '" class="lang-icon" width="16" height="16" style="vertical-align:middle;margin-right:4px">'
       : '<div class="legend-dot" style="background:' + color + '"></div>';
     item.innerHTML = iconEl + lang;
     legendGrid.appendChild(item);
