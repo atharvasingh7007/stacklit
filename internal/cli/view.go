@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/GLINCKER/stacklit/internal/renderer"
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/renderer"
+	"github.com/glincker/stacklit/internal/schema"
 	"github.com/spf13/cobra"
 )
 

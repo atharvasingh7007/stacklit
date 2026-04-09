@@ -7,13 +7,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/GLINCKER/stacklit/internal/git"
-	"github.com/GLINCKER/stacklit/internal/graph"
-	"github.com/GLINCKER/stacklit/internal/monorepo"
-	"github.com/GLINCKER/stacklit/internal/parser"
-	"github.com/GLINCKER/stacklit/internal/renderer"
-	"github.com/GLINCKER/stacklit/internal/schema"
-	"github.com/GLINCKER/stacklit/internal/walker"
+	"github.com/glincker/stacklit/internal/git"
+	"github.com/glincker/stacklit/internal/graph"
+	"github.com/glincker/stacklit/internal/monorepo"
+	"github.com/glincker/stacklit/internal/parser"
+	"github.com/glincker/stacklit/internal/renderer"
+	"github.com/glincker/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/walker"
 )
 
 // Options configures an engine Run.

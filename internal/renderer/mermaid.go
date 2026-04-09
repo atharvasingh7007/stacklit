@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/schema"
 )
 
 // langColors maps language names to neutral monochrome colors.

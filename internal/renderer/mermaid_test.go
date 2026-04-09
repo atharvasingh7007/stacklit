@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/schema"
 )
 
 func makeTestIndex() *schema.Index {

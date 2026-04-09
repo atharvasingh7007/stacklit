@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/GLINCKER/stacklit/internal/engine"
+	"github.com/glincker/stacklit/internal/engine"
 	"github.com/spf13/cobra"
 )
 

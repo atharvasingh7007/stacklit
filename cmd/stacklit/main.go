@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/GLINCKER/stacklit/internal/cli"
+	"github.com/glincker/stacklit/internal/cli"
 )
 
 func main() {

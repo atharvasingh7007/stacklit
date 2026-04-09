@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/GLINCKER/stacklit/internal/engine"
+	"github.com/glincker/stacklit/internal/engine"
 	"github.com/spf13/cobra"
 )
 

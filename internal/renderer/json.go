@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/schema"
 )
 
 const schemaURL = "https://stacklit.dev/schema/v1.json"

@@ -3,7 +3,7 @@ package graph
 import (
 	"testing"
 
-	"github.com/GLINCKER/stacklit/internal/parser"
+	"github.com/glincker/stacklit/internal/parser"
 )
 
 // assertStringSliceContains fails the test if want is not present in got.

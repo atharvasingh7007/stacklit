@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/GLINCKER/stacklit/assets"
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/assets"
+	"github.com/glincker/stacklit/internal/schema"
 )
 
 // WriteHTML renders idx as a self-contained HTML file with an interactive

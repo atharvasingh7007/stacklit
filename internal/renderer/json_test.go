@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/GLINCKER/stacklit/internal/schema"
+	"github.com/glincker/stacklit/internal/schema"
 )
 
 func TestWriteJSON(t *testing.T) {

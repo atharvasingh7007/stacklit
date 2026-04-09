@@ -1,4 +1,4 @@
-module github.com/GLINCKER/stacklit
+module github.com/glincker/stacklit
 
 go 1.24.5
 

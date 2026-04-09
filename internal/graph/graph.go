@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/GLINCKER/stacklit/internal/parser"
+	"github.com/glincker/stacklit/internal/parser"
 )
 
 // Module represents a logical grouping of source files by directory.

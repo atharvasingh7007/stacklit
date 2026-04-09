@@ -6,7 +6,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/GLINCKER/stacklit/internal/walker"
+	"github.com/glincker/stacklit/internal/walker"
 )
 
 // fixtureDir returns the absolute path to the go-project test fixture.
