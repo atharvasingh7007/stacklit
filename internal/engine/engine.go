@@ -219,7 +219,10 @@ func assembleIndex(
 		ls.Lines += f.LineCount
 		langStats[lang] = ls
 		totalLines += f.LineCount
-		allImports = append(allImports, f.Imports...)
+		// Skip testdata imports for framework detection
+		if !strings.HasPrefix(f.Path, "testdata") {
+			allImports = append(allImports, f.Imports...)
+		}
 	}
 
 	// --- Frameworks ---

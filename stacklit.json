@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T18:38:20Z",
+  "generated_at": "2026-04-09T18:54:59Z",
   "stacklit_version": "dev",
-  "merkle_hash": "c215b517d0d2e1056501379d22599a657b9ab3a9d4065bca39584b21b434bda7",
+  "merkle_hash": "95bfda3f8ccecf62eaddd23656f2e232535d32a65d9c5806f0bbe3397203c014",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -13,8 +13,8 @@
     "primary_language": "go",
     "languages": {
       "go": {
-        "files": 35,
-        "lines": 3639
+        "files": 38,
+        "lines": 4015
       },
       "javascript": {
         "files": 1,
@@ -28,14 +28,17 @@
         "files": 5,
         "lines": 24
       }
-    }
+    },
+    "frameworks": [
+      "GitHub Actions"
+    ]
   },
   "structure": {
     "entrypoints": [
       "cmd/stacklit/main.go"
     ],
-    "total_files": 42,
-    "total_lines": 3696
+    "total_files": 45,
+    "total_lines": 4072
   },
   "modules": {
     "assets": {
@@ -62,32 +65,47 @@
     },
     "internal/cli": {
       "purpose": "Command-line interface",
-      "files": 4,
-      "lines": 144,
+      "files": 5,
+      "lines": 211,
       "exports": [
         "Execute",
         "Version"
       ],
       "depends_on": [
         "internal/engine",
+        "internal/git",
         "internal/renderer",
-        "internal/schema"
+        "internal/schema",
+        "internal/walker"
       ],
       "depended_by": [
         "cmd/stacklit"
       ],
       "activity": "low"
     },
+    "internal/detect": {
+      "purpose": "Detect",
+      "files": 2,
+      "lines": 299,
+      "exports": [
+        "DetectFrameworks"
+      ],
+      "depended_by": [
+        "internal/engine"
+      ],
+      "activity": "low"
+    },
     "internal/engine": {
       "purpose": "Core orchestration engine",
       "files": 1,
-      "lines": 335,
+      "lines": 345,
       "exports": [
         "Options",
         "Result",
         "Run"
       ],
       "depends_on": [
+        "internal/detect",
         "internal/git",
         "internal/graph",
         "internal/monorepo",
@@ -99,7 +117,7 @@
       "depended_by": [
         "internal/cli"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "internal/git": {
       "purpose": "Git integration",
@@ -113,6 +131,7 @@
         "InstallHook"
       ],
       "depended_by": [
+        "internal/cli",
         "internal/engine"
       ],
       "activity": "low"
@@ -224,6 +243,7 @@
         "Walk"
       ],
       "depended_by": [
+        "internal/cli",
         "internal/engine"
       ],
       "activity": "low"
@@ -241,11 +261,23 @@
       ],
       [
         "internal/cli",
+        "internal/git"
+      ],
+      [
+        "internal/cli",
         "internal/renderer"
       ],
       [
         "internal/cli",
         "internal/schema"
+      ],
+      [
+        "internal/cli",
+        "internal/walker"
+      ],
+      [
+        "internal/engine",
+        "internal/detect"
       ],
       [
         "internal/engine",
@@ -293,15 +325,15 @@
     ],
     "most_depended": [
       "internal/schema",
+      "internal/git",
       "internal/parser",
       "internal/renderer",
+      "internal/walker",
       "assets",
       "internal/cli",
+      "internal/detect",
       "internal/engine",
-      "internal/git",
-      "internal/graph",
-      "internal/monorepo",
-      "internal/walker"
+      "internal/graph"
     ]
   },
   "git": {
@@ -312,6 +344,30 @@
       },
       {
         "path": "internal/engine/engine.go",
+        "commits_90d": 5
+      },
+      {
+        "path": "go.mod",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/cli/generate.go",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/cli/init.go",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/cli/view.go",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/renderer/html.go",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/renderer/mermaid.go",
         "commits_90d": 3
       },
       {
@@ -323,7 +379,7 @@
         "commits_90d": 2
       },
       {
-        "path": "go.mod",
+        "path": "cmd/stacklit/main.go",
         "commits_90d": 2
       },
       {
@@ -331,23 +387,27 @@
         "commits_90d": 2
       },
       {
-        "path": "internal/cli/generate.go",
+        "path": "internal/cli/root.go",
         "commits_90d": 2
       },
       {
-        "path": "internal/cli/init.go",
+        "path": "internal/graph/graph.go",
         "commits_90d": 2
       },
       {
-        "path": "internal/cli/view.go",
+        "path": "internal/graph/graph_test.go",
         "commits_90d": 2
       },
       {
-        "path": "internal/renderer/html.go",
+        "path": "internal/renderer/json.go",
         "commits_90d": 2
       },
       {
-        "path": "internal/renderer/mermaid.go",
+        "path": "internal/renderer/json_test.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/renderer/mermaid_test.go",
         "commits_90d": 2
       },
       {
@@ -355,61 +415,33 @@
         "commits_90d": 2
       },
       {
-        "path": "testdata/go-project/internal/handler.go",
+        "path": "internal/walker/walker_test.go",
         "commits_90d": 2
-      },
-      {
-        "path": "testdata/go-project/main.go",
-        "commits_90d": 2
-      },
-      {
-        "path": ".gitignore",
-        "commits_90d": 1
-      },
-      {
-        "path": "assets/lang-icons.js",
-        "commits_90d": 1
-      },
-      {
-        "path": "cmd/stacklit/main.go",
-        "commits_90d": 1
-      },
-      {
-        "path": "docs-local/decisions/001-standard-file-not-mcp.md",
-        "commits_90d": 1
-      },
-      {
-        "path": "docs-local/decisions/002-regex-parsers-first.md",
-        "commits_90d": 1
-      },
-      {
-        "path": "docs-local/decisions/003-visual-outputs.md",
-        "commits_90d": 1
       }
     ],
     "recent": [
-      "assets/template.html",
-      "assets/embed.go",
-      "assets/lang-icons.js",
-      "internal/renderer/html.go",
-      "Makefile",
-      "docs-local/decisions/001-standard-file-not-mcp.md",
-      "docs-local/decisions/002-regex-parsers-first.md",
-      "docs-local/decisions/003-visual-outputs.md",
-      "docs-local/plans/00-overview.md",
-      "docs-local/plans/01-cli-scaffold.md"
+      "internal/detect/frameworks.go",
+      "internal/detect/frameworks_test.go",
+      "internal/engine/engine.go",
+      "internal/cli/diff.go",
+      "internal/cli/root.go",
+      "SKILL.md",
+      ".github/workflows/ci.yml",
+      ".github/workflows/release.yml",
+      "action/action.yml",
+      ".goreleaser.yml"
     ],
     "stable": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/release.yml",
       ".gitignore",
+      ".goreleaser.yml",
+      "README.md",
+      "SKILL.md",
+      "action/action.yml",
       "assets/lang-icons.js",
-      "cmd/stacklit/main.go",
       "docs-local/decisions/001-standard-file-not-mcp.md",
-      "docs-local/decisions/002-regex-parsers-first.md",
-      "docs-local/decisions/003-visual-outputs.md",
-      "docs-local/plans/00-overview.md",
-      "docs-local/plans/01-cli-scaffold.md",
-      "docs-local/plans/02-file-walker.md",
-      "docs-local/plans/03-parsers.md"
+      "docs-local/decisions/002-regex-parsers-first.md"
     ]
   },
   "hints": {

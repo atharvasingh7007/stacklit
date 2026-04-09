@@ -16,5 +16,5 @@ stacklit.html
 vendor/
 coverage.out
 
-# Local docs
-docs-local/ref/
+# Local docs (research, plans, specs — not for public repo)
+docs-local/
