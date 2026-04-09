@@ -1,0 +1,1 @@
+{ "name": "test-ts", "scripts": { "start": "ts-node src/index.ts" } }
