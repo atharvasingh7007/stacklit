@@ -1464,6 +1464,11 @@
   requestAnimationFrame(graphLoop);
 
   // Graph mouse interactions
+  function canvasXY(e) {
+    const rect = graphCanvas.getBoundingClientRect();
+    return [e.clientX - rect.left, e.clientY - rect.top];
+  }
+
   let dragNode   = null;
   let dragOffX   = 0, dragOffY = 0;
   let panStart   = null;
@@ -1487,10 +1492,11 @@
     hasDragged = false;
     mouseDownX = e.clientX;
     mouseDownY = e.clientY;
-    const hit = nodeAtScreen(e.clientX, e.clientY);
+    const [cx, cy] = canvasXY(e);
+    const hit = nodeAtScreen(cx, cy);
     if (hit >= 0) {
       dragNode = nodeArr[hit];
-      const [wx, wy] = screenToWorld(e.clientX, e.clientY);
+      const [wx, wy] = screenToWorld(cx, cy);
       dragOffX = dragNode.x - wx;
       dragOffY = dragNode.y - wy;
       dragNode.vx = 0; dragNode.vy = 0;
@@ -1498,8 +1504,8 @@
       graphCanvas.style.cursor = 'grabbing';
     } else {
       panStart   = true;
-      panStartPX = e.clientX - panX;
-      panStartPY = e.clientY - panY;
+      panStartPX = cx - panX;
+      panStartPY = cy - panY;
       graphCanvas.classList.add('dragging');
       graphCanvas.style.cursor = 'move';
     }
@@ -1514,12 +1520,14 @@
     if (dragNode) {
       graphSimRunning = true;
       graphSimTick = 0;
-      const [wx, wy] = screenToWorld(e.clientX, e.clientY);
+      const [cx2, cy2] = canvasXY(e);
+      const [wx, wy] = screenToWorld(cx2, cy2);
       dragNode.x = wx + dragOffX;
       dragNode.y = wy + dragOffY;
     } else if (panStart) {
-      panX = e.clientX - panStartPX;
-      panY = e.clientY - panStartPY;
+      const [cx2, cy2] = canvasXY(e);
+      panX = cx2 - panStartPX;
+      panY = cy2 - panStartPY;
     }
   });
 
@@ -1531,7 +1539,8 @@
 
   graphCanvas.addEventListener('click', function (e) {
     if (hasDragged) return;
-    const hit = nodeAtScreen(e.clientX, e.clientY);
+    const [cx3, cy3] = canvasXY(e);
+    const hit = nodeAtScreen(cx3, cy3);
     if (hit >= 0) {
       selectedNode = hit;
       showModuleInfo(nodeArr[hit]);
@@ -1551,14 +1560,16 @@
     const zf         = 1 + direction * zoomSpeed;
     const newScale   = scale * zf;
     if (newScale < 0.1 || newScale > 10) return;
-    panX  = e.clientX - (e.clientX - panX) * (newScale / scale);
-    panY  = e.clientY - (e.clientY - panY) * (newScale / scale);
+    const [zx, zy] = canvasXY(e);
+    panX  = zx - (zx - panX) * (newScale / scale);
+    panY  = zy - (zy - panY) * (newScale / scale);
     scale = newScale;
   }, { passive: false });
 
   const tooltip = document.getElementById('tooltip');
   graphCanvas.addEventListener('mousemove', function (e) {
-    const hit = nodeAtScreen(e.clientX, e.clientY);
+    const [hx, hy] = canvasXY(e);
+    const hit = nodeAtScreen(hx, hy);
     if (hit >= 0 && !dragNode) {
       const n = nodeArr[hit];
       tooltip.style.display = 'block';
