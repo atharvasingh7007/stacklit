@@ -2,6 +2,7 @@ package parser
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -109,11 +110,12 @@ func TestTypeScriptParserParse_Exports(t *testing.T) {
 		t.Fatalf("Parse: %v", err)
 	}
 
+	// Exports are now full signatures containing the name.
 	wantExports := []string{"AppRouter", "Router", "RouteHandler"}
 	for _, want := range wantExports {
 		found := false
 		for _, got := range info.Exports {
-			if got == want {
+			if strings.Contains(got, want) {
 				found = true
 				break
 			}
@@ -156,11 +158,12 @@ export enum MyEnum { A, B }
 		t.Errorf("'react' import count = %d, want 1 (deduplicated)", reactCount)
 	}
 
+	// Exports are now full signatures containing the name.
 	wantExports := []string{"MyComponent", "myValue", "MyType", "MyInterface", "MyClass", "MyEnum"}
 	for _, want := range wantExports {
 		found := false
 		for _, got := range info.Exports {
-			if got == want {
+			if strings.Contains(got, want) {
 				found = true
 				break
 			}

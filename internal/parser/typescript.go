@@ -2,6 +2,7 @@ package parser
 
 import (
 	"regexp"
+	"strings"
 )
 
 var (
@@ -14,8 +15,12 @@ var (
 	// CJS require: require('module')
 	tsRequire = regexp.MustCompile(`require\(['"]([^'"]+)['"]\)`)
 
-	// Named exports: export [async] function|class|const|let|var|type|interface|enum Name
-	tsExport = regexp.MustCompile(`(?m)^export\s+(?:async\s+)?(?:function|class|const|let|var|type|interface|enum)\s+(\w+)`)
+	// Named exports: capture the full signature line up to { or = or end of line.
+	// Group 1 captures: [async] keyword name[(params)][: ReturnType]
+	tsExportSig = regexp.MustCompile(`(?m)^export\s+((?:async\s+)?(?:function|class|const|let|var|type|interface|enum)\s+\w+(?:\([^)]*\))?(?:\s*:\s*\S+)?)`)
+
+	// Fallback: just the name, for deduplication key
+	tsExportName = regexp.MustCompile(`(?m)^export\s+(?:async\s+)?(?:function|class|const|let|var|type|interface|enum)\s+(\w+)`)
 )
 
 // TypeScriptParser parses TypeScript and JavaScript files using regex.
@@ -55,13 +60,31 @@ func (t *TypeScriptParser) Parse(path string, content []byte) (*FileInfo, error)
 		addImport(string(m[1]))
 	}
 
-	// Collect exports.
+	// Collect exports with full signatures.
 	seenExport := make(map[string]bool)
-	for _, m := range tsExport.FindAllSubmatch(content, -1) {
+	// Build a name→sig map from full signature regex.
+	sigMatches := tsExportSig.FindAllSubmatch(content, -1)
+	nameMatches := tsExportName.FindAllSubmatch(content, -1)
+	sigMap := make(map[string]string, len(sigMatches))
+	for i, sm := range sigMatches {
+		if i < len(nameMatches) {
+			name := string(nameMatches[i][1])
+			sig := strings.TrimSpace(string(sm[1]))
+			if len(sig) > 80 {
+				sig = sig[:80]
+			}
+			sigMap[name] = sig
+		}
+	}
+	for _, m := range nameMatches {
 		name := string(m[1])
 		if !seenExport[name] {
 			seenExport[name] = true
-			info.Exports = append(info.Exports, name)
+			if sig, ok := sigMap[name]; ok && sig != "" {
+				info.Exports = append(info.Exports, sig)
+			} else {
+				info.Exports = append(info.Exports, name)
+			}
 		}
 	}
 

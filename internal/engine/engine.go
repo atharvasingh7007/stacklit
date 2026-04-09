@@ -63,6 +63,9 @@ var purposeMap = map[string]string{
 	"assets":     "Static assets",
 	"parser":     "Source code parsers",
 	"monorepo":   "Monorepo detection",
+	"detect":     "Framework and tool detection",
+	"mcp":        "MCP server for AI agents",
+	"summary":    "AI-powered codebase summaries",
 }
 
 // inferPurpose returns a human-readable description for a module path.
@@ -284,6 +287,10 @@ func assembleIndex(
 		if len(exports) > 10 {
 			exports = exports[:10]
 		}
+		fileList := mod.Files
+		if len(fileList) > 20 {
+			fileList = fileList[:20]
+		}
 		// Compute activity level from git hot files
 		activityLevel := "low"
 		for _, hf := range activity.HotFiles {
@@ -301,6 +308,7 @@ func assembleIndex(
 			Purpose:    inferPurpose(mod.Name),
 			Files:      mod.FileCount,
 			Lines:      mod.LineCount,
+			FileList:   fileList,
 			Exports:    exports,
 			DependsOn:  mod.DependsOn,
 			DependedBy: mod.DependedBy,

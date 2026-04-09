@@ -8,6 +8,71 @@ import (
 	"unicode"
 )
 
+// formatFuncSignature returns a concise signature string for a Go function declaration.
+func formatFuncSignature(fn *ast.FuncDecl) string {
+	var b strings.Builder
+	b.WriteString(fn.Name.Name)
+
+	// Parameters
+	b.WriteString("(")
+	if fn.Type.Params != nil {
+		params := []string{}
+		for _, field := range fn.Type.Params.List {
+			typeStr := formatType(field.Type)
+			if len(field.Names) > 0 {
+				for _, name := range field.Names {
+					params = append(params, name.Name+" "+typeStr)
+				}
+			} else {
+				params = append(params, typeStr)
+			}
+		}
+		b.WriteString(strings.Join(params, ", "))
+	}
+	b.WriteString(")")
+
+	// Return types
+	if fn.Type.Results != nil && len(fn.Type.Results.List) > 0 {
+		results := []string{}
+		for _, field := range fn.Type.Results.List {
+			results = append(results, formatType(field.Type))
+		}
+		if len(results) == 1 {
+			b.WriteString(" " + results[0])
+		} else {
+			b.WriteString(" (" + strings.Join(results, ", ") + ")")
+		}
+	}
+
+	sig := b.String()
+	if len(sig) > 80 {
+		sig = sig[:80]
+	}
+	return sig
+}
+
+// formatType returns a string representation of an AST type expression.
+func formatType(expr ast.Expr) string {
+	switch t := expr.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.StarExpr:
+		return "*" + formatType(t.X)
+	case *ast.ArrayType:
+		return "[]" + formatType(t.Elt)
+	case *ast.MapType:
+		return "map[" + formatType(t.Key) + "]" + formatType(t.Value)
+	case *ast.SelectorExpr:
+		return formatType(t.X) + "." + t.Sel.Name
+	case *ast.InterfaceType:
+		return "interface{}"
+	case *ast.Ellipsis:
+		return "..." + formatType(t.Elt)
+	default:
+		return "any"
+	}
+}
+
 // GoParser parses Go source files using the stdlib go/parser + go/ast.
 type GoParser struct{}
 
@@ -55,19 +120,19 @@ func (g *GoParser) Parse(path string, content []byte) (*FileInfo, error) {
 		}
 	}
 
-	// Extract exported names (uppercase first letter).
+	// Extract exported names/signatures (uppercase first letter).
 	for _, decl := range f.Decls {
 		switch d := decl.(type) {
 		case *ast.FuncDecl:
 			if isExported(d.Name.Name) {
-				info.Exports = append(info.Exports, d.Name.Name)
+				info.Exports = append(info.Exports, formatFuncSignature(d))
 			}
 		case *ast.GenDecl:
 			for _, spec := range d.Specs {
 				switch s := spec.(type) {
 				case *ast.TypeSpec:
 					if isExported(s.Name.Name) {
-						info.Exports = append(info.Exports, s.Name.Name)
+						info.Exports = append(info.Exports, "type "+s.Name.Name)
 					}
 				case *ast.ValueSpec:
 					for _, name := range s.Names {

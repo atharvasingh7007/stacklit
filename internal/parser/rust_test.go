@@ -2,6 +2,7 @@ package parser
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -73,11 +74,12 @@ func TestRustParserParse_Exports(t *testing.T) {
 		t.Fatalf("Parse: %v", err)
 	}
 
+	// Exports are now full signatures containing the name.
 	wantExports := []string{"AppState", "create_app"}
 	for _, want := range wantExports {
 		found := false
 		for _, got := range info.Exports {
-			if got == want {
+			if strings.Contains(got, want) {
 				found = true
 				break
 			}
@@ -89,7 +91,7 @@ func TestRustParserParse_Exports(t *testing.T) {
 
 	// Private function should NOT be exported
 	for _, got := range info.Exports {
-		if got == "internal_helper" {
+		if strings.Contains(got, "internal_helper") {
 			t.Errorf("private fn %q should not be in exports", got)
 		}
 	}

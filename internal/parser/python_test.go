@@ -2,6 +2,7 @@ package parser
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -73,12 +74,12 @@ func TestPythonParserParse_Exports(t *testing.T) {
 		t.Fatalf("Parse: %v", err)
 	}
 
-	// Public names should be exported.
+	// Public names should be exported (as full signatures containing the name).
 	wantExports := []string{"Application", "create_app"}
 	for _, want := range wantExports {
 		found := false
 		for _, got := range info.Exports {
-			if got == want {
+			if strings.Contains(got, want) {
 				found = true
 				break
 			}
@@ -90,7 +91,7 @@ func TestPythonParserParse_Exports(t *testing.T) {
 
 	// Private names should NOT be exported.
 	for _, got := range info.Exports {
-		if got == "_internal_helper" {
+		if strings.Contains(got, "_internal_helper") {
 			t.Errorf("private name %q should not be in exports", got)
 		}
 	}

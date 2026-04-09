@@ -12,8 +12,9 @@ var (
 	// from X import ...
 	pyFromImport = regexp.MustCompile(`(?m)^from\s+(\S+)\s+import`)
 
-	// module-level function definitions
-	pyDef = regexp.MustCompile(`(?m)^def\s+(\w+)\s*\(`)
+	// module-level function definitions — capture full signature up to colon
+	pyDef    = regexp.MustCompile(`(?m)^def\s+(\w+)\s*\(`)
+	pyDefSig = regexp.MustCompile(`(?m)^(def\s+\w+\s*\([^)]*\)(?:\s*->\s*\S+)?)`)
 
 	// module-level class definitions
 	pyClass = regexp.MustCompile(`(?m)^class\s+(\w+)`)
@@ -57,19 +58,41 @@ func (p *PythonParser) Parse(path string, content []byte) (*FileInfo, error) {
 
 	// Collect exports: module-level defs and classes that don't start with _.
 	seenExport := make(map[string]bool)
-	addExport := func(name string) {
-		if !strings.HasPrefix(name, "_") && !seenExport[name] {
-			seenExport[name] = true
-			info.Exports = append(info.Exports, name)
+
+	// Build name→full-sig map for defs.
+	defNames := pyDef.FindAllSubmatch(content, -1)
+	defSigs := pyDefSig.FindAllSubmatch(content, -1)
+	defSigMap := make(map[string]string, len(defSigs))
+	for i, ds := range defSigs {
+		if i < len(defNames) {
+			name := string(defNames[i][1])
+			sig := strings.TrimSpace(string(ds[1]))
+			if len(sig) > 80 {
+				sig = sig[:80]
+			}
+			defSigMap[name] = sig
 		}
 	}
 
-	for _, m := range pyDef.FindAllSubmatch(content, -1) {
-		addExport(string(m[1]))
+	addExport := func(name, sig string) {
+		if !strings.HasPrefix(name, "_") && !seenExport[name] {
+			seenExport[name] = true
+			info.Exports = append(info.Exports, sig)
+		}
+	}
+
+	for _, m := range defNames {
+		name := string(m[1])
+		sig, ok := defSigMap[name]
+		if !ok || sig == "" {
+			sig = name
+		}
+		addExport(name, sig)
 	}
 
 	for _, m := range pyClass.FindAllSubmatch(content, -1) {
-		addExport(string(m[1]))
+		name := string(m[1])
+		addExport(name, "class "+name)
 	}
 
 	// Detect entrypoint.

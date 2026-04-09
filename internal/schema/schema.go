@@ -50,6 +50,7 @@ type ModuleInfo struct {
 	Purpose    string   `json:"purpose"`
 	Files      int      `json:"files"`
 	Lines      int      `json:"lines"`
+	FileList   []string `json:"file_list,omitempty"`
 	Exports    []string `json:"exports,omitempty"`
 	DependsOn  []string `json:"depends_on,omitempty"`
 	DependedBy []string `json:"depended_by,omitempty"`

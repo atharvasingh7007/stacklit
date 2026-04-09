@@ -2,6 +2,7 @@ package parser
 
 import (
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -92,20 +93,21 @@ func TestGoParserParse_Exports(t *testing.T) {
 		t.Fatalf("Parse: %v", err)
 	}
 
-	// Handle should be exported, processRequest should not.
+	// Handle should be exported (as a full signature starting with "Handle"),
+	// processRequest should not appear at all.
 	foundHandle := false
 	foundProcessRequest := false
 	for _, exp := range info.Exports {
-		if exp == "Handle" {
+		if strings.HasPrefix(exp, "Handle") {
 			foundHandle = true
 		}
-		if exp == "processRequest" {
+		if strings.Contains(exp, "processRequest") {
 			foundProcessRequest = true
 		}
 	}
 
 	if !foundHandle {
-		t.Errorf("exported name %q not found in %v", "Handle", info.Exports)
+		t.Errorf("exported name starting with %q not found in %v", "Handle", info.Exports)
 	}
 	if foundProcessRequest {
 		t.Errorf("unexported name %q should not be in exports %v", "processRequest", info.Exports)

@@ -15,8 +15,11 @@ var (
 	// extern crate serde;
 	rustExternCrate = regexp.MustCompile(`(?m)^extern\s+crate\s+(\w+)`)
 
-	// pub fn / pub struct / pub enum / pub trait / pub type / pub const / pub static
+	// pub fn / pub struct / pub enum / pub trait / pub type / pub const / pub static — name only (for dedup)
 	rustPub = regexp.MustCompile(`(?m)^pub\s+(?:async\s+)?(?:fn|struct|enum|trait|type|const|static)\s+(\w+)`)
+
+	// Full pub signature: captures keyword + name + optional params + optional return
+	rustPubSig = regexp.MustCompile(`(?m)^(pub\s+(?:async\s+)?(?:fn\s+\w+\s*\([^)]*\)(?:\s*->\s*\S+)?|struct\s+\w+|enum\s+\w+|trait\s+\w+|type\s+\w+\s*=\s*[^;]+|const\s+\w+\s*:\s*\S+|static\s+\w+\s*:\s*\S+))`)
 
 	// fn main() entrypoint
 	rustMain = regexp.MustCompile(`(?m)^fn\s+main\s*\(`)
@@ -69,13 +72,30 @@ func (r *RustParser) Parse(path string, content []byte) (*FileInfo, error) {
 		addImport(string(m[1]))
 	}
 
-	// Collect public exports
+	// Collect public exports with full signatures.
 	seenExport := make(map[string]bool)
-	for _, m := range rustPub.FindAllSubmatch(content, -1) {
+	nameMatches := rustPub.FindAllSubmatch(content, -1)
+	sigMatches := rustPubSig.FindAllSubmatch(content, -1)
+	rustSigMap := make(map[string]string, len(sigMatches))
+	for i, sm := range sigMatches {
+		if i < len(nameMatches) {
+			name := string(nameMatches[i][1])
+			sig := strings.TrimSpace(string(sm[1]))
+			if len(sig) > 80 {
+				sig = sig[:80]
+			}
+			rustSigMap[name] = sig
+		}
+	}
+	for _, m := range nameMatches {
 		name := string(m[1])
 		if !seenExport[name] {
 			seenExport[name] = true
-			info.Exports = append(info.Exports, name)
+			if sig, ok := rustSigMap[name]; ok && sig != "" {
+				info.Exports = append(info.Exports, sig)
+			} else {
+				info.Exports = append(info.Exports, name)
+			}
 		}
 	}
 

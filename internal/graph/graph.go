@@ -49,6 +49,7 @@ func shouldSkipModule(name string) bool {
 type Module struct {
 	Name       string
 	FileCount  int
+	Files      []string // basenames of files in this module
 	Exports    []string
 	DependsOn  []string
 	DependedBy []string
@@ -97,6 +98,7 @@ func Build(files []*parser.FileInfo) *Graph {
 		m.LineCount += f.LineCount
 		m.Exports = appendUnique(m.Exports, f.Exports...)
 		m.Languages = appendUnique(m.Languages, f.Language)
+		m.Files = append(m.Files, filepath.Base(f.Path))
 
 		if f.IsEntrypoint {
 			g.entrypoints = append(g.entrypoints, f.Path)
@@ -149,6 +151,7 @@ func Build(files []*parser.FileInfo) *Graph {
 		sort.Strings(m.DependsOn)
 		sort.Strings(m.DependedBy)
 		sort.Strings(m.Languages)
+		sort.Strings(m.Files)
 	}
 	sort.Strings(g.entrypoints)
 
