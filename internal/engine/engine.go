@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/glincker/stacklit/internal/detect"
 	"github.com/glincker/stacklit/internal/git"
 	"github.com/glincker/stacklit/internal/graph"
 	"github.com/glincker/stacklit/internal/monorepo"
@@ -207,9 +208,10 @@ func assembleIndex(
 	projectName := filepath.Base(root)
 	projectType := mono.Type
 
-	// --- Tech: count languages ---
+	// --- Tech: count languages and collect imports ---
 	langStats := map[string]schema.LangStats{}
 	totalLines := 0
+	var allImports []string
 	for _, f := range parsed {
 		lang := strings.ToLower(f.Language)
 		ls := langStats[lang]
@@ -217,7 +219,11 @@ func assembleIndex(
 		ls.Lines += f.LineCount
 		langStats[lang] = ls
 		totalLines += f.LineCount
+		allImports = append(allImports, f.Imports...)
 	}
+
+	// --- Frameworks ---
+	frameworks := detect.DetectFrameworks(root, allImports)
 	primaryLang := ""
 	primaryCount := 0
 	for lang, ls := range langStats {
@@ -311,6 +317,7 @@ func assembleIndex(
 		Tech: schema.Tech{
 			PrimaryLanguage: primaryLang,
 			Languages:       langStats,
+			Frameworks:      frameworks,
 		},
 		Structure: schema.Structure{
 			TotalFiles:  len(files),
