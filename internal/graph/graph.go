@@ -8,9 +8,8 @@ import (
 	"github.com/glincker/stacklit/internal/parser"
 )
 
-// maxModuleDepth is the maximum number of path segments a module name may have.
-// Deeper paths are collapsed to their ancestor at this depth.
-const maxModuleDepth = 4
+// defaultMaxModuleDepth is the default maximum path depth for module detection.
+const defaultMaxModuleDepth = 4
 
 // skipModuleSegments is the set of path segment names that indicate a module
 // (or any ancestor) should be excluded from the graph.
@@ -75,8 +74,22 @@ type edgeKey struct {
 	to   string
 }
 
+// BuildOptions configures the behaviour of Build.
+type BuildOptions struct {
+	// MaxDepth is the maximum number of path segments a module name may have.
+	// Deeper paths are collapsed to their ancestor. Defaults to 4 when 0.
+	MaxDepth int
+	// MaxModules caps how many modules are retained. 0 means no cap.
+	MaxModules int
+}
+
 // Build constructs a dependency Graph from a slice of parsed FileInfo.
-func Build(files []*parser.FileInfo) *Graph {
+func Build(files []*parser.FileInfo, opts BuildOptions) *Graph {
+	maxDepth := opts.MaxDepth
+	if maxDepth == 0 {
+		maxDepth = defaultMaxModuleDepth
+	}
+
 	g := &Graph{
 		modules: make(map[string]*Module),
 		edges:   make(map[edgeKey]*Edge),
@@ -84,7 +97,7 @@ func Build(files []*parser.FileInfo) *Graph {
 
 	// First pass: create modules and collect entrypoints.
 	for _, f := range files {
-		mod := detectModule(f.Path)
+		mod := detectModuleWithDepth(f.Path, maxDepth)
 		if shouldSkipModule(mod) {
 			continue
 		}
@@ -123,7 +136,7 @@ func Build(files []*parser.FileInfo) *Graph {
 
 	// Second pass: resolve imports to edges.
 	for _, f := range files {
-		fromMod := detectModule(f.Path)
+		fromMod := detectModuleWithDepth(f.Path, maxDepth)
 		if shouldSkipModule(fromMod) {
 			continue
 		}
@@ -234,18 +247,36 @@ func (g *Graph) Entrypoints() []string {
 	return g.entrypoints
 }
 
+// Isolated returns the names of modules that have no incoming and no outgoing
+// dependency edges, sorted alphabetically.
+func (g *Graph) Isolated() []string {
+	var isolated []string
+	for _, m := range g.modules {
+		if len(m.DependsOn) == 0 && len(m.DependedBy) == 0 {
+			isolated = append(isolated, m.Name)
+		}
+	}
+	sort.Strings(isolated)
+	return isolated
+}
+
 // detectModule returns the parent directory of a file path as the module name,
-// collapsed to at most maxModuleDepth segments. Files at the root level return
-// "root".
+// collapsed to at most defaultMaxModuleDepth segments. Files at the root level
+// return "root".
 func detectModule(filePath string) string {
+	return detectModuleWithDepth(filePath, defaultMaxModuleDepth)
+}
+
+// detectModuleWithDepth is like detectModule but uses an explicit depth cap.
+func detectModuleWithDepth(filePath string, maxDepth int) string {
 	dir := filepath.Dir(filePath)
 	if dir == "." || dir == "" || dir == "/" {
 		return "root"
 	}
 	dir = filepath.ToSlash(dir)
 	parts := strings.Split(dir, "/")
-	if len(parts) > maxModuleDepth {
-		parts = parts[:maxModuleDepth]
+	if maxDepth > 0 && len(parts) > maxDepth {
+		parts = parts[:maxDepth]
 	}
 	return strings.Join(parts, "/")
 }

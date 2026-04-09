@@ -70,12 +70,20 @@ var alwaysIgnoreDirs = map[string]bool{
 
 // Walk traverses root and returns a sorted slice of relative paths for all
 // source files that are not excluded by .gitignore rules or alwaysIgnoreDirs.
-func Walk(root string) ([]string, error) {
+// extraIgnore is an optional list of additional gitignore-style patterns to
+// skip; it may be nil or empty to preserve the previous behaviour.
+func Walk(root string, extraIgnore []string) ([]string, error) {
 	// Load .gitignore from root if present.
 	var gi *gitignore.GitIgnore
 	gitignorePath := filepath.Join(root, ".gitignore")
 	if _, err := os.Stat(gitignorePath); err == nil {
 		gi, _ = gitignore.CompileIgnoreFile(gitignorePath)
+	}
+
+	// Compile extra ignore patterns into a separate matcher when provided.
+	var extraGi *gitignore.GitIgnore
+	if len(extraIgnore) > 0 {
+		extraGi = gitignore.CompileIgnoreLines(extraIgnore...)
 	}
 
 	var results []string
@@ -107,11 +115,20 @@ func Walk(root string) ([]string, error) {
 			if gi != nil && gi.MatchesPath(rel+"/") {
 				return filepath.SkipDir
 			}
+			// Skip directories matched by extra ignore patterns.
+			if extraGi != nil && extraGi.MatchesPath(rel+"/") {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 
 		// Skip files matched by .gitignore.
 		if gi != nil && gi.MatchesPath(rel) {
+			return nil
+		}
+
+		// Skip files matched by extra ignore patterns.
+		if extraGi != nil && extraGi.MatchesPath(rel) {
 			return nil
 		}
 

@@ -33,7 +33,7 @@ func newDiffCmd() *cobra.Command {
 			}
 
 			// 2. Walk current source files
-			files, err := walker.Walk(".")
+			files, err := walker.Walk(".", nil)
 			if err != nil {
 				return fmt.Errorf("failed to walk source files: %w", err)
 			}

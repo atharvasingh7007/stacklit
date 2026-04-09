@@ -22,7 +22,7 @@ func fixtureDir(t *testing.T) string {
 
 func TestWalkSourceFiles(t *testing.T) {
 	root := fixtureDir(t)
-	files, err := walker.Walk(root)
+	files, err := walker.Walk(root, nil)
 	if err != nil {
 		t.Fatalf("Walk returned error: %v", err)
 	}
@@ -66,7 +66,7 @@ func TestWalkSourceFiles(t *testing.T) {
 
 func TestWalkReturnsRelativePaths(t *testing.T) {
 	root := fixtureDir(t)
-	files, err := walker.Walk(root)
+	files, err := walker.Walk(root, nil)
 	if err != nil {
 		t.Fatalf("Walk returned error: %v", err)
 	}
@@ -80,7 +80,7 @@ func TestWalkReturnsRelativePaths(t *testing.T) {
 
 func TestWalkEmptyDir(t *testing.T) {
 	dir := t.TempDir()
-	files, err := walker.Walk(dir)
+	files, err := walker.Walk(dir, nil)
 	if err != nil {
 		t.Fatalf("Walk returned error: %v", err)
 	}
@@ -109,7 +109,7 @@ func TestWalkAlwaysIgnoresDirs(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	files, err := walker.Walk(dir)
+	files, err := walker.Walk(dir, nil)
 	if err != nil {
 		t.Fatalf("Walk returned error: %v", err)
 	}

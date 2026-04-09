@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/glincker/stacklit/internal/config"
 	"github.com/glincker/stacklit/internal/detect"
 	"github.com/glincker/stacklit/internal/git"
 	"github.com/glincker/stacklit/internal/graph"
@@ -144,6 +146,9 @@ func Run(opts Options) (*Result, error) {
 		return nil, fmt.Errorf("resolving root: %w", err)
 	}
 
+	// 1a. Load config (best-effort; uses defaults if absent).
+	cfg := config.Load(root)
+
 	// 2. Detect monorepo layout.
 	mono, err := monorepo.Detect(root)
 	if err != nil {
@@ -154,8 +159,8 @@ func Run(opts Options) (*Result, error) {
 		fmt.Printf("[stacklit] monorepo detected: %s (%d workspaces)\n", mono.Tool, len(mono.Workspaces))
 	}
 
-	// 3. Walk the filesystem.
-	files, err := walker.Walk(root)
+	// 3. Walk the filesystem, honouring extra ignore patterns from config.
+	files, err := walker.Walk(root, cfg.Ignore)
 	if err != nil {
 		return nil, fmt.Errorf("walking %s: %w", root, err)
 	}
@@ -169,8 +174,11 @@ func Run(opts Options) (*Result, error) {
 		fmt.Printf("[stacklit] parsed %d files (%d errors)\n", len(parsed), len(parseErrs))
 	}
 
-	// 5. Build dependency graph.
-	g := graph.Build(parsed)
+	// 5. Build dependency graph with config-driven limits.
+	g := graph.Build(parsed, graph.BuildOptions{
+		MaxDepth:   cfg.MaxDepth,
+		MaxModules: cfg.MaxModules,
+	})
 
 	// 6. Get git activity.
 	activity, err := git.GetActivity(root, 90)
@@ -189,7 +197,7 @@ func Run(opts Options) (*Result, error) {
 	}
 
 	// 8. Assemble schema.Index.
-	idx := assembleIndex(root, mono, files, parsed, g, activity, contents)
+	idx := assembleIndex(root, mono, files, parsed, g, activity, contents, cfg)
 
 	// 9. Compute Merkle hash.
 	idx.MerkleHash = git.ComputeMerkle(files, contents)
@@ -207,10 +215,10 @@ func Run(opts Options) (*Result, error) {
 		}
 	}
 
-	// 10. Write outputs.
-	jsonPath := filepath.Join(root, "stacklit.json")
-	mmdPath := filepath.Join(root, "stacklit.mmd")
-	htmlPath := filepath.Join(root, "stacklit.html")
+	// 11. Write outputs using config-driven paths.
+	jsonPath := filepath.Join(root, cfg.Output.JSON)
+	mmdPath := filepath.Join(root, cfg.Output.Mermaid)
+	htmlPath := filepath.Join(root, cfg.Output.HTML)
 
 	if err := renderer.WriteJSON(idx, jsonPath); err != nil {
 		return nil, fmt.Errorf("writing JSON: %w", err)
@@ -222,7 +230,7 @@ func Run(opts Options) (*Result, error) {
 		return nil, fmt.Errorf("writing HTML: %w", err)
 	}
 
-	// 10. Install git hook if requested.
+	// 12. Install git hook if requested.
 	if opts.InstallHook {
 		if hookErr := git.InstallHook(root); hookErr != nil && !opts.Quiet {
 			fmt.Printf("[stacklit] warning: could not install hook: %v\n", hookErr)
@@ -231,7 +239,7 @@ func Run(opts Options) (*Result, error) {
 
 	dur := time.Since(start)
 
-	// 11. Print summary.
+	// 13. Print summary.
 	if !opts.Quiet {
 		fmt.Printf("[stacklit] done in %s — wrote %s, %s, %s\n",
 			dur.Round(time.Millisecond), jsonPath, mmdPath, htmlPath)
@@ -246,6 +254,94 @@ func Run(opts Options) (*Result, error) {
 	}, nil
 }
 
+// MultiOptions configures a RunMulti call.
+type MultiOptions struct {
+	ReposFile string
+	Quiet     bool
+}
+
+// MultiResult holds the output of a RunMulti call.
+type MultiResult struct {
+	OutputPath string
+	RepoCount  int
+	Duration   time.Duration
+}
+
+// RunMulti reads a repos file, scans each repo, and writes a combined stacklit-multi.json.
+func RunMulti(opts MultiOptions) (*MultiResult, error) {
+	start := time.Now()
+
+	// 1. Read repos file.
+	data, err := os.ReadFile(opts.ReposFile)
+	if err != nil {
+		return nil, fmt.Errorf("reading repos file: %w", err)
+	}
+
+	// 2. Parse lines (skip empty lines and comments).
+	var repos []string
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		repos = append(repos, line)
+	}
+
+	// 3. Run stacklit on each repo.
+	var indices []*schema.Index
+	for _, repo := range repos {
+		if !opts.Quiet {
+			fmt.Printf("[stacklit] scanning %s...\n", repo)
+		}
+		result, err := Run(Options{Root: repo, Quiet: true})
+		if err != nil {
+			fmt.Printf("[stacklit] warning: failed to scan %s: %v\n", repo, err)
+			continue
+		}
+		indices = append(indices, result.Index)
+	}
+
+	// 4. Generate cross-repo summary.
+	multi := buildMultiIndex(indices)
+
+	// 5. Write to stacklit-multi.json in current directory.
+	outputPath := "stacklit-multi.json"
+	multiData, _ := json.MarshalIndent(multi, "", "  ")
+	os.WriteFile(outputPath, append(multiData, '\n'), 0644) //nolint:errcheck
+
+	dur := time.Since(start)
+	if !opts.Quiet {
+		fmt.Printf("[stacklit] multi-repo scan done in %s — %d repos indexed\n", dur.Round(time.Millisecond), len(indices))
+	}
+
+	return &MultiResult{OutputPath: outputPath, RepoCount: len(indices), Duration: dur}, nil
+}
+
+// buildMultiIndex assembles a MultiIndex from individual repo indices.
+func buildMultiIndex(indices []*schema.Index) *schema.MultiIndex {
+	multi := &schema.MultiIndex{
+		Schema:      "https://stacklit.dev/schema/v1-multi.json",
+		Version:     "1",
+		Type:        "polyrepo",
+		GeneratedAt: time.Now().UTC().Format(time.RFC3339),
+	}
+
+	for _, idx := range indices {
+		multi.Repos = append(multi.Repos, schema.RepoSummary{
+			Name:            idx.Project.Name,
+			Path:            idx.Project.Root,
+			PrimaryLanguage: idx.Tech.PrimaryLanguage,
+			TotalFiles:      idx.Structure.TotalFiles,
+			TotalLines:      idx.Structure.TotalLines,
+			Modules:         len(idx.Modules),
+			Frameworks:      idx.Tech.Frameworks,
+			Entrypoints:     idx.Structure.Entrypoints,
+		})
+	}
+
+	return multi
+}
+
 // assembleIndex builds a schema.Index from the pipeline outputs.
 func assembleIndex(
 	root string,
@@ -255,6 +351,7 @@ func assembleIndex(
 	g *graph.Graph,
 	activity *git.Activity,
 	contents map[string][]byte,
+	cfg *config.Config,
 ) *schema.Index {
 	// --- Project ---
 	projectName := filepath.Base(root)
@@ -298,13 +395,14 @@ func assembleIndex(
 	}
 
 	// --- Modules ---
-	// maxModules caps the total number of modules emitted to keep output lean.
-	const maxModules = 200
+	// maxModules and maxExports come from config.
+	maxModules := cfg.MaxModules
+	maxExports := cfg.MaxExports
 
 	allMods := g.Modules()
 
 	// If we exceed the cap, keep the modules with the most files.
-	if len(allMods) > maxModules {
+	if maxModules > 0 && len(allMods) > maxModules {
 		sort.SliceStable(allMods, func(i, j int) bool {
 			return allMods[i].FileCount > allMods[j].FileCount
 		})
@@ -317,8 +415,8 @@ func assembleIndex(
 			continue
 		}
 		exports := mod.Exports
-		if len(exports) > 10 {
-			exports = exports[:10]
+		if maxExports > 0 && len(exports) > maxExports {
+			exports = exports[:maxExports]
 		}
 		fileList := mod.Files
 		if len(fileList) > 20 {
@@ -337,15 +435,15 @@ func assembleIndex(
 			}
 		}
 
-		// Cap type defs to 10 per module.
+		// Cap type defs to maxExports per module.
 		typeDefs := mod.TypeDefs
-		if len(typeDefs) > 10 {
-			trimmed := make(map[string]string, 10)
+		if maxExports > 0 && len(typeDefs) > maxExports {
+			trimmed := make(map[string]string, maxExports)
 			i := 0
 			for k, v := range typeDefs {
 				trimmed[k] = v
 				i++
-				if i >= 10 {
+				if i >= maxExports {
 					break
 				}
 			}
@@ -380,6 +478,7 @@ func assembleIndex(
 	if len(mostDepended) > 10 {
 		mostDepended = mostDepended[:10]
 	}
+	isolated := g.Isolated()
 
 	// --- Git ---
 	hotFiles := make([]schema.HotFile, len(activity.HotFiles))
@@ -422,6 +521,7 @@ func assembleIndex(
 			Edges:        schemaEdges,
 			Entrypoints:  entrypoints,
 			MostDepended: mostDepended,
+			Isolated:     isolated,
 		},
 		Git: schema.GitInfo{
 			HotFiles: hotFiles,

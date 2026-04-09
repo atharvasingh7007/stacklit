@@ -13,12 +13,25 @@ var (
 	initHook      bool
 	initWorkspace string
 	initSummary   bool
+	initMultiFile string
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize stacklit in the current project",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if initMultiFile != "" {
+			result, err := engine.RunMulti(engine.MultiOptions{
+				ReposFile: initMultiFile,
+				Quiet:     false,
+			})
+			if err != nil {
+				return err
+			}
+			fmt.Printf("Multi-repo index: %s (%d repos)\n", result.OutputPath, result.RepoCount)
+			return nil
+		}
+
 		result, err := engine.Run(engine.Options{
 			Root:        ".",
 			Workspace:   initWorkspace,
@@ -38,6 +51,7 @@ func init() {
 	initCmd.Flags().BoolVar(&initHook, "hook", false, "Install a git pre-commit hook")
 	initCmd.Flags().StringVar(&initWorkspace, "workspace", "", "Path to workspace root (default: current directory)")
 	initCmd.Flags().BoolVar(&initSummary, "summary", false, "Generate a high-level summary during init")
+	initCmd.Flags().StringVar(&initMultiFile, "multi", "", "Path to file listing repos for polyrepo scanning")
 }
 
 // openBrowser opens url in the default system browser.

@@ -83,3 +83,22 @@ type Hints struct {
 	EnvVars    []string `json:"env_vars,omitempty"`
 	DoNotTouch []string `json:"do_not_touch,omitempty"`
 }
+
+type MultiIndex struct {
+	Schema      string        `json:"$schema"`
+	Version     string        `json:"version"`
+	Type        string        `json:"type"` // "polyrepo"
+	GeneratedAt string        `json:"generated_at"`
+	Repos       []RepoSummary `json:"repos"`
+}
+
+type RepoSummary struct {
+	Name            string   `json:"name"`
+	Path            string   `json:"path"`
+	PrimaryLanguage string   `json:"primary_language"`
+	TotalFiles      int      `json:"total_files"`
+	TotalLines      int      `json:"total_lines"`
+	Modules         int      `json:"modules"`
+	Frameworks      []string `json:"frameworks,omitempty"`
+	Entrypoints     []string `json:"entrypoints,omitempty"`
+}
