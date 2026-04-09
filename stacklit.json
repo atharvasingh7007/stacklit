@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T18:22:38Z",
+  "generated_at": "2026-04-09T18:38:20Z",
   "stacklit_version": "dev",
-  "merkle_hash": "7087ad798fd210e3c1780226b682c1ed3fc084aaccad0618a0ef3e21e6bb8a26",
+  "merkle_hash": "c215b517d0d2e1056501379d22599a657b9ab3a9d4065bca39584b21b434bda7",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,11 @@
     "languages": {
       "go": {
         "files": 35,
-        "lines": 3635
+        "lines": 3639
+      },
+      "javascript": {
+        "files": 1,
+        "lines": 13
       },
       "python": {
         "files": 1,
@@ -30,21 +34,22 @@
     "entrypoints": [
       "cmd/stacklit/main.go"
     ],
-    "total_files": 41,
-    "total_lines": 3679
+    "total_files": 42,
+    "total_lines": 3696
   },
   "modules": {
     "assets": {
       "purpose": "Static assets",
-      "files": 1,
-      "lines": 6,
+      "files": 2,
+      "lines": 22,
       "exports": [
+        "LangIconsJS",
         "TemplateHTML"
       ],
       "depended_by": [
         "internal/renderer"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "cmd/stacklit": {
       "purpose": "Stacklit",
@@ -172,7 +177,7 @@
     "internal/renderer": {
       "purpose": "Output renderers",
       "files": 5,
-      "lines": 370,
+      "lines": 371,
       "exports": [
         "WriteHTML",
         "WriteJSON",
@@ -303,7 +308,19 @@
     "hot_files": [
       {
         "path": "assets/template.html",
+        "commits_90d": 6
+      },
+      {
+        "path": "internal/engine/engine.go",
         "commits_90d": 3
+      },
+      {
+        "path": "Makefile",
+        "commits_90d": 2
+      },
+      {
+        "path": "assets/embed.go",
+        "commits_90d": 2
       },
       {
         "path": "go.mod",
@@ -326,11 +343,15 @@
         "commits_90d": 2
       },
       {
-        "path": "internal/engine/engine.go",
+        "path": "internal/renderer/html.go",
         "commits_90d": 2
       },
       {
         "path": "internal/renderer/mermaid.go",
+        "commits_90d": 2
+      },
+      {
+        "path": "internal/schema/schema.go",
         "commits_90d": 2
       },
       {
@@ -346,11 +367,7 @@
         "commits_90d": 1
       },
       {
-        "path": "Makefile",
-        "commits_90d": 1
-      },
-      {
-        "path": "assets/embed.go",
+        "path": "assets/lang-icons.js",
         "commits_90d": 1
       },
       {
@@ -358,53 +375,41 @@
         "commits_90d": 1
       },
       {
-        "path": "internal/cli/root.go",
+        "path": "docs-local/decisions/001-standard-file-not-mcp.md",
         "commits_90d": 1
       },
       {
-        "path": "internal/git/activity.go",
+        "path": "docs-local/decisions/002-regex-parsers-first.md",
         "commits_90d": 1
       },
       {
-        "path": "internal/git/activity_test.go",
-        "commits_90d": 1
-      },
-      {
-        "path": "internal/git/hooks.go",
-        "commits_90d": 1
-      },
-      {
-        "path": "internal/git/merkle.go",
-        "commits_90d": 1
-      },
-      {
-        "path": "internal/graph/graph.go",
+        "path": "docs-local/decisions/003-visual-outputs.md",
         "commits_90d": 1
       }
     ],
     "recent": [
       "assets/template.html",
-      "internal/engine/engine.go",
-      "internal/renderer/mermaid.go",
       "assets/embed.go",
-      "internal/cli/generate.go",
-      "internal/cli/init.go",
-      "internal/cli/view.go",
+      "assets/lang-icons.js",
       "internal/renderer/html.go",
-      "internal/renderer/json.go",
-      "internal/renderer/json_test.go"
+      "Makefile",
+      "docs-local/decisions/001-standard-file-not-mcp.md",
+      "docs-local/decisions/002-regex-parsers-first.md",
+      "docs-local/decisions/003-visual-outputs.md",
+      "docs-local/plans/00-overview.md",
+      "docs-local/plans/01-cli-scaffold.md"
     ],
     "stable": [
       ".gitignore",
-      "Makefile",
-      "assets/embed.go",
+      "assets/lang-icons.js",
       "cmd/stacklit/main.go",
-      "internal/cli/root.go",
-      "internal/git/activity.go",
-      "internal/git/activity_test.go",
-      "internal/git/hooks.go",
-      "internal/git/merkle.go",
-      "internal/graph/graph.go"
+      "docs-local/decisions/001-standard-file-not-mcp.md",
+      "docs-local/decisions/002-regex-parsers-first.md",
+      "docs-local/decisions/003-visual-outputs.md",
+      "docs-local/plans/00-overview.md",
+      "docs-local/plans/01-cli-scaffold.md",
+      "docs-local/plans/02-file-walker.md",
+      "docs-local/plans/03-parsers.md"
     ]
   },
   "hints": {
