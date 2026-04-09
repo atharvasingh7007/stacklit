@@ -1,0 +1,20 @@
+# Build artifacts
+/stacklit
+dist/
+
+# Generated output
+stacklit.html
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Go
+vendor/
+coverage.out
+
+# Local docs
+docs-local/ref/
