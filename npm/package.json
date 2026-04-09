@@ -1,0 +1,22 @@
+{
+  "name": "stacklit",
+  "version": "0.1.0",
+  "description": "Stop burning tokens. One command to make any repo AI-agent-ready.",
+  "bin": {
+    "stacklit": "bin/stacklit.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": ["ai", "codebase", "index", "agent", "mcp", "cli", "developer-tools"],
+  "author": "glincker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glincker/stacklit"
+  },
+  "homepage": "https://github.com/glincker/stacklit",
+  "engines": {
+    "node": ">=16"
+  }
+}
