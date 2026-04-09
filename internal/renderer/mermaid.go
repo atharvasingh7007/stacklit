@@ -9,23 +9,23 @@ import (
 	"github.com/GLINCKER/stacklit/internal/schema"
 )
 
-// langColors maps language names to their brand colors.
+// langColors maps language names to neutral monochrome colors.
 var langColors = map[string][2]string{
-	"go":         {"#00ADD8", "white"},
-	"typescript": {"#3178C6", "white"},
-	"javascript": {"#F7DF1E", "black"},
-	"python":     {"#3776AB", "white"},
-	"rust":       {"#DEA584", "black"},
-	"java":       {"#ED8B00", "white"},
-	"ruby":       {"#CC342D", "white"},
-	"c":          {"#A8B9CC", "black"},
-	"cpp":        {"#00599C", "white"},
-	"csharp":     {"#239120", "white"},
-	"swift":      {"#FA7343", "white"},
-	"kotlin":     {"#7F52FF", "white"},
-	"php":        {"#777BB4", "white"},
-	"scala":      {"#DC322F", "white"},
-	"elixir":     {"#6E4A7E", "white"},
+	"go":         {"#e6edf3", "#0d1117"},
+	"typescript": {"#c9d1d9", "#0d1117"},
+	"javascript": {"#c9d1d9", "#0d1117"},
+	"python":     {"#b1bac4", "#0d1117"},
+	"rust":       {"#a5b3bf", "#0d1117"},
+	"java":       {"#8b949e", "#0d1117"},
+	"csharp":     {"#8b949e", "#0d1117"},
+	"ruby":       {"#8b949e", "#0d1117"},
+	"php":        {"#8b949e", "#0d1117"},
+	"swift":      {"#8b949e", "#0d1117"},
+	"kotlin":     {"#8b949e", "#0d1117"},
+	"c":          {"#8b949e", "#0d1117"},
+	"cpp":        {"#8b949e", "#0d1117"},
+	"scala":      {"#8b949e", "#0d1117"},
+	"elixir":     {"#8b949e", "#0d1117"},
 }
 
 // sanitizeMermaidID converts a module path to a valid Mermaid node ID.

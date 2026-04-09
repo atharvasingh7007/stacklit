@@ -35,20 +35,30 @@ type Result struct {
 
 // purposeMap maps common directory names to human-readable descriptions.
 var purposeMap = map[string]string{
-	"auth":        "Authentication and authorization",
-	"api":         "API endpoints and handlers",
-	"db":          "Database access layer",
-	"models":      "Data models and types",
-	"config":      "Configuration management",
-	"components":  "UI components",
-	"hooks":       "React hooks",
-	"cmd":         "Application entrypoints",
-	"internal":    "Private application packages",
-	"pkg":         "Public packages",
-	"lib":         "Shared library code",
-	"utils":       "Utility functions",
-	"services":    "Business logic services",
+	"auth":       "Authentication and authorization",
+	"api":        "API endpoints and handlers",
+	"db":         "Database access layer",
+	"models":     "Data models and types",
+	"config":     "Configuration management",
+	"components": "UI components",
+	"hooks":      "React hooks",
+	"cmd":        "Application entrypoints",
+	"internal":   "Private application packages",
+	"pkg":        "Public packages",
+	"lib":        "Shared library code",
+	"utils":      "Utility functions",
+	"services":   "Business logic services",
 	"middleware":  "HTTP middleware",
+	"cli":        "Command-line interface",
+	"schema":     "Data schema definitions",
+	"renderer":   "Output renderers",
+	"walker":     "File system walker",
+	"graph":      "Dependency graph",
+	"engine":     "Core orchestration engine",
+	"git":        "Git integration",
+	"assets":     "Static assets",
+	"parser":     "Source code parsers",
+	"monorepo":   "Monorepo detection",
 }
 
 // inferPurpose returns a human-readable description for a module path.
@@ -218,11 +228,20 @@ func assembleIndex(
 	}
 
 	// --- Structure ---
-	entrypoints := g.Entrypoints()
+	rawEntrypoints := g.Entrypoints()
+	var entrypoints []string
+	for _, ep := range rawEntrypoints {
+		if !strings.HasPrefix(ep, "testdata") {
+			entrypoints = append(entrypoints, ep)
+		}
+	}
 
 	// --- Modules ---
 	modules := map[string]schema.ModuleInfo{}
 	for _, mod := range g.Modules() {
+		if strings.HasPrefix(mod.Name, "testdata") {
+			continue
+		}
 		exports := mod.Exports
 		if len(exports) > 15 {
 			exports = exports[:15]
@@ -238,9 +257,12 @@ func assembleIndex(
 
 	// --- Dependencies ---
 	edges := g.Edges()
-	schemaEdges := make([][2]string, len(edges))
-	for i, e := range edges {
-		schemaEdges[i] = [2]string{e.From, e.To}
+	var schemaEdges [][2]string
+	for _, e := range edges {
+		if strings.HasPrefix(e.From, "testdata") || strings.HasPrefix(e.To, "testdata") {
+			continue
+		}
+		schemaEdges = append(schemaEdges, [2]string{e.From, e.To})
 	}
 	mostDepended := g.MostDepended()
 	// Cap most-depended list.
@@ -267,7 +289,7 @@ func assembleIndex(
 		Version: "1",
 		Project: schema.Project{
 			Name:       projectName,
-			Root:       root,
+			Root:       ".",
 			Type:       projectType,
 			Workspaces: workspaces,
 		},

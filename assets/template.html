@@ -13,7 +13,7 @@
     --border: #30363d;
     --text: #e6edf3;
     --text-muted: #8b949e;
-    --accent: #58a6ff;
+    --accent: #f0f6fc;
     --danger: #f85149;
     --success: #3fb950;
     --radius: 6px;
@@ -422,20 +422,20 @@
 
   // ── Constants ──────────────────────────────────────────────────────────────
   const LANG_COLORS = {
-    go:         '#00ADD8',
-    typescript: '#3178C6',
-    javascript: '#F7DF1E',
-    python:     '#3776AB',
-    rust:       '#DEA584',
-    java:       '#ED8B00',
-    csharp:     '#239120',
-    ruby:       '#CC342D',
-    php:        '#777BB4',
-    swift:      '#FA7343',
-    kotlin:     '#7F52FF',
-    c:          '#555599',
-    cpp:        '#659AD2',
-    default:    '#8b949e',
+    go:         '#e6edf3',   // white-ish
+    typescript: '#c9d1d9',   // light gray
+    javascript: '#c9d1d9',   // light gray
+    python:     '#b1bac4',   // medium gray
+    rust:       '#a5b3bf',   // gray
+    java:       '#8b949e',   // muted gray
+    csharp:     '#8b949e',
+    ruby:       '#8b949e',
+    php:        '#8b949e',
+    swift:      '#8b949e',
+    kotlin:     '#8b949e',
+    c:          '#8b949e',
+    cpp:        '#8b949e',
+    default:    '#6e7681',   // dim gray
   };
 
   const MIN_RADIUS = 6;
@@ -964,8 +964,8 @@
   } else {
     hotFiles.slice(0, 15).forEach(function (f) {
       const pct  = (f.commits_90d / maxCommits) * 100;
-      const heat = Math.round((f.commits_90d / maxCommits) * 255);
-      const color = 'rgb(' + heat + ',' + Math.round(heat * 0.3) + ',40)';
+      const heat = Math.round((f.commits_90d / maxCommits) * 180) + 40;
+      const color = 'rgb(' + heat + ',' + heat + ',' + heat + ')';
 
       const row = document.createElement('div');
       row.className = 'heatmap-row';
