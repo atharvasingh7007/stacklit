@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T18:54:59Z",
+  "generated_at": "2026-04-09T19:38:56Z",
   "stacklit_version": "dev",
-  "merkle_hash": "95bfda3f8ccecf62eaddd23656f2e232535d32a65d9c5806f0bbe3397203c014",
+  "merkle_hash": "8869cd106cbc7b2feb590ceca87c452ea47c9c34995c430c206d98941a2f92d7",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -13,12 +13,12 @@
     "primary_language": "go",
     "languages": {
       "go": {
-        "files": 38,
-        "lines": 4015
+        "files": 41,
+        "lines": 4382
       },
       "javascript": {
-        "files": 1,
-        "lines": 13
+        "files": 3,
+        "lines": 137
       },
       "python": {
         "files": 1,
@@ -30,15 +30,16 @@
       }
     },
     "frameworks": [
-      "GitHub Actions"
+      "GitHub Actions",
+      "net/http"
     ]
   },
   "structure": {
     "entrypoints": [
       "cmd/stacklit/main.go"
     ],
-    "total_files": 45,
-    "total_lines": 4072
+    "total_files": 50,
+    "total_lines": 4563
   },
   "modules": {
     "assets": {
@@ -65,8 +66,8 @@
     },
     "internal/cli": {
       "purpose": "Command-line interface",
-      "files": 5,
-      "lines": 211,
+      "files": 6,
+      "lines": 241,
       "exports": [
         "Execute",
         "Version"
@@ -74,6 +75,7 @@
       "depends_on": [
         "internal/engine",
         "internal/git",
+        "internal/mcp",
         "internal/renderer",
         "internal/schema",
         "internal/walker"
@@ -81,7 +83,7 @@
       "depended_by": [
         "cmd/stacklit"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "internal/detect": {
       "purpose": "Detect",
@@ -98,7 +100,7 @@
     "internal/engine": {
       "purpose": "Core orchestration engine",
       "files": 1,
-      "lines": 345,
+      "lines": 360,
       "exports": [
         "Options",
         "Result",
@@ -112,6 +114,7 @@
         "internal/parser",
         "internal/renderer",
         "internal/schema",
+        "internal/summary",
         "internal/walker"
       ],
       "depended_by": [
@@ -155,6 +158,21 @@
       ],
       "depended_by": [
         "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/mcp": {
+      "purpose": "Mcp",
+      "files": 1,
+      "lines": 187,
+      "exports": [
+        "StartServer"
+      ],
+      "depends_on": [
+        "internal/schema"
+      ],
+      "depended_by": [
+        "internal/cli"
       ],
       "activity": "low"
     },
@@ -215,8 +233,9 @@
     "internal/schema": {
       "purpose": "Data schema definitions",
       "files": 1,
-      "lines": 76,
+      "lines": 82,
       "exports": [
+        "Architecture",
         "Dependencies",
         "GitInfo",
         "Hints",
@@ -231,7 +250,24 @@
       "depended_by": [
         "internal/cli",
         "internal/engine",
-        "internal/renderer"
+        "internal/mcp",
+        "internal/renderer",
+        "internal/summary"
+      ],
+      "activity": "low"
+    },
+    "internal/summary": {
+      "purpose": "Summary",
+      "files": 1,
+      "lines": 129,
+      "exports": [
+        "Generate"
+      ],
+      "depends_on": [
+        "internal/schema"
+      ],
+      "depended_by": [
+        "internal/engine"
       ],
       "activity": "low"
     },
@@ -246,6 +282,18 @@
         "internal/cli",
         "internal/engine"
       ],
+      "activity": "low"
+    },
+    "npm": {
+      "purpose": "Npm",
+      "files": 1,
+      "lines": 101,
+      "activity": "low"
+    },
+    "npm/bin": {
+      "purpose": "Bin",
+      "files": 1,
+      "lines": 23,
       "activity": "low"
     }
   },
@@ -262,6 +310,10 @@
       [
         "internal/cli",
         "internal/git"
+      ],
+      [
+        "internal/cli",
+        "internal/mcp"
       ],
       [
         "internal/cli",
@@ -305,6 +357,10 @@
       ],
       [
         "internal/engine",
+        "internal/summary"
+      ],
+      [
+        "internal/engine",
         "internal/walker"
       ],
       [
@@ -312,11 +368,19 @@
         "internal/parser"
       ],
       [
+        "internal/mcp",
+        "internal/schema"
+      ],
+      [
         "internal/renderer",
         "assets"
       ],
       [
         "internal/renderer",
+        "internal/schema"
+      ],
+      [
+        "internal/summary",
         "internal/schema"
       ]
     ],
@@ -339,15 +403,23 @@
   "git": {
     "hot_files": [
       {
+        "path": "internal/engine/engine.go",
+        "commits_90d": 7
+      },
+      {
         "path": "assets/template.html",
         "commits_90d": 6
       },
       {
-        "path": "internal/engine/engine.go",
-        "commits_90d": 5
+        "path": "go.mod",
+        "commits_90d": 4
       },
       {
-        "path": "go.mod",
+        "path": "internal/cli/init.go",
+        "commits_90d": 4
+      },
+      {
+        "path": "go.sum",
         "commits_90d": 3
       },
       {
@@ -355,7 +427,7 @@
         "commits_90d": 3
       },
       {
-        "path": "internal/cli/init.go",
+        "path": "internal/cli/root.go",
         "commits_90d": 3
       },
       {
@@ -371,6 +443,22 @@
         "commits_90d": 3
       },
       {
+        "path": "internal/schema/schema.go",
+        "commits_90d": 3
+      },
+      {
+        "path": "stacklit.json",
+        "commits_90d": 3
+      },
+      {
+        "path": "stacklit.mmd",
+        "commits_90d": 3
+      },
+      {
+        "path": ".gitignore",
+        "commits_90d": 2
+      },
+      {
         "path": "Makefile",
         "commits_90d": 2
       },
@@ -380,14 +468,6 @@
       },
       {
         "path": "cmd/stacklit/main.go",
-        "commits_90d": 2
-      },
-      {
-        "path": "go.sum",
-        "commits_90d": 2
-      },
-      {
-        "path": "internal/cli/root.go",
         "commits_90d": 2
       },
       {
@@ -401,50 +481,35 @@
       {
         "path": "internal/renderer/json.go",
         "commits_90d": 2
-      },
-      {
-        "path": "internal/renderer/json_test.go",
-        "commits_90d": 2
-      },
-      {
-        "path": "internal/renderer/mermaid_test.go",
-        "commits_90d": 2
-      },
-      {
-        "path": "internal/schema/schema.go",
-        "commits_90d": 2
-      },
-      {
-        "path": "internal/walker/walker_test.go",
-        "commits_90d": 2
       }
     ],
     "recent": [
-      "internal/detect/frameworks.go",
-      "internal/detect/frameworks_test.go",
-      "internal/engine/engine.go",
-      "internal/cli/diff.go",
+      "go.mod",
+      "go.sum",
       "internal/cli/root.go",
-      "SKILL.md",
-      ".github/workflows/ci.yml",
-      ".github/workflows/release.yml",
-      "action/action.yml",
-      ".goreleaser.yml"
+      "internal/cli/serve.go",
+      "internal/mcp/server.go",
+      "internal/cli/init.go",
+      "internal/engine/engine.go",
+      "internal/schema/schema.go",
+      "internal/summary/ai.go",
+      "LICENSE"
     ],
     "stable": [
       ".github/workflows/ci.yml",
       ".github/workflows/release.yml",
-      ".gitignore",
       ".goreleaser.yml",
+      "LICENSE",
       "README.md",
       "SKILL.md",
       "action/action.yml",
       "assets/lang-icons.js",
-      "docs-local/decisions/001-standard-file-not-mcp.md",
-      "docs-local/decisions/002-regex-parsers-first.md"
+      "internal/cli/diff.go",
+      "internal/cli/serve.go"
     ]
   },
   "hints": {
     "test_command": "go test ./..."
-  }
+  },
+  "architecture": {}
 }
