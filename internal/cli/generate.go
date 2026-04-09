@@ -1,8 +1,7 @@
 package cli
 
 import (
-	"fmt"
-
+	"github.com/GLINCKER/stacklit/internal/engine"
 	"github.com/spf13/cobra"
 )
 
@@ -12,8 +11,11 @@ var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generate the stacklit.json codebase index",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("stacklit generate: stub — not yet implemented")
-		return nil
+		_, err := engine.Run(engine.Options{
+			Root:  ".",
+			Quiet: generateQuiet,
+		})
+		return err
 	},
 }
 
