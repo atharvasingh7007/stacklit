@@ -1,6 +1,6 @@
 # Stacklit
 
-**Your codebase, in 1,500 tokens.**
+**108,000 lines of code. 4,000 tokens of index.**
 
 One command generates a committed JSON index that any AI agent can read. No server, no setup.
 
@@ -13,7 +13,7 @@ One command generates a committed JSON index that any AI agent can read. No serv
 
 AI coding agents burn most of their context window just figuring out where things live. Reading one 2,000-line file to find a function signature costs ~6,000 tokens. Five agents on the same repo each rebuild the same mental model from scratch. Every session starts at zero.
 
-`stacklit init` generates a `stacklit.json` that maps your entire codebase in ~1,500 tokens -- modules, dependencies, exports, types, what changed recently. Commit it to git. Now every agent that opens the repo already knows what goes where.
+`stacklit init` generates a `stacklit.json` that maps your entire codebase in a few thousand tokens -- modules, dependencies, exports, types, what changed recently. Commit it to git. Now every agent that opens the repo already knows what goes where.
 
 ```bash
 npx stacklit init
@@ -23,7 +23,7 @@ npx stacklit init
 
 **Without stacklit:** Agent reads 8-12 files to build context. ~400,000 tokens. 45 seconds before writing a line.
 
-**With stacklit:** Agent reads `stacklit.json`. ~1,500 tokens. Knows every module, dependency, and convention instantly.
+**With stacklit:** Agent reads `stacklit.json`. ~3,000-4,000 tokens. Knows every module, dependency, and convention instantly.
 
 ## What you get
 
@@ -56,7 +56,7 @@ npx stacklit init
 }
 ```
 
-A 500-file repo produces ~1,500 tokens of index. That is what an agent wastes reading ONE large file today.
+FastAPI (108k lines) produces a 4,142-token index. Gin (24k lines) produces 3,361 tokens. That is less than what an agent wastes reading a single large file. See [examples/](examples/) for real outputs.
 
 ## Visual map
 
