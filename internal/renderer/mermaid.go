@@ -60,8 +60,7 @@ func truncate(s string, n int) string {
 func WriteMermaid(idx *schema.Index, path string) error {
 	var sb strings.Builder
 
-	// Wrap in markdown code fence so GitHub renders the diagram.
-	sb.WriteString("```mermaid\ngraph LR\n")
+	sb.WriteString("graph LR\n")
 
 	// Collect which languages are actually used by modules.
 	usedLangs := map[string]bool{}
@@ -94,9 +93,9 @@ func WriteMermaid(idx *schema.Index, path string) error {
 			nodeClass = ""
 		}
 		if nodeClass != "" {
-			sb.WriteString(fmt.Sprintf("  %s[\"%s\\n%s\"]:::%s\n", id, name, label, nodeClass))
+			sb.WriteString(fmt.Sprintf("  %s[\"%s<br/>%s\"]:::%s\n", id, name, label, nodeClass))
 		} else {
-			sb.WriteString(fmt.Sprintf("  %s[\"%s\\n%s\"]\n", id, name, label))
+			sb.WriteString(fmt.Sprintf("  %s[\"%s<br/>%s\"]\n", id, name, label))
 		}
 	}
 
@@ -107,6 +106,5 @@ func WriteMermaid(idx *schema.Index, path string) error {
 		sb.WriteString(fmt.Sprintf("  %s --> %s\n", from, to))
 	}
 
-	sb.WriteString("```\n")
 	return os.WriteFile(path, []byte(sb.String()), 0644)
 }

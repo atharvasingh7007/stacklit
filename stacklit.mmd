@@ -1,4 +1,3 @@
-```mermaid
 graph LR
   classDef javascript fill:#c9d1d9,color:#0d1117,stroke:#c9d1d9
   classDef java fill:#8b949e,color:#0d1117,stroke:#8b949e
@@ -6,23 +5,23 @@ graph LR
   classDef python fill:#b1bac4,color:#0d1117,stroke:#b1bac4
   classDef rust fill:#a5b3bf,color:#0d1117,stroke:#a5b3bf
   classDef go fill:#e6edf3,color:#0d1117,stroke:#e6edf3
-  cmd_stacklit["cmd/stacklit\nStacklit"]:::go
-  internal_cli["internal/cli\nCommand-line interface"]:::go
-  internal_renderer["internal/renderer\nOutput renderers"]:::go
-  internal_schema["internal/schema\nData schema definitions"]:::go
-  internal_summary["internal/summary\nAI-powered codebase summaries"]:::go
-  internal_walker["internal/walker\nFile system walker"]:::go
-  npm["npm\nNpm"]:::go
-  npm_bin["npm/bin\nBin"]:::go
-  internal_graph["internal/graph\nDependency graph"]:::go
-  internal_monorepo["internal/monorepo\nMonorepo detection"]:::go
-  assets["assets\nStatic assets"]:::go
-  internal_config["internal/config\nConfiguration management"]:::go
-  internal_mcp["internal/mcp\nMCP server for AI agents"]:::go
-  internal_parser["internal/parser\nSource code parsers"]:::go
-  internal_detect["internal/detect\nFramework and tool detection"]:::go
-  internal_engine["internal/engine\nCore orchestration engine"]:::go
-  internal_git["internal/git\nGit integration"]:::go
+  internal_summary["internal/summary<br/>AI-powered codebase summaries"]:::go
+  npm_bin["npm/bin<br/>Bin"]:::go
+  internal_walker["internal/walker<br/>File system walker"]:::go
+  npm["npm<br/>Npm"]:::go
+  cmd_stacklit["cmd/stacklit<br/>Stacklit"]:::go
+  internal_git["internal/git<br/>Git integration"]:::go
+  internal_mcp["internal/mcp<br/>MCP server for AI agents"]:::go
+  assets["assets<br/>Static assets"]:::go
+  internal_cli["internal/cli<br/>Command-line interface"]:::go
+  internal_detect["internal/detect<br/>Framework and tool detection"]:::go
+  internal_parser["internal/parser<br/>Source code parsers"]:::go
+  internal_renderer["internal/renderer<br/>Output renderers"]:::go
+  internal_schema["internal/schema<br/>Data schema definitions"]:::go
+  internal_config["internal/config<br/>Configuration management"]:::go
+  internal_engine["internal/engine<br/>Core orchestration engine"]:::go
+  internal_graph["internal/graph<br/>Dependency graph"]:::go
+  internal_monorepo["internal/monorepo<br/>Monorepo detection"]:::go
   cmd_stacklit --> internal_cli
   internal_cli --> internal_engine
   internal_cli --> internal_git
@@ -45,4 +44,3 @@ graph LR
   internal_renderer --> assets
   internal_renderer --> internal_schema
   internal_summary --> internal_schema
-```
