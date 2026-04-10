@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-10T00:58:31Z",
+  "generated_at": "2026-04-10T19:16:04Z",
   "stacklit_version": "dev",
-  "merkle_hash": "b7e8e2f13ff595bc19be41801283a88156c998e4b8e372952500dd539a7d85f4",
+  "merkle_hash": "20557a43e42b49aca23b6fb2c132c6594813d8f82e1335b30e9383f81020b49f",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -13,8 +13,8 @@
     "primary_language": "go",
     "languages": {
       "go": {
-        "files": 55,
-        "lines": 7252
+        "files": 59,
+        "lines": 7862
       },
       "java": {
         "files": 1,
@@ -22,7 +22,7 @@
       },
       "javascript": {
         "files": 3,
-        "lines": 133
+        "lines": 127
       },
       "python": {
         "files": 1,
@@ -46,8 +46,8 @@
     "entrypoints": [
       "cmd/stacklit/main.go"
     ],
-    "total_files": 66,
-    "total_lines": 7464
+    "total_files": 70,
+    "total_lines": 8068
   },
   "modules": {
     "assets": {
@@ -84,14 +84,16 @@
     "internal/cli": {
       "purpose": "Command-line interface",
       "language": "go",
-      "files": 6,
-      "lines": 255,
+      "files": 8,
+      "lines": 492,
       "file_list": [
+        "derive.go",
         "diff.go",
         "generate.go",
         "init.go",
         "root.go",
         "serve.go",
+        "setup.go",
         "view.go"
       ],
       "exports": [
@@ -99,11 +101,13 @@
         "Version"
       ],
       "depends_on": [
+        "internal/derive",
         "internal/engine",
         "internal/git",
         "internal/mcp",
         "internal/renderer",
         "internal/schema",
+        "internal/setup",
         "internal/walker"
       ],
       "depended_by": [
@@ -132,6 +136,28 @@
       },
       "depended_by": [
         "internal/engine"
+      ],
+      "activity": "low"
+    },
+    "internal/derive": {
+      "purpose": "Derive",
+      "language": "go",
+      "files": 1,
+      "lines": 215,
+      "file_list": [
+        "derive.go"
+      ],
+      "exports": [
+        "CompactMap(idx *schema.Index) string",
+        "InjectIntoFile(path string, block string) error",
+        "InjectableBlock(idx *schema.Index) string"
+      ],
+      "depends_on": [
+        "internal/schema"
+      ],
+      "depended_by": [
+        "internal/cli",
+        "internal/setup"
       ],
       "activity": "low"
     },
@@ -342,7 +368,7 @@
         "internal/engine",
         "internal/graph"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "internal/renderer": {
       "purpose": "Output renderers",
@@ -392,25 +418,54 @@
         "type Project"
       ],
       "type_defs": {
-        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
+        "Architecture": "Pattern string, Summary string",
         "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
-        "LangStats": "Files int, Lines int",
+        "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
-        "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
+        "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string"
       },
       "depended_by": [
         "internal/cli",
+        "internal/derive",
         "internal/engine",
         "internal/mcp",
         "internal/renderer",
+        "internal/setup",
         "internal/summary"
       ],
       "activity": "medium"
+    },
+    "internal/setup": {
+      "purpose": "Setup",
+      "language": "go",
+      "files": 1,
+      "lines": 158,
+      "file_list": [
+        "setup.go"
+      ],
+      "exports": [
+        "ConfigureAider(idx *schema.Index) error",
+        "ConfigureClaude(idx *schema.Index, withMCP bool) error",
+        "ConfigureCursor(idx *schema.Index) error",
+        "DetectTools() []Tool",
+        "type Tool"
+      ],
+      "type_defs": {
+        "Tool": "Name string, Detected bool"
+      },
+      "depends_on": [
+        "internal/derive",
+        "internal/schema"
+      ],
+      "depended_by": [
+        "internal/cli"
+      ],
+      "activity": "low"
     },
     "internal/summary": {
       "purpose": "AI-powered codebase summaries",
@@ -457,13 +512,13 @@
       "file_list": [
         "install.js"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "npm/bin": {
       "purpose": "Bin",
       "language": "javascript",
       "files": 1,
-      "lines": 19,
+      "lines": 13,
       "file_list": [
         "stacklit.js"
       ],
@@ -475,6 +530,10 @@
       [
         "cmd/stacklit",
         "internal/cli"
+      ],
+      [
+        "internal/cli",
+        "internal/derive"
       ],
       [
         "internal/cli",
@@ -498,7 +557,15 @@
       ],
       [
         "internal/cli",
+        "internal/setup"
+      ],
+      [
+        "internal/cli",
         "internal/walker"
+      ],
+      [
+        "internal/derive",
+        "internal/schema"
       ],
       [
         "internal/engine",
@@ -557,6 +624,14 @@
         "internal/schema"
       ],
       [
+        "internal/setup",
+        "internal/derive"
+      ],
+      [
+        "internal/setup",
+        "internal/schema"
+      ],
+      [
         "internal/summary",
         "internal/schema"
       ]
@@ -566,6 +641,7 @@
     ],
     "most_depended": [
       "internal/schema",
+      "internal/derive",
       "internal/git",
       "internal/parser",
       "internal/renderer",
@@ -573,8 +649,7 @@
       "assets",
       "internal/cli",
       "internal/config",
-      "internal/detect",
-      "internal/engine"
+      "internal/detect"
     ],
     "isolated": [
       "npm",
@@ -585,7 +660,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 15
+        "commits_90d": 16
       },
       {
         "path": "stacklit.mmd",
@@ -596,12 +671,12 @@
         "commits_90d": 13
       },
       {
-        "path": "assets/template.html",
-        "commits_90d": 10
+        "path": "README.md",
+        "commits_90d": 12
       },
       {
-        "path": "README.md",
-        "commits_90d": 7
+        "path": "assets/template.html",
+        "commits_90d": 10
       },
       {
         "path": "internal/graph/graph.go",
@@ -612,11 +687,15 @@
         "commits_90d": 7
       },
       {
+        "path": "go.mod",
+        "commits_90d": 6
+      },
+      {
         "path": "internal/renderer/mermaid.go",
         "commits_90d": 6
       },
       {
-        "path": "go.mod",
+        "path": "go.sum",
         "commits_90d": 5
       },
       {
@@ -628,15 +707,27 @@
         "commits_90d": 5
       },
       {
-        "path": "go.sum",
-        "commits_90d": 4
-      },
-      {
-        "path": "internal/cli/generate.go",
-        "commits_90d": 3
+        "path": "npm/package.json",
+        "commits_90d": 5
       },
       {
         "path": "internal/cli/root.go",
+        "commits_90d": 4
+      },
+      {
+        "path": "internal/parser/parser.go",
+        "commits_90d": 4
+      },
+      {
+        "path": ".gitignore",
+        "commits_90d": 3
+      },
+      {
+        "path": "examples/README.md",
+        "commits_90d": 3
+      },
+      {
+        "path": "internal/cli/generate.go",
         "commits_90d": 3
       },
       {
@@ -646,47 +737,31 @@
       {
         "path": "internal/graph/graph_test.go",
         "commits_90d": 3
-      },
-      {
-        "path": "internal/parser/golang.go",
-        "commits_90d": 3
-      },
-      {
-        "path": "internal/parser/golang_test.go",
-        "commits_90d": 3
-      },
-      {
-        "path": "internal/parser/parser.go",
-        "commits_90d": 3
-      },
-      {
-        "path": "internal/renderer/html.go",
-        "commits_90d": 3
       }
     ],
     "recent": [
-      "DEPENDENCIES.md",
+      ".gitignore",
+      "COMPARISON.md",
       "README.md",
-      "action/action.yml",
-      "internal/config/config.go",
-      "internal/config/config_test.go",
-      "internal/git/hooks.go",
-      "internal/renderer/mermaid.go",
-      "internal/renderer/mermaid_test.go",
-      "npm/README.md",
-      "stacklit.json"
+      "USAGE.md",
+      "examples/README.md",
+      "internal/cli/derive.go",
+      "internal/cli/root.go",
+      "internal/cli/setup.go",
+      "internal/derive/derive.go",
+      "internal/setup/setup.go"
     ],
     "stable": [
-      "DEPENDENCIES.md",
+      "COMPARISON.md",
       "LICENSE",
       "assets/lang-icons.js",
-      "internal/cli/serve.go",
-      "internal/detect/envvars.go",
-      "internal/detect/frameworks.go",
-      "internal/detect/frameworks_test.go",
-      "internal/git/activity.go",
-      "internal/git/activity_test.go",
-      "internal/git/merkle.go"
+      "examples/axum/DEPENDENCIES.md",
+      "examples/axum/stacklit.json",
+      "examples/express/DEPENDENCIES.md",
+      "examples/express/stacklit.json",
+      "examples/fastapi/DEPENDENCIES.md",
+      "examples/fastapi/stacklit.json",
+      "examples/gin/DEPENDENCIES.md"
     ]
   },
   "hints": {
