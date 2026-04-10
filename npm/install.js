@@ -4,7 +4,7 @@ const path = require('path');
 const https = require('https');
 const { execSync } = require('child_process');
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const REPO = 'glincker/stacklit';
 
 const PLATFORM_MAP = {
