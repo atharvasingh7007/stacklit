@@ -248,7 +248,8 @@ func Run(opts Options) (*Result, error) {
 	// 13. Print summary.
 	if !opts.Quiet {
 		fmt.Printf("[stacklit] done in %s — wrote %s, %s, %s\n",
-			dur.Round(time.Millisecond), jsonPath, mmdPath, htmlPath)
+			dur.Round(time.Millisecond),
+			filepath.Base(jsonPath), filepath.Base(mmdPath), filepath.Base(htmlPath))
 	}
 
 	return &Result{

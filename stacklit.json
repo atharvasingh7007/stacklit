@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-09T23:56:36Z",
+  "generated_at": "2026-04-10T00:05:04Z",
   "stacklit_version": "dev",
-  "merkle_hash": "fdac4b84e691421e649f3523cb688eb24554439ade7ccea2f27a3d3cb3466ae9",
+  "merkle_hash": "bd0d1090ba4aff650f9a9d9a308b118e7708043445a2cc9cbc202e800378608e",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 48,
-        "lines": 5697
+        "lines": 5698
       },
       "java": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 59,
-    "total_lines": 5909
+    "total_lines": 5910
   },
   "modules": {
     "assets": {
@@ -158,7 +158,7 @@
       "purpose": "Core orchestration engine",
       "language": "go",
       "files": 1,
-      "lines": 554,
+      "lines": 555,
       "file_list": [
         "engine.go"
       ],
@@ -386,14 +386,14 @@
       ],
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
+        "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
         "LangStats": "Files int, Lines int",
+        "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
@@ -582,15 +582,15 @@
       },
       {
         "path": "stacklit.json",
-        "commits_90d": 10
+        "commits_90d": 11
       },
       {
         "path": "stacklit.mmd",
-        "commits_90d": 10
+        "commits_90d": 11
       },
       {
         "path": "assets/template.html",
-        "commits_90d": 9
+        "commits_90d": 10
       },
       {
         "path": "internal/graph/graph.go",
@@ -599,6 +599,10 @@
       {
         "path": "internal/schema/schema.go",
         "commits_90d": 7
+      },
+      {
+        "path": "README.md",
+        "commits_90d": 5
       },
       {
         "path": "go.mod",
@@ -611,10 +615,6 @@
       {
         "path": "go.sum",
         "commits_90d": 4
-      },
-      {
-        "path": "README.md",
-        "commits_90d": 3
       },
       {
         "path": "internal/cli/generate.go",
@@ -658,28 +658,28 @@
       }
     ],
     "recent": [
+      "README.md",
+      "assets/template.html",
+      "demo.gif",
+      "demo.tape",
+      "internal/mcp/server.go",
+      "stacklit.json",
+      "stacklit.mmd",
       "npm/README.md",
       "npm/bin/stacklit.js",
-      "npm/package.json",
-      "README.md",
-      "SKILL.md",
-      "assets/template.html",
-      ".github/workflows/ci.yml",
-      ".github/workflows/release.yml",
-      ".goreleaser.yml",
-      "go.mod"
+      "npm/package.json"
     ],
     "stable": [
       "LICENSE",
       "action/action.yml",
       "assets/lang-icons.js",
+      "demo.gif",
+      "demo.tape",
       "internal/cli/serve.go",
       "internal/config/config.go",
       "internal/config/config_test.go",
       "internal/detect/envvars.go",
-      "internal/detect/frameworks.go",
-      "internal/detect/frameworks_test.go",
-      "internal/git/activity.go"
+      "internal/detect/frameworks.go"
     ]
   },
   "hints": {
