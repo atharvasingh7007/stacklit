@@ -286,11 +286,31 @@ html = "stacklit.html"
 
 Auto-detects: pnpm, npm, yarn workspaces, Go workspaces, Turborepo, Nx, Lerna, Cargo workspaces, and convention directories (`apps/`, `packages/`, `services/`).
 
+## How does Stacklit compare to Repomix?
+
+Repomix concatenates all files into one prompt (50k-500k tokens). Stacklit parses code structure and generates a ~250-token navigation map. Use Repomix for small repos and one-shot chats. Use Stacklit for daily AI-assisted development on larger codebases. See the full [comparison table](COMPARISON.md).
+
+## FAQ
+
+**Does Stacklit read my code?**
+Yes, locally. It parses source files with tree-sitter to extract structure (imports, exports, types). No code is sent anywhere unless you use the optional `--summary` flag (which calls the Claude API).
+
+**What if my language isn't supported?**
+Stacklit falls back to basic support (line count + language detection) for any language not in the tree-sitter list. The module map, dependency graph, and git activity still work.
+
+**Does the git hook slow down commits?**
+No. Stacklit uses Merkle hashing to skip regeneration when only docs or configs changed. On a 10k-line repo, regeneration takes ~50ms.
+
+**Can I use Stacklit with GitHub Copilot?**
+Yes. Run `stacklit derive --inject claude` and rename the output to `.github/copilot-instructions.md`, or just commit `stacklit.json` and reference it in your Copilot instructions.
+
 ## Documentation
 
-- [USAGE.md](USAGE.md) -- full usage guide, command reference, MCP tools, configuration options, reading the index
+- [USAGE.md](USAGE.md) -- full usage guide, command reference, MCP tools, configuration
+- [COMPARISON.md](COMPARISON.md) -- head-to-head comparison with Repomix, code2prompt, Codebase-Memory
 - [SKILL.md](SKILL.md) -- instructions for AI agents on how to use stacklit.json
 - [examples/](examples/) -- real stacklit.json outputs from Express.js, FastAPI, Gin, Axum
+- [Discussions](https://github.com/glincker/stacklit/discussions) -- guides, Q&A, feature requests
 
 ## Contributing
 
@@ -298,6 +318,8 @@ Auto-detects: pnpm, npm, yarn workspaces, Go workspaces, Turborepo, Nx, Lerna, C
 make build   # build binary
 make test    # run all tests
 ```
+
+Contributions welcome. See [open issues](https://github.com/glincker/stacklit/issues) or start a [discussion](https://github.com/glincker/stacklit/discussions).
 
 ## License
 
