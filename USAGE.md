@@ -115,6 +115,13 @@ Regenerates `stacklit.html` and opens it in your browser.
 | `stacklit view` | Regenerate HTML and open in browser |
 | `stacklit diff` | Check if index is stale |
 | `stacklit serve` | Start MCP server for AI agent integration |
+| `stacklit derive` | Print compact navigation map (~250 tokens) to stdout |
+| `stacklit derive --inject claude` | Inject map into CLAUDE.md |
+| `stacklit derive --inject cursor` | Inject map into .cursorrules |
+| `stacklit setup` | Auto-detect and configure all AI tools |
+| `stacklit setup claude` | Configure Claude Code (CLAUDE.md + MCP) |
+| `stacklit setup cursor` | Configure Cursor (.cursorrules + MCP) |
+| `stacklit setup aider` | Configure Aider (.aider.conf.yml) |
 | `stacklit --version` | Print version |
 
 ---

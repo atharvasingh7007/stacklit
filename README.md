@@ -97,17 +97,55 @@ Modules, dependencies, exports with signatures, type definitions, git activity h
 
 ## Set up your AI tools
 
-### Claude Code
+### One command (recommended)
 
-Add to your project's `CLAUDE.md`:
+```bash
+stacklit setup
+```
+
+Auto-detects Claude Code, Cursor, and Aider. For each:
+- Injects a compact ~250-token codebase map into the tool's config file
+- Configures MCP server integration
+- Installs a git hook to keep the map fresh on every commit
+
+Or configure a specific tool:
+
+```bash
+stacklit setup claude   # updates CLAUDE.md + .mcp.json
+stacklit setup cursor   # updates .cursorrules + .cursor/mcp.json
+stacklit setup aider    # updates .aider.conf.yml
+```
+
+### Compact navigation map
+
+```bash
+stacklit derive         # print to stdout
+```
+
+Generates a ~250-token navigation map that replaces 3,000-8,000 tokens of agent exploration:
+
+```
+myapp | go | 14 modules | 8,420 lines
+entry: cmd/api/main.go | test: go test ./...
+
+modules:
+  cmd/api/          entrypoint, routes, middleware
+  internal/auth/    jwt, session | depends: store, config
+  internal/store/   postgres | depended-by: auth, handler
+```
+
+### Manual setup
+
+<details>
+<summary>Configure manually instead</summary>
+
+**Claude Code** — add to `CLAUDE.md`:
 
 ```
 Read stacklit.json before exploring files. Use modules to locate code, hints for conventions.
 ```
 
-### Claude Desktop / Cursor (MCP)
-
-Add to your MCP config:
+**Claude Desktop / Cursor (MCP)** — add to MCP config:
 
 ```json
 {
@@ -120,11 +158,11 @@ Add to your MCP config:
 }
 ```
 
-This starts the MCP server with 7 tools: `get_overview`, `get_module`, `find_module`, `list_modules`, `get_dependencies`, `get_hot_files`, `get_hints`.
+MCP server exposes 7 tools: `get_overview`, `get_module`, `find_module`, `list_modules`, `get_dependencies`, `get_hot_files`, `get_hints`.
 
-### Any other agent
+**Any other agent** — `stacklit.json` is a plain JSON file. Any tool that reads files can use it.
 
-`stacklit.json` is a plain JSON file. Any tool that reads files can use it.
+</details>
 
 ## Keep it updated
 
@@ -209,6 +247,11 @@ stacklit generate                # regenerate from current source
 stacklit view                    # regenerate HTML, open in browser
 stacklit diff                    # check if index is stale
 stacklit serve                   # start MCP server
+stacklit derive                  # print compact nav map (~250 tokens)
+stacklit derive --inject claude  # inject map into CLAUDE.md
+stacklit setup                   # auto-configure all detected AI tools
+stacklit setup claude            # configure Claude Code + MCP
+stacklit setup cursor            # configure Cursor + MCP
 ```
 
 <details>

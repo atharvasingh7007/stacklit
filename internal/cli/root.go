@@ -24,4 +24,6 @@ func init() {
 	rootCmd.AddCommand(viewCmd)
 	rootCmd.AddCommand(newDiffCmd())
 	rootCmd.AddCommand(newServeCmd())
+	rootCmd.AddCommand(newDeriveCmd())
+	rootCmd.AddCommand(newSetupCmd())
 }

@@ -1,7 +1,7 @@
 {
   "name": "stacklit",
-  "version": "0.2.1",
-  "description": "Your codebase, in 1,500 tokens. One command generates a committed JSON index that any AI agent can read.",
+  "version": "0.3.0",
+  "description": "Zero-config codebase context for AI agents. One command generates a ~250-token navigation map and auto-configures Claude Code, Cursor, and Aider.",
   "bin": {
     "stacklit": "bin/stacklit.js"
   },
