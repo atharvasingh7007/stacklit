@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-10T19:16:04Z",
+  "generated_at": "2026-04-10T19:17:44Z",
   "stacklit_version": "dev",
-  "merkle_hash": "20557a43e42b49aca23b6fb2c132c6594813d8f82e1335b30e9383f81020b49f",
+  "merkle_hash": "30be93d7f694cca2cd354dcaaa49aa84329732f577399f2f0fddaffcfab3b5ef",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -419,15 +419,15 @@
       ],
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
+        "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
-        "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string"
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
+        "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
         "internal/cli",
@@ -660,7 +660,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 16
+        "commits_90d": 17
       },
       {
         "path": "stacklit.mmd",
@@ -740,6 +740,8 @@
       }
     ],
     "recent": [
+      "npm/install.js",
+      "stacklit.json",
       ".gitignore",
       "COMPARISON.md",
       "README.md",
@@ -747,9 +749,7 @@
       "examples/README.md",
       "internal/cli/derive.go",
       "internal/cli/root.go",
-      "internal/cli/setup.go",
-      "internal/derive/derive.go",
-      "internal/setup/setup.go"
+      "internal/cli/setup.go"
     ],
     "stable": [
       "COMPARISON.md",
