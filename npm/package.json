@@ -1,6 +1,6 @@
 {
   "name": "stacklit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Your codebase, in 1,500 tokens. One command generates a committed JSON index that any AI agent can read.",
   "bin": {
     "stacklit": "bin/stacklit.js"
