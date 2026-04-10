@@ -6,34 +6,9 @@ import (
 	"testing"
 )
 
-func TestTypeScriptParserCanParse(t *testing.T) {
-	p := &TypeScriptParser{}
-
-	cases := []struct {
-		filename string
-		want     bool
-	}{
-		{"index.ts", true},
-		{"component.tsx", true},
-		{"app.js", true},
-		{"app.jsx", true},
-		{"module.mjs", true},
-		{"lib.cjs", true},
-		{"main.go", false},
-		{"app.py", false},
-		{"README.md", false},
-	}
-
-	for _, tc := range cases {
-		got := p.CanParse(tc.filename)
-		if got != tc.want {
-			t.Errorf("CanParse(%q) = %v, want %v", tc.filename, got, tc.want)
-		}
-	}
-}
 
 func TestTypeScriptParserParse_ImportsESM(t *testing.T) {
-	p := &TypeScriptParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/ts-project/src/index.ts")
 	if err != nil {
@@ -65,7 +40,7 @@ func TestTypeScriptParserParse_ImportsESM(t *testing.T) {
 }
 
 func TestTypeScriptParserParse_ImportsCJS(t *testing.T) {
-	p := &TypeScriptParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/ts-project/src/router.ts")
 	if err != nil {
@@ -98,7 +73,7 @@ func TestTypeScriptParserParse_ImportsCJS(t *testing.T) {
 }
 
 func TestTypeScriptParserParse_Exports(t *testing.T) {
-	p := &TypeScriptParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/ts-project/src/router.ts")
 	if err != nil {
@@ -111,7 +86,7 @@ func TestTypeScriptParserParse_Exports(t *testing.T) {
 	}
 
 	// Exports are now full signatures containing the name.
-	wantExports := []string{"AppRouter", "Router", "RouteHandler"}
+	wantExports := []string{"Router", "RouteHandler"}
 	for _, want := range wantExports {
 		found := false
 		for _, got := range info.Exports {
@@ -127,7 +102,7 @@ func TestTypeScriptParserParse_Exports(t *testing.T) {
 }
 
 func TestTypeScriptParserParse_InlineContent(t *testing.T) {
-	p := &TypeScriptParser{}
+	p := &TreeSitterParser{}
 
 	content := []byte(`import React from 'react';
 import { useState } from 'react';

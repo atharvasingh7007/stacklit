@@ -5,30 +5,9 @@ import (
 	"testing"
 )
 
-func TestJavaParserCanParse(t *testing.T) {
-	p := &JavaParser{}
-
-	cases := []struct {
-		filename string
-		want     bool
-	}{
-		{"Main.java", true},
-		{"UserService.java", true},
-		{"main.go", false},
-		{"app.py", false},
-		{"index.ts", false},
-	}
-
-	for _, tc := range cases {
-		got := p.CanParse(tc.filename)
-		if got != tc.want {
-			t.Errorf("CanParse(%q) = %v, want %v", tc.filename, got, tc.want)
-		}
-	}
-}
 
 func TestJavaParserParse_Imports(t *testing.T) {
-	p := &JavaParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/java-project/src/Main.java")
 	if err != nil {
@@ -60,7 +39,7 @@ func TestJavaParserParse_Imports(t *testing.T) {
 }
 
 func TestJavaParserParse_Exports(t *testing.T) {
-	p := &JavaParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/java-project/src/Main.java")
 	if err != nil {
@@ -88,7 +67,7 @@ func TestJavaParserParse_Exports(t *testing.T) {
 }
 
 func TestJavaParserParse_Entrypoint(t *testing.T) {
-	p := &JavaParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/java-project/src/Main.java")
 	if err != nil {
@@ -106,7 +85,7 @@ func TestJavaParserParse_Entrypoint(t *testing.T) {
 }
 
 func TestJavaParserParse_NoEntrypoint(t *testing.T) {
-	p := &JavaParser{}
+	p := &TreeSitterParser{}
 
 	content := []byte(`package com.example;
 

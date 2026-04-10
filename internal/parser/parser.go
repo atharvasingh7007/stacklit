@@ -30,10 +30,7 @@ var registry []Parser
 func init() {
 	registry = []Parser{
 		&GoParser{},
-		&TypeScriptParser{},
-		&PythonParser{},
-		&RustParser{},
-		&JavaParser{},
+		&TreeSitterParser{},
 		&GenericParser{},
 	}
 }

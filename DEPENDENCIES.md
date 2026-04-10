@@ -4,29 +4,29 @@
 
 ```mermaid
 graph LR
-  classDef typescript fill:#c9d1d9,color:#0d1117,stroke:#c9d1d9
-  classDef python fill:#b1bac4,color:#0d1117,stroke:#b1bac4
   classDef rust fill:#a5b3bf,color:#0d1117,stroke:#a5b3bf
   classDef go fill:#e6edf3,color:#0d1117,stroke:#e6edf3
   classDef javascript fill:#c9d1d9,color:#0d1117,stroke:#c9d1d9
   classDef java fill:#8b949e,color:#0d1117,stroke:#8b949e
+  classDef typescript fill:#c9d1d9,color:#0d1117,stroke:#c9d1d9
+  classDef python fill:#b1bac4,color:#0d1117,stroke:#b1bac4
+  internal_summary["internal/summary<br/>AI-powered codebase summaries"]:::go
+  internal_detect["internal/detect<br/>Framework and tool detection"]:::go
   internal_engine["internal/engine<br/>Core orchestration engine"]:::go
-  internal_parser["internal/parser<br/>Source code parsers"]:::go
-  npm_bin["npm/bin<br/>Bin"]:::go
+  internal_git["internal/git<br/>Git integration"]:::go
+  cmd_stacklit["cmd/stacklit<br/>Stacklit"]:::go
   internal_cli["internal/cli<br/>Command-line interface"]:::go
+  internal_mcp["internal/mcp<br/>MCP server for AI agents"]:::go
+  npm_bin["npm/bin<br/>Bin"]:::go
+  assets["assets<br/>Static assets"]:::go
+  internal_config["internal/config<br/>Configuration management"]:::go
+  internal_graph["internal/graph<br/>Dependency graph"]:::go
   internal_monorepo["internal/monorepo<br/>Monorepo detection"]:::go
   internal_renderer["internal/renderer<br/>Output renderers"]:::go
-  cmd_stacklit["cmd/stacklit<br/>Stacklit"]:::go
-  internal_summary["internal/summary<br/>AI-powered codebase summaries"]:::go
-  assets["assets<br/>Static assets"]:::go
-  internal_git["internal/git<br/>Git integration"]:::go
-  internal_graph["internal/graph<br/>Dependency graph"]:::go
-  internal_mcp["internal/mcp<br/>MCP server for AI agents"]:::go
+  npm["npm<br/>Npm"]:::go
+  internal_parser["internal/parser<br/>Source code parsers"]:::go
   internal_schema["internal/schema<br/>Data schema definitions"]:::go
   internal_walker["internal/walker<br/>File system walker"]:::go
-  npm["npm<br/>Npm"]:::go
-  internal_config["internal/config<br/>Configuration management"]:::go
-  internal_detect["internal/detect<br/>Framework and tool detection"]:::go
   cmd_stacklit --> internal_cli
   internal_cli --> internal_engine
   internal_cli --> internal_git

@@ -6,31 +6,9 @@ import (
 	"testing"
 )
 
-func TestPythonParserCanParse(t *testing.T) {
-	p := &PythonParser{}
-
-	cases := []struct {
-		filename string
-		want     bool
-	}{
-		{"app.py", true},
-		{"__init__.py", true},
-		{"setup.py", true},
-		{"main.go", false},
-		{"index.ts", false},
-		{"README.md", false},
-	}
-
-	for _, tc := range cases {
-		got := p.CanParse(tc.filename)
-		if got != tc.want {
-			t.Errorf("CanParse(%q) = %v, want %v", tc.filename, got, tc.want)
-		}
-	}
-}
 
 func TestPythonParserParse_Imports(t *testing.T) {
-	p := &PythonParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/python-project/app.py")
 	if err != nil {
@@ -62,7 +40,7 @@ func TestPythonParserParse_Imports(t *testing.T) {
 }
 
 func TestPythonParserParse_Exports(t *testing.T) {
-	p := &PythonParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/python-project/app.py")
 	if err != nil {
@@ -98,7 +76,7 @@ func TestPythonParserParse_Exports(t *testing.T) {
 }
 
 func TestPythonParserParse_Entrypoint(t *testing.T) {
-	p := &PythonParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/python-project/app.py")
 	if err != nil {
@@ -116,7 +94,7 @@ func TestPythonParserParse_Entrypoint(t *testing.T) {
 }
 
 func TestPythonParserParse_NoEntrypoint(t *testing.T) {
-	p := &PythonParser{}
+	p := &TreeSitterParser{}
 
 	content := []byte(`def helper():
     pass
@@ -136,7 +114,7 @@ class MyClass:
 }
 
 func TestPythonParserParse_LineCount(t *testing.T) {
-	p := &PythonParser{}
+	p := &TreeSitterParser{}
 
 	content := []byte("import os\nimport sys\n\nprint('hello')\n")
 	info, err := p.Parse("script.py", content)

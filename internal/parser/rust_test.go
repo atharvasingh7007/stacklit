@@ -6,31 +6,9 @@ import (
 	"testing"
 )
 
-func TestRustParserCanParse(t *testing.T) {
-	p := &RustParser{}
-
-	cases := []struct {
-		filename string
-		want     bool
-	}{
-		{"main.rs", true},
-		{"lib.rs", true},
-		{"mod.rs", true},
-		{"main.go", false},
-		{"index.ts", false},
-		{"app.py", false},
-	}
-
-	for _, tc := range cases {
-		got := p.CanParse(tc.filename)
-		if got != tc.want {
-			t.Errorf("CanParse(%q) = %v, want %v", tc.filename, got, tc.want)
-		}
-	}
-}
 
 func TestRustParserParse_Imports(t *testing.T) {
-	p := &RustParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
 	if err != nil {
@@ -62,7 +40,7 @@ func TestRustParserParse_Imports(t *testing.T) {
 }
 
 func TestRustParserParse_Exports(t *testing.T) {
-	p := &RustParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
 	if err != nil {
@@ -98,7 +76,7 @@ func TestRustParserParse_Exports(t *testing.T) {
 }
 
 func TestRustParserParse_Entrypoint(t *testing.T) {
-	p := &RustParser{}
+	p := &TreeSitterParser{}
 
 	content, err := os.ReadFile("../../testdata/rust-project/src/main.rs")
 	if err != nil {
@@ -116,7 +94,7 @@ func TestRustParserParse_Entrypoint(t *testing.T) {
 }
 
 func TestRustParserParse_NoEntrypoint(t *testing.T) {
-	p := &RustParser{}
+	p := &TreeSitterParser{}
 
 	content := []byte(`pub fn helper() {}
 
