@@ -243,6 +243,12 @@ html = "stacklit.html"
 
 Auto-detects: pnpm, npm, yarn workspaces, Go workspaces, Turborepo, Nx, Lerna, Cargo workspaces, and convention directories (`apps/`, `packages/`, `services/`).
 
+## Documentation
+
+- [USAGE.md](USAGE.md) -- full usage guide, command reference, MCP tools, configuration options, reading the index
+- [SKILL.md](SKILL.md) -- instructions for AI agents on how to use stacklit.json
+- [examples/](examples/) -- real stacklit.json outputs from Express.js, FastAPI, Gin, Axum
+
 ## Contributing
 
 ```bash
