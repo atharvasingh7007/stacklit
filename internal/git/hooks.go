@@ -8,7 +8,7 @@ import (
 
 const hookScript = `#!/bin/sh
 stacklit generate --quiet 2>/dev/null
-git add stacklit.json stacklit.mmd 2>/dev/null || true
+git add stacklit.json DEPENDENCIES.md 2>/dev/null || true
 `
 
 // InstallHook installs (or appends to) the post-commit git hook in root so

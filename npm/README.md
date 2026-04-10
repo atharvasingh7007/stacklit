@@ -28,7 +28,7 @@ npx stacklit init
 | File | What it does | Committed? |
 |------|-------------|------------|
 | `stacklit.json` | Machine-readable codebase index | Yes |
-| `stacklit.mmd` | Mermaid dependency diagram (renders on GitHub) | Yes |
+| `DEPENDENCIES.md` | Mermaid dependency diagram (renders on GitHub) | Yes |
 | `stacklit.html` | Interactive visual map with 4 views | No (gitignored) |
 
 ## Visual map

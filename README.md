@@ -30,7 +30,7 @@ npx stacklit init
 | File | What it does | Committed? |
 |------|-------------|------------|
 | `stacklit.json` | Machine-readable codebase index | Yes |
-| `stacklit.mmd` | Mermaid dependency diagram (renders on GitHub) | Yes |
+| `DEPENDENCIES.md` | Mermaid dependency diagram (renders on GitHub) | Yes |
 | `stacklit.html` | Interactive visual map with 4 views | No (gitignored) |
 
 ## stacklit.json
@@ -208,7 +208,7 @@ Stacklit auto-detects workspace layouts:
 stacklit init --hook
 ```
 
-Auto-regenerates `stacklit.json` and `stacklit.mmd` on commit. Merkle hashing skips regeneration when only docs or configs changed.
+Auto-regenerates `stacklit.json` and `DEPENDENCIES.md` on commit. Merkle hashing skips regeneration when only docs or configs changed.
 
 ### GitHub Action
 
@@ -217,7 +217,7 @@ name: Update stacklit index
 on:
   push:
     branches: [main]
-    paths-ignore: ['stacklit.json', 'stacklit.mmd', '**.md']
+    paths-ignore: ['stacklit.json', 'DEPENDENCIES.md', '**.md']
 
 jobs:
   stacklit:
@@ -232,7 +232,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update stacklit index"
-          file_pattern: "stacklit.json stacklit.mmd"
+          file_pattern: "stacklit.json DEPENDENCIES.md"
 ```
 
 ## Configuration
@@ -249,7 +249,7 @@ max_depth = 3
 # Output file paths
 [output]
 json = "stacklit.json"
-mermaid = "stacklit.mmd"
+mermaid = "DEPENDENCIES.md"
 html = "stacklit.html"
 ```
 

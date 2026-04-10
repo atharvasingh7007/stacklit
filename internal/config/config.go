@@ -30,7 +30,7 @@ func DefaultConfig() *Config {
 		MaxExports: 10,
 		Output: OutputConfig{
 			JSON:    "stacklit.json",
-			Mermaid: "stacklit.mmd",
+			Mermaid: "DEPENDENCIES.md",
 			HTML:    "stacklit.html",
 		},
 	}
@@ -64,7 +64,7 @@ func Load(root string) *Config {
 		cfg.Output.JSON = "stacklit.json"
 	}
 	if cfg.Output.Mermaid == "" {
-		cfg.Output.Mermaid = "stacklit.mmd"
+		cfg.Output.Mermaid = "DEPENDENCIES.md"
 	}
 	if cfg.Output.HTML == "" {
 		cfg.Output.HTML = "stacklit.html"

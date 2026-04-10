@@ -57,7 +57,7 @@ func TestRenderMermaid(t *testing.T) {
 	content := string(data)
 
 	// Must start with graph LR
-	if !strings.HasPrefix(content, "graph LR\n") {
+	if !strings.Contains(content, "```mermaid\ngraph LR\n") {
 		t.Errorf("expected content to start with 'graph LR\\n', got: %q", content[:min(len(content), 20)])
 	}
 
@@ -102,7 +102,7 @@ func TestRenderMermaidEmpty(t *testing.T) {
 	}
 	content := string(data)
 
-	if !strings.HasPrefix(content, "graph LR\n") {
+	if !strings.Contains(content, "```mermaid\ngraph LR\n") {
 		t.Errorf("expected empty diagram to start with 'graph LR\\n', got: %q", content)
 	}
 }

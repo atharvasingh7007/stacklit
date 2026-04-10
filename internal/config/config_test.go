@@ -20,8 +20,8 @@ func TestLoadDefault(t *testing.T) {
 	if cfg.Output.JSON != "stacklit.json" {
 		t.Errorf("expected default output.json=stacklit.json, got %q", cfg.Output.JSON)
 	}
-	if cfg.Output.Mermaid != "stacklit.mmd" {
-		t.Errorf("expected default output.mermaid=stacklit.mmd, got %q", cfg.Output.Mermaid)
+	if cfg.Output.Mermaid != "DEPENDENCIES.md" {
+		t.Errorf("expected default output.mermaid=DEPENDENCIES.md, got %q", cfg.Output.Mermaid)
 	}
 	if cfg.Output.HTML != "stacklit.html" {
 		t.Errorf("expected default output.html=stacklit.html, got %q", cfg.Output.HTML)
