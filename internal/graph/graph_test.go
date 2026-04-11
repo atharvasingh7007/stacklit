@@ -202,6 +202,26 @@ func TestPythonDottedAbsoluteImport(t *testing.T) {
 	assertStringSliceContains(t, apiMod.DependsOn, "myapp/db")
 }
 
+// TestGoImportWithDotsNotMangled verifies that Go-style imports containing dots
+// (e.g. "github.com/user/repo") are not incorrectly slash-converted.
+func TestGoImportWithDotsNotMangled(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "cmd/main.go", Language: "go", Imports: []string{"github.com/lib/pq"}, LineCount: 20},
+		{Path: "internal/db/conn.go", Language: "go", Exports: []string{"Connect"}, LineCount: 30},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	cmdMod := g.Module("cmd")
+	if cmdMod == nil {
+		t.Fatal("expected module cmd to exist")
+	}
+	// "github.com/lib/pq" is external — should not resolve to internal/db or any module.
+	if len(cmdMod.DependsOn) != 0 {
+		t.Errorf("expected no deps for external Go import, got %v", cmdMod.DependsOn)
+	}
+}
+
 // moduleNames is a helper to extract names for error messages.
 func moduleNames(mods []*Module) []string {
 	names := make([]string, len(mods))

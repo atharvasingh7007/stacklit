@@ -292,46 +292,61 @@ func resolveImport(imp, fileDir string, knownModules []string) string {
 
 	// Relative imports: ./foo or ../foo
 	if strings.HasPrefix(imp, "./") || strings.HasPrefix(imp, "../") {
-		resolved := filepath.Clean(filepath.Join(fileDir, imp))
-		// Try exact match first, then prefix match.
+		resolved := filepath.ToSlash(filepath.Clean(filepath.Join(fileDir, imp)))
+		// Try exact match first, then prefix match (longest wins).
+		best := ""
 		for _, mod := range knownModules {
 			if mod == resolved {
 				return mod
 			}
 		}
-		// The import may point to a file inside a module directory.
 		for _, mod := range knownModules {
 			if strings.HasPrefix(resolved, mod+"/") || strings.HasPrefix(resolved+"/", mod+"/") {
-				return mod
+				if len(mod) > len(best) {
+					best = mod
+				}
 			}
 		}
-		return ""
+		return best
 	}
 
 	// Absolute/package-style imports: match suffix against known module names.
-	// e.g. import "internal/auth" matches module "internal/auth".
-	// Also convert dotted imports (Python "os.path" → "os/path") for matching.
-	slashImp := strings.ReplaceAll(imp, ".", "/")
+	// Convert dotted imports to slash-separated only when the import has no slash
+	// (Python "os.path" → "os/path"). Imports with slashes (Go "github.com/...")
+	// are left as-is to avoid false matches.
+	slashImp := imp
+	if !strings.Contains(imp, "/") {
+		slashImp = strings.ReplaceAll(imp, ".", "/")
+	}
 
+	best := ""
 	for _, mod := range knownModules {
 		if mod == imp || mod == slashImp {
 			return mod
 		}
 		// Suffix match: "internal/auth" matches module "internal/auth".
 		if strings.HasSuffix(imp, "/"+mod) || strings.HasSuffix(slashImp, "/"+mod) {
-			return mod
+			if len(mod) > len(best) {
+				best = mod
+			}
+			continue
 		}
 		// Module is a prefix of the import path (package.submodule → package/).
 		if strings.HasPrefix(slashImp, mod+"/") || strings.HasPrefix(imp, mod+"/") {
-			return mod
+			if len(mod) > len(best) {
+				best = mod
+			}
+			continue
 		}
 		// Module is a suffix of the import path (Go-style).
 		if strings.HasSuffix(imp, mod) || strings.HasSuffix(slashImp, mod) {
-			return mod
+			if len(mod) > len(best) {
+				best = mod
+			}
 		}
 	}
 
-	return ""
+	return best
 }
 
 // normalizePythonImport converts Python dot-prefix relative imports to path-style.
