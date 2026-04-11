@@ -1,7 +1,7 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-10T19:17:44Z",
+  "generated_at": "2026-04-10T19:43:30Z",
   "stacklit_version": "dev",
   "merkle_hash": "30be93d7f694cca2cd354dcaaa49aa84329732f577399f2f0fddaffcfab3b5ef",
   "project": {
@@ -418,9 +418,9 @@
         "type Project"
       ],
       "type_defs": {
-        "Architecture": "Pattern string, Summary string",
+        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
+        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
-        "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
         "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
@@ -660,19 +660,19 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 17
+        "commits_90d": 18
       },
       {
         "path": "stacklit.mmd",
         "commits_90d": 14
       },
       {
-        "path": "internal/engine/engine.go",
+        "path": "README.md",
         "commits_90d": 13
       },
       {
-        "path": "README.md",
-        "commits_90d": 12
+        "path": "internal/engine/engine.go",
+        "commits_90d": 13
       },
       {
         "path": "assets/template.html",
@@ -740,11 +740,11 @@
       }
     ],
     "recent": [
-      "npm/install.js",
+      "README.md",
       "stacklit.json",
+      "npm/install.js",
       ".gitignore",
       "COMPARISON.md",
-      "README.md",
       "USAGE.md",
       "examples/README.md",
       "internal/cli/derive.go",
