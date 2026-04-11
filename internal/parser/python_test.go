@@ -6,7 +6,6 @@ import (
 	"testing"
 )
 
-
 func TestPythonParserParse_Imports(t *testing.T) {
 	p := &TreeSitterParser{}
 
@@ -124,5 +123,29 @@ func TestPythonParserParse_LineCount(t *testing.T) {
 
 	if info.LineCount != 4 {
 		t.Errorf("LineCount = %d, want 4", info.LineCount)
+	}
+}
+
+func TestPythonParserParse_RelativeImportShorthand(t *testing.T) {
+	p := &TreeSitterParser{}
+
+	content := []byte("from . import models\nfrom .. import utils\n")
+	info, err := p.Parse("pkg/api/views.py", content)
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	wantImports := []string{".models", "..utils"}
+	for _, want := range wantImports {
+		found := false
+		for _, got := range info.Imports {
+			if got == want {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("import %q not found in %v", want, info.Imports)
+		}
 	}
 }

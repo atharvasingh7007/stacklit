@@ -222,6 +222,25 @@ func TestGoImportWithDotsNotMangled(t *testing.T) {
 	}
 }
 
+// TestPythonRelativeImportShorthand verifies that "from . import module" style
+// imports resolve to dependency edges.
+func TestPythonRelativeImportShorthand(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "pkg/api/views.py", Language: "python", Imports: []string{".models", "..shared"}, LineCount: 20},
+		{Path: "pkg/api/models/user.py", Language: "python", LineCount: 10},
+		{Path: "pkg/shared/util.py", Language: "python", LineCount: 10},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	apiMod := g.Module("pkg/api")
+	if apiMod == nil {
+		t.Fatal("expected module pkg/api to exist")
+	}
+	assertStringSliceContains(t, apiMod.DependsOn, "pkg/api/models")
+	assertStringSliceContains(t, apiMod.DependsOn, "pkg/shared")
+}
+
 // moduleNames is a helper to extract names for error messages.
 func moduleNames(mods []*Module) []string {
 	names := make([]string, len(mods))

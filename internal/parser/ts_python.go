@@ -31,7 +31,11 @@ func extractPython(root *gts.Node, lang *gts.Language, src []byte, path string) 
 			if mod != nil {
 				name := nodeText(mod, src)
 				if name != "" {
-					info.Imports = dedup(append(info.Imports, name))
+					if strings.Trim(name, ".") == "" {
+						info.Imports = dedup(append(info.Imports, extractPyRelativeFromImports(node, lang, src, name)...))
+					} else {
+						info.Imports = dedup(append(info.Imports, name))
+					}
 				}
 			}
 			return gts.WalkSkipChildren
@@ -90,6 +94,34 @@ func extractPython(root *gts.Node, lang *gts.Language, src []byte, path string) 
 	})
 
 	return info
+}
+
+// extractPyRelativeFromImports expands shorthand relative imports such as
+// "from . import models" into module paths like ".models".
+func extractPyRelativeFromImports(node *gts.Node, lang *gts.Language, src []byte, prefix string) []string {
+	var imports []string
+	for i := 0; i < node.ChildCount(); i++ {
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+		switch child.Type(lang) {
+		case "identifier", "dotted_name":
+			name := nodeText(child, src)
+			if name != "" {
+				imports = append(imports, prefix+name)
+			}
+		case "aliased_import":
+			nameNode := child.ChildByFieldName("name", lang)
+			if nameNode != nil {
+				name := nodeText(nameNode, src)
+				if name != "" {
+					imports = append(imports, prefix+name)
+				}
+			}
+		}
+	}
+	return imports
 }
 
 // extractPyImportNames handles import_statement nodes and appends module names
