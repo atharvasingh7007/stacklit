@@ -144,6 +144,64 @@ func TestIsolatedModules(t *testing.T) {
 	}
 }
 
+// TestPythonRelativeImports verifies that Python dot-notation relative imports
+// produce correct dependency edges.
+func TestPythonRelativeImports(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "myapp/api/views.py", Language: "python", Imports: []string{"flask", ".models", ".config"}, LineCount: 30},
+		{Path: "myapp/api/models.py", Language: "python", Exports: []string{"User", "Post"}, LineCount: 20},
+		{Path: "myapp/api/config.py", Language: "python", Exports: []string{"Settings"}, LineCount: 10},
+		{Path: "myapp/db/client.py", Language: "python", Exports: []string{"get_conn"}, LineCount: 15},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	apiMod := g.Module("myapp/api")
+	if apiMod == nil {
+		t.Fatal("expected module myapp/api to exist")
+	}
+
+	// ".models" and ".config" are in the same directory so they resolve to same module.
+	// They should NOT create self-edges. External "flask" should not appear.
+	if len(apiMod.DependsOn) != 0 {
+		t.Errorf("expected no external deps (self-refs filtered), got %v", apiMod.DependsOn)
+	}
+}
+
+// TestPythonParentRelativeImport verifies that ".." style Python imports resolve
+// to the parent module.
+func TestPythonParentRelativeImport(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "myapp/api/views.py", Language: "python", Imports: []string{"..db"}, LineCount: 30},
+		{Path: "myapp/db/client.py", Language: "python", Exports: []string{"get_conn"}, LineCount: 15},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	apiMod := g.Module("myapp/api")
+	if apiMod == nil {
+		t.Fatal("expected module myapp/api to exist")
+	}
+	assertStringSliceContains(t, apiMod.DependsOn, "myapp/db")
+}
+
+// TestPythonDottedAbsoluteImport verifies that Python dotted absolute imports
+// (e.g. "myapp.db.client") resolve to the correct module.
+func TestPythonDottedAbsoluteImport(t *testing.T) {
+	files := []*parser.FileInfo{
+		{Path: "myapp/api/views.py", Language: "python", Imports: []string{"myapp.db.client"}, LineCount: 30},
+		{Path: "myapp/db/client.py", Language: "python", Exports: []string{"get_conn"}, LineCount: 15},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	apiMod := g.Module("myapp/api")
+	if apiMod == nil {
+		t.Fatal("expected module myapp/api to exist")
+	}
+	assertStringSliceContains(t, apiMod.DependsOn, "myapp/db")
+}
+
 // moduleNames is a helper to extract names for error messages.
 func moduleNames(mods []*Module) []string {
 	names := make([]string, len(mods))
