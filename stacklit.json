@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-11T21:16:42Z",
+  "generated_at": "2026-04-11T21:25:30Z",
   "stacklit_version": "dev",
-  "merkle_hash": "dcc7d770eed645addb8cd8239c889f2b16333d4bae240bc662cabf562c7e505f",
+  "merkle_hash": "c54196674f574568c9cf9e2f2207d0708bfbcd48cfaf336eda503c7ab5a0449f",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 59,
-        "lines": 7994
+        "lines": 8068
       },
       "java": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 70,
-    "total_lines": 8200
+    "total_lines": 8274
   },
   "modules": {
     "assets": {
@@ -251,7 +251,7 @@
       "purpose": "Dependency graph",
       "language": "go",
       "files": 2,
-      "lines": 626,
+      "lines": 645,
       "file_list": [
         "graph.go",
         "graph_test.go"
@@ -325,7 +325,7 @@
       "purpose": "Source code parsers",
       "language": "go",
       "files": 20,
-      "lines": 3212,
+      "lines": 3267,
       "file_list": [
         "generic.go",
         "generic_test.go",
@@ -418,16 +418,16 @@
         "type Project"
       ],
       "type_defs": {
-        "Architecture": "Pattern string, Summary string",
         "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
         "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
+        "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
-        "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
-        "Project": "Name string, Root string, Type string, Workspaces []string",
+        "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string"
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
+        "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
         "internal/cli",
@@ -660,7 +660,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 20
+        "commits_90d": 21
       },
       {
         "path": "stacklit.mmd",
@@ -691,6 +691,10 @@
         "commits_90d": 6
       },
       {
+        "path": "internal/graph/graph_test.go",
+        "commits_90d": 6
+      },
+      {
         "path": "internal/renderer/mermaid.go",
         "commits_90d": 6
       },
@@ -707,12 +711,12 @@
         "commits_90d": 5
       },
       {
-        "path": "internal/graph/graph_test.go",
+        "path": "internal/renderer/mermaid_test.go",
         "commits_90d": 5
       },
       {
-        "path": "internal/renderer/mermaid_test.go",
-        "commits_90d": 5
+        "path": ".github/workflows/release.yml",
+        "commits_90d": 4
       },
       {
         "path": "internal/cli/root.go",
@@ -723,8 +727,8 @@
         "commits_90d": 4
       },
       {
-        "path": ".github/workflows/release.yml",
-        "commits_90d": 3
+        "path": "internal/parser/python_test.go",
+        "commits_90d": 4
       },
       {
         "path": ".gitignore",
@@ -733,23 +737,19 @@
       {
         "path": "examples/README.md",
         "commits_90d": 3
-      },
-      {
-        "path": "internal/cli/generate.go",
-        "commits_90d": 3
       }
     ],
     "recent": [
       ".github/workflows/release.yml",
-      "npm/package.json",
       "stacklit.json",
-      "internal/graph/graph.go",
+      "npm/package.json",
       "internal/graph/graph_test.go",
+      "internal/parser/python_test.go",
+      "internal/parser/ts_python.go",
+      "internal/graph/graph.go",
       "README.md",
       "npm/install.js",
-      ".gitignore",
-      "COMPARISON.md",
-      "USAGE.md"
+      ".gitignore"
     ],
     "stable": [
       "COMPARISON.md",
