@@ -144,6 +144,39 @@ func TestIsolatedModules(t *testing.T) {
 	}
 }
 
+// TestPythonImportsResolveToModuleEdges verifies that Python dotted imports and
+// relative imports map to internal module dependencies.
+func TestPythonImportsResolveToModuleEdges(t *testing.T) {
+	files := []*parser.FileInfo{
+		{
+			Path:      "pkg/app/main.py",
+			Language:  "python",
+			Imports:   []string{".models", "..shared", "pkg.app.helpers", "flask"},
+			LineCount: 20,
+		},
+		{Path: "pkg/app/models/user.py", Language: "python", LineCount: 10},
+		{Path: "pkg/shared/util.py", Language: "python", LineCount: 10},
+		{Path: "pkg/app/helpers/tool.py", Language: "python", LineCount: 10},
+	}
+
+	g := Build(files, BuildOptions{MaxDepth: 4})
+
+	appMod := g.Module("pkg/app")
+	if appMod == nil {
+		t.Fatal("expected module pkg/app to exist")
+	}
+
+	assertStringSliceContains(t, appMod.DependsOn, "pkg/app/models")
+	assertStringSliceContains(t, appMod.DependsOn, "pkg/shared")
+	assertStringSliceContains(t, appMod.DependsOn, "pkg/app/helpers")
+
+	for _, dep := range appMod.DependsOn {
+		if dep == "flask" {
+			t.Fatalf("external dependency %q should not resolve to an internal module", dep)
+		}
+	}
+}
+
 // moduleNames is a helper to extract names for error messages.
 func moduleNames(mods []*Module) []string {
 	names := make([]string, len(mods))

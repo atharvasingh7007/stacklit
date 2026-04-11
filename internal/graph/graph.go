@@ -284,41 +284,74 @@ func detectModuleWithDepth(filePath string, maxDepth int) string {
 // resolveImport attempts to match an import string to a known module name.
 // Returns the matched module name, or "" if no match (external dependency).
 func resolveImport(imp, fileDir string, knownModules []string) string {
+	imp = strings.TrimSpace(imp)
+	fileDir = filepath.ToSlash(fileDir)
+	if imp == "" {
+		return ""
+	}
+
 	// Relative imports: ./foo or ../foo
 	if strings.HasPrefix(imp, "./") || strings.HasPrefix(imp, "../") {
-		resolved := filepath.Clean(filepath.Join(fileDir, imp))
-		// Try exact match first, then prefix match.
-		for _, mod := range knownModules {
-			if mod == resolved {
-				return mod
-			}
+		return matchKnownModule(filepath.Join(fileDir, imp), knownModules)
+	}
+
+	// Python relative imports use dots instead of filesystem segments.
+	// A single leading dot stays in the current package; additional dots walk up.
+	if strings.HasPrefix(imp, ".") {
+		trimmed := strings.TrimLeft(imp, ".")
+		levels := len(imp) - len(trimmed)
+		baseDir := fileDir
+		for i := 1; i < levels; i++ {
+			baseDir = filepath.Dir(baseDir)
 		}
-		// The import may point to a file inside a module directory.
-		for _, mod := range knownModules {
-			if strings.HasPrefix(resolved, mod+"/") || strings.HasPrefix(resolved+"/", mod+"/") {
-				return mod
-			}
+		if trimmed == "" {
+			return matchKnownModule(baseDir, knownModules)
 		}
-		return ""
+		relativePath := strings.ReplaceAll(trimmed, ".", "/")
+		return matchKnownModule(filepath.Join(baseDir, relativePath), knownModules)
+	}
+
+	// Python absolute imports are package dotted paths rather than slash paths.
+	if strings.Contains(imp, ".") && !strings.Contains(imp, "/") {
+		if mod := matchKnownModule(strings.ReplaceAll(imp, ".", "/"), knownModules); mod != "" {
+			return mod
+		}
 	}
 
 	// Absolute/package-style imports: match suffix against known module names.
 	// e.g. import "internal/auth" matches module "internal/auth".
+	return matchImportSuffix(imp, knownModules)
+}
+
+// matchKnownModule resolves a filesystem-like path to the best matching module.
+// Exact matches win; otherwise the longest parent module match is returned.
+func matchKnownModule(target string, knownModules []string) string {
+	target = filepath.ToSlash(filepath.Clean(target))
+	best := ""
 	for _, mod := range knownModules {
-		if mod == imp {
+		if mod == target {
 			return mod
 		}
-		// Suffix match: "internal/auth" matches module "internal/auth".
-		if strings.HasSuffix(imp, "/"+mod) || strings.HasSuffix(imp, mod) {
-			return mod
-		}
-		// Module is a suffix of the import path (Go-style).
-		if strings.HasSuffix(imp, mod) || imp == mod {
-			return mod
+		if strings.HasPrefix(target, mod+"/") && len(mod) > len(best) {
+			best = mod
 		}
 	}
+	return best
+}
 
-	return ""
+// matchImportSuffix resolves import strings like Go package paths by matching
+// the longest module suffix on a slash boundary.
+func matchImportSuffix(imp string, knownModules []string) string {
+	imp = filepath.ToSlash(strings.TrimSpace(imp))
+	best := ""
+	for _, mod := range knownModules {
+		if mod == imp || strings.HasSuffix(imp, "/"+mod) {
+			if len(mod) > len(best) {
+				best = mod
+			}
+		}
+	}
+	return best
 }
 
 // appendUnique appends values to s, skipping duplicates.
