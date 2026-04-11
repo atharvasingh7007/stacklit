@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-10T19:43:30Z",
+  "generated_at": "2026-04-11T20:44:58Z",
   "stacklit_version": "dev",
-  "merkle_hash": "30be93d7f694cca2cd354dcaaa49aa84329732f577399f2f0fddaffcfab3b5ef",
+  "merkle_hash": "dcc7d770eed645addb8cd8239c889f2b16333d4bae240bc662cabf562c7e505f",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -14,7 +14,7 @@
     "languages": {
       "go": {
         "files": 59,
-        "lines": 7862
+        "lines": 7994
       },
       "java": {
         "files": 1,
@@ -47,7 +47,7 @@
       "cmd/stacklit/main.go"
     ],
     "total_files": 70,
-    "total_lines": 8068
+    "total_lines": 8200
   },
   "modules": {
     "assets": {
@@ -251,7 +251,7 @@
       "purpose": "Dependency graph",
       "language": "go",
       "files": 2,
-      "lines": 494,
+      "lines": 626,
       "file_list": [
         "graph.go",
         "graph_test.go"
@@ -418,13 +418,13 @@
         "type Project"
       ],
       "type_defs": {
-        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
+        "Architecture": "Pattern string, Summary string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
+        "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
-        "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
+        "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
         "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
@@ -660,7 +660,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 18
+        "commits_90d": 19
       },
       {
         "path": "stacklit.mmd",
@@ -680,7 +680,7 @@
       },
       {
         "path": "internal/graph/graph.go",
-        "commits_90d": 7
+        "commits_90d": 9
       },
       {
         "path": "internal/schema/schema.go",
@@ -700,6 +700,10 @@
       },
       {
         "path": "internal/cli/init.go",
+        "commits_90d": 5
+      },
+      {
+        "path": "internal/graph/graph_test.go",
         "commits_90d": 5
       },
       {
@@ -733,23 +737,19 @@
       {
         "path": "internal/cli/view.go",
         "commits_90d": 3
-      },
-      {
-        "path": "internal/graph/graph_test.go",
-        "commits_90d": 3
       }
     ],
     "recent": [
-      "README.md",
+      "internal/graph/graph.go",
+      "internal/graph/graph_test.go",
       "stacklit.json",
+      "README.md",
       "npm/install.js",
       ".gitignore",
       "COMPARISON.md",
       "USAGE.md",
       "examples/README.md",
-      "internal/cli/derive.go",
-      "internal/cli/root.go",
-      "internal/cli/setup.go"
+      "internal/cli/derive.go"
     ],
     "stable": [
       "COMPARISON.md",

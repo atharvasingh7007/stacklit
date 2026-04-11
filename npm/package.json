@@ -1,6 +1,6 @@
 {
   "name": "stacklit",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Zero-config codebase context for AI agents. One command generates a ~250-token navigation map and auto-configures Claude Code, Cursor, and Aider.",
   "bin": {
     "stacklit": "bin/stacklit.js"
