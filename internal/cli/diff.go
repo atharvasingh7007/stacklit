@@ -17,24 +17,29 @@ func newDiffCmd() *cobra.Command {
 		Use:   "diff",
 		Short: "Show changes since last index generation",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// 1. Read stacklit.json
-			data, err := os.ReadFile("stacklit.json")
+			// 1. Load config and read the index file.
+			cfg := config.Load(".")
+			indexPath := cfg.Output.JSON
+			if indexPath == "" {
+				indexPath = "stacklit.json"
+			}
+
+			data, err := os.ReadFile(indexPath)
 			if err != nil {
-				return fmt.Errorf("could not read stacklit.json: %w (run 'stacklit generate' first)", err)
+				return fmt.Errorf("could not read %s: %w (run 'stacklit generate' first)", indexPath, err)
 			}
 
 			var index schema.Index
 			if err := json.Unmarshal(data, &index); err != nil {
-				return fmt.Errorf("could not parse stacklit.json: %w", err)
+				return fmt.Errorf("could not parse %s: %w", indexPath, err)
 			}
 
 			storedHash := index.MerkleHash
 			if storedHash == "" {
-				return fmt.Errorf("stacklit.json has no merkle_hash; run 'stacklit generate' to rebuild")
+				return fmt.Errorf("%s has no merkle_hash; run 'stacklit generate' to rebuild", indexPath)
 			}
 
 			// 2. Walk current source files, excluding Stacklit's own generated outputs.
-			cfg := config.Load(".")
 			files, err := walker.Walk(".", cfg.ScanIgnore())
 			if err != nil {
 				return fmt.Errorf("failed to walk source files: %w", err)

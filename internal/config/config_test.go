@@ -57,13 +57,13 @@ func TestLoadMalformed(t *testing.T) {
 
 func TestScanIgnoreIncludesOutputs(t *testing.T) {
 	cfg := DefaultConfig()
-	cfg.Ignore = []string{"custom/"}
+	cfg.Ignore = []string{"custom/", "vendor\\libs"}
 	cfg.Output.JSON = "out\\stacklit.json"
 	cfg.Output.Mermaid = "docs\\DEPENDENCIES.md"
 	cfg.Output.HTML = "stacklit.html"
 
 	got := cfg.ScanIgnore()
-	want := []string{"custom/", "out/stacklit.json", "docs/DEPENDENCIES.md", "stacklit.html"}
+	want := []string{"custom/", "vendor/libs", "out/stacklit.json", "docs/DEPENDENCIES.md", "stacklit.html"}
 	if len(got) != len(want) {
 		t.Fatalf("expected %d ignore patterns, got %d: %v", len(want), len(got), got)
 	}

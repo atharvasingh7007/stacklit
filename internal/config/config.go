@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Config holds the settings loaded from a .stacklitrc.json file.
@@ -74,14 +75,26 @@ func Load(root string) *Config {
 }
 
 // ScanIgnore returns ignore patterns plus Stacklit output files so generated artifacts
-// never feed back into the next scan.
+// never feed back into the next scan. All patterns are normalized to forward slashes
+// so they match the walker's normalized paths on every OS.
 func (c *Config) ScanIgnore() []string {
-	ignore := append([]string{}, c.Ignore...)
+	ignore := make([]string, 0, len(c.Ignore)+3)
+	for _, pat := range c.Ignore {
+		ignore = append(ignore, toSlash(pat))
+	}
 	for _, out := range []string{c.Output.JSON, c.Output.Mermaid, c.Output.HTML} {
 		if out == "" {
 			continue
 		}
-		ignore = append(ignore, filepath.ToSlash(out))
+		ignore = append(ignore, toSlash(out))
 	}
 	return ignore
+}
+
+// toSlash normalizes both OS path separators and literal backslashes to forward
+// slashes. filepath.ToSlash only converts os.PathSeparator which is '/' on
+// Unix, leaving Windows-style backslashes untouched on non-Windows builds.
+func toSlash(p string) string {
+	p = filepath.ToSlash(p)
+	return strings.ReplaceAll(p, "\\", "/")
 }
