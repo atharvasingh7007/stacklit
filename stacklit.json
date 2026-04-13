@@ -1,9 +1,9 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-11T21:25:30Z",
+  "generated_at": "2026-04-12T23:14:24Z",
   "stacklit_version": "dev",
-  "merkle_hash": "c54196674f574568c9cf9e2f2207d0708bfbcd48cfaf336eda503c7ab5a0449f",
+  "merkle_hash": "401fb57379393fa0bb33bf340a0a5df4be8ff2f64f01ac48a4e800053070f70a",
   "project": {
     "name": "stacklit",
     "root": ".",
@@ -13,8 +13,8 @@
     "primary_language": "go",
     "languages": {
       "go": {
-        "files": 59,
-        "lines": 8068
+        "files": 60,
+        "lines": 8194
       },
       "java": {
         "files": 1,
@@ -46,8 +46,8 @@
     "entrypoints": [
       "cmd/stacklit/main.go"
     ],
-    "total_files": 70,
-    "total_lines": 8274
+    "total_files": 71,
+    "total_lines": 8400
   },
   "modules": {
     "assets": {
@@ -85,7 +85,7 @@
       "purpose": "Command-line interface",
       "language": "go",
       "files": 8,
-      "lines": 492,
+      "lines": 499,
       "file_list": [
         "derive.go",
         "diff.go",
@@ -101,6 +101,7 @@
         "Version"
       ],
       "depends_on": [
+        "internal/config",
         "internal/derive",
         "internal/engine",
         "internal/git",
@@ -119,7 +120,7 @@
       "purpose": "Configuration management",
       "language": "go",
       "files": 2,
-      "lines": 130,
+      "lines": 175,
       "file_list": [
         "config.go",
         "config_test.go"
@@ -127,6 +128,7 @@
       "exports": [
         "DefaultConfig() *Config",
         "Load(root string) *Config",
+        "ScanIgnore() []string",
         "type Config",
         "type OutputConfig"
       ],
@@ -135,9 +137,10 @@
         "OutputConfig": "JSON string, Mermaid string, HTML string"
       },
       "depended_by": [
+        "internal/cli",
         "internal/engine"
       ],
-      "activity": "low"
+      "activity": "medium"
     },
     "internal/derive": {
       "purpose": "Derive",
@@ -184,7 +187,7 @@
       "purpose": "Core orchestration engine",
       "language": "go",
       "files": 1,
-      "lines": 555,
+      "lines": 558,
       "file_list": [
         "engine.go"
       ],
@@ -373,14 +376,15 @@
     "internal/renderer": {
       "purpose": "Output renderers",
       "language": "go",
-      "files": 5,
-      "lines": 380,
+      "files": 6,
+      "lines": 448,
       "file_list": [
         "html.go",
         "json.go",
         "json_test.go",
         "mermaid.go",
-        "mermaid_test.go"
+        "mermaid_test.go",
+        "stable.go"
       ],
       "exports": [
         "WriteHTML(idx *schema.Index, path string) error",
@@ -419,12 +423,12 @@
       ],
       "type_defs": {
         "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
+        "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
-        "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
+        "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
         "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
@@ -490,7 +494,7 @@
       "purpose": "File system walker",
       "language": "go",
       "files": 2,
-      "lines": 291,
+      "lines": 294,
       "file_list": [
         "walker.go",
         "walker_test.go"
@@ -530,6 +534,10 @@
       [
         "cmd/stacklit",
         "internal/cli"
+      ],
+      [
+        "internal/cli",
+        "internal/config"
       ],
       [
         "internal/cli",
@@ -641,6 +649,7 @@
     ],
     "most_depended": [
       "internal/schema",
+      "internal/config",
       "internal/derive",
       "internal/git",
       "internal/parser",
@@ -648,7 +657,6 @@
       "internal/walker",
       "assets",
       "internal/cli",
-      "internal/config",
       "internal/detect"
     ],
     "isolated": [
@@ -660,7 +668,11 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 21
+        "commits_90d": 22
+      },
+      {
+        "path": "internal/engine/engine.go",
+        "commits_90d": 14
       },
       {
         "path": "stacklit.mmd",
@@ -671,16 +683,16 @@
         "commits_90d": 13
       },
       {
-        "path": "internal/engine/engine.go",
-        "commits_90d": 13
-      },
-      {
         "path": "assets/template.html",
         "commits_90d": 10
       },
       {
         "path": "internal/graph/graph.go",
         "commits_90d": 9
+      },
+      {
+        "path": "internal/renderer/mermaid.go",
+        "commits_90d": 7
       },
       {
         "path": "internal/schema/schema.go",
@@ -695,12 +707,12 @@
         "commits_90d": 6
       },
       {
-        "path": "internal/renderer/mermaid.go",
+        "path": "npm/package.json",
         "commits_90d": 6
       },
       {
-        "path": "npm/package.json",
-        "commits_90d": 6
+        "path": ".github/workflows/release.yml",
+        "commits_90d": 5
       },
       {
         "path": "go.sum",
@@ -715,7 +727,7 @@
         "commits_90d": 5
       },
       {
-        "path": ".github/workflows/release.yml",
+        "path": "internal/cli/diff.go",
         "commits_90d": 4
       },
       {
@@ -723,33 +735,29 @@
         "commits_90d": 4
       },
       {
+        "path": "internal/config/config.go",
+        "commits_90d": 4
+      },
+      {
+        "path": "internal/config/config_test.go",
+        "commits_90d": 4
+      },
+      {
         "path": "internal/parser/parser.go",
         "commits_90d": 4
-      },
-      {
-        "path": "internal/parser/python_test.go",
-        "commits_90d": 4
-      },
-      {
-        "path": ".gitignore",
-        "commits_90d": 3
-      },
-      {
-        "path": "examples/README.md",
-        "commits_90d": 3
       }
     ],
     "recent": [
-      ".github/workflows/release.yml",
-      "stacklit.json",
-      "npm/package.json",
-      "internal/graph/graph_test.go",
-      "internal/parser/python_test.go",
-      "internal/parser/ts_python.go",
-      "internal/graph/graph.go",
-      "README.md",
-      "npm/install.js",
-      ".gitignore"
+      "internal/cli/diff.go",
+      "internal/config/config.go",
+      "internal/config/config_test.go",
+      "internal/engine/engine.go",
+      "internal/renderer/html.go",
+      "internal/renderer/json.go",
+      "internal/renderer/mermaid.go",
+      "internal/renderer/stable.go",
+      "internal/walker/walker.go",
+      "internal/walker/walker_test.go"
     ],
     "stable": [
       "COMPARISON.md",
