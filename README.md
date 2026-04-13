@@ -281,6 +281,17 @@ html = "stacklit.html"
 
 </details>
 
+## How it compares
+
+| Tool | Approach | Tokens | Committable | Visual map |
+|------|----------|--------|-------------|------------|
+| **Stacklit** | Structured index | ~250 | Yes | Yes |
+| Repomix | Full dump | 50k-500k | No | No |
+| code2prompt | Full dump | 50k-500k | No | No |
+| Aider repo-map | Tree-sitter + PageRank | ~1k | No | No |
+
+[Full comparison with 7 tools →](https://github.com/glincker/stacklit/discussions/13)
+
 ## Compared to alternatives
 
 | | Stacklit | Repomix | Aider repo-map | Codebase Memory MCP |
@@ -300,7 +311,7 @@ Auto-detects: pnpm, npm, yarn workspaces, Go workspaces, Turborepo, Nx, Lerna, C
 
 ## How does Stacklit compare to Repomix?
 
-Repomix concatenates all files into one prompt (50k-500k tokens). Stacklit parses code structure and generates a ~250-token navigation map. Use Repomix for small repos and one-shot chats. Use Stacklit for daily AI-assisted development on larger codebases. See the full [comparison table](COMPARISON.md).
+Repomix concatenates all files into one prompt (50k-500k tokens). Stacklit parses code structure and generates a ~250-token navigation map. Use Repomix for small repos and one-shot chats. Use Stacklit for daily AI-assisted development on larger codebases. See the [full comparison](https://github.com/glincker/stacklit/discussions/13).
 
 ## FAQ
 
