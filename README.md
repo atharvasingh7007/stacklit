@@ -26,6 +26,18 @@ go install github.com/glincker/stacklit/cmd/stacklit@latest
 
 Or grab a binary from [GitHub Releases](https://github.com/glincker/stacklit/releases) (macOS, Linux, Windows).
 
+## CI / GitHub Action
+
+Use [glincker/stacklit-action](https://github.com/glincker/stacklit-action) to keep the index fresh automatically. Auto-commit on push, or gate PRs with check mode:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: glincker/stacklit-action@v1        # auto-commit (default)
+# or: with: { mode: check }               # fail PR if index is stale
+```
+
+Add `permissions: contents: write` to the job when using `auto-commit` mode.
+
 ![Stacklit demo](demo.gif)
 
 ## What happens when you run it

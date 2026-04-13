@@ -1,0 +1,12 @@
+name: Check stacklit index
+on:
+  pull_request:
+
+jobs:
+  stacklit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: glincker/stacklit-action@v1
+        with:
+          mode: check

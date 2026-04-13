@@ -1,7 +1,7 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-13T00:23:50Z",
+  "generated_at": "2026-04-13T00:26:53Z",
   "stacklit_version": "dev",
   "merkle_hash": "401fb57379393fa0bb33bf340a0a5df4be8ff2f64f01ac48a4e800053070f70a",
   "project": {
@@ -423,10 +423,10 @@
       ],
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
+        "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
         "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
-        "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
-        "LangStats": "Files int, Lines int",
+        "HotFile": "Path string, Commits90d int",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
         "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
@@ -668,7 +668,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 23
+        "commits_90d": 24
       },
       {
         "path": "internal/engine/engine.go",
@@ -748,28 +748,28 @@
       }
     ],
     "recent": [
-      "docs/superpowers/specs/2026-04-12-growth-package-design.md",
+      "docs/superpowers/plans/2026-04-12-growth-package.md",
       "stacklit.json",
+      "docs/superpowers/specs/2026-04-12-growth-package-design.md",
       "internal/cli/diff.go",
       "internal/config/config.go",
       "internal/config/config_test.go",
       "internal/engine/engine.go",
       "internal/renderer/html.go",
       "internal/renderer/json.go",
-      "internal/renderer/mermaid.go",
-      "internal/renderer/stable.go"
+      "internal/renderer/mermaid.go"
     ],
     "stable": [
       "COMPARISON.md",
       "LICENSE",
       "assets/lang-icons.js",
+      "docs/superpowers/plans/2026-04-12-growth-package.md",
       "docs/superpowers/specs/2026-04-12-growth-package-design.md",
       "examples/axum/DEPENDENCIES.md",
       "examples/axum/stacklit.json",
       "examples/express/DEPENDENCIES.md",
       "examples/express/stacklit.json",
-      "examples/fastapi/DEPENDENCIES.md",
-      "examples/fastapi/stacklit.json"
+      "examples/fastapi/DEPENDENCIES.md"
     ]
   },
   "hints": {
