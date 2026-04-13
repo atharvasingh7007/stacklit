@@ -54,7 +54,7 @@ var purposeMap = map[string]string{
 	"lib":        "Shared library code",
 	"utils":      "Utility functions",
 	"services":   "Business logic services",
-	"middleware":  "HTTP middleware",
+	"middleware": "HTTP middleware",
 	"cli":        "Command-line interface",
 	"schema":     "Data schema definitions",
 	"renderer":   "Output renderers",
