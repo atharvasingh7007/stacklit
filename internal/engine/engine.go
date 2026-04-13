@@ -108,6 +108,46 @@ func generateAddFeatureHint(modules map[string]schema.ModuleInfo, entrypoints []
 	return ""
 }
 
+func filterRetainedModules(names []string, retained map[string]bool) []string {
+	if len(names) == 0 {
+		return nil
+	}
+	out := make([]string, 0, len(names))
+	for _, name := range names {
+		if retained[name] {
+			out = append(out, name)
+		}
+	}
+	return out
+}
+
+func rankMostDepended(modules map[string]schema.ModuleInfo) []string {
+	names := make([]string, 0, len(modules))
+	for name := range modules {
+		names = append(names, name)
+	}
+	sort.SliceStable(names, func(i, j int) bool {
+		ci := len(modules[names[i]].DependedBy)
+		cj := len(modules[names[j]].DependedBy)
+		if ci != cj {
+			return ci > cj
+		}
+		return names[i] < names[j]
+	})
+	return names
+}
+
+func findIsolatedModules(modules map[string]schema.ModuleInfo) []string {
+	var isolated []string
+	for name, mod := range modules {
+		if len(mod.DependsOn) == 0 && len(mod.DependedBy) == 0 {
+			isolated = append(isolated, name)
+		}
+	}
+	sort.Strings(isolated)
+	return isolated
+}
+
 // detectDoNotTouch returns paths that should generally not be modified by hand.
 func detectDoNotTouch(root string) []string {
 	candidates := []string{"migrations", "vendor", "generated", "proto", ".github"}
@@ -439,6 +479,14 @@ func assembleIndex(
 		allMods = allMods[:maxModules]
 	}
 
+	retainedModules := make(map[string]bool, len(allMods))
+	for _, mod := range allMods {
+		if strings.HasPrefix(mod.Name, "testdata") {
+			continue
+		}
+		retainedModules[mod.Name] = true
+	}
+
 	modules := map[string]schema.ModuleInfo{}
 	for _, mod := range allMods {
 		if strings.HasPrefix(mod.Name, "testdata") {
@@ -491,8 +539,8 @@ func assembleIndex(
 			FileList:   fileList,
 			Exports:    exports,
 			TypeDefs:   typeDefs,
-			DependsOn:  mod.DependsOn,
-			DependedBy: mod.DependedBy,
+			DependsOn:  filterRetainedModules(mod.DependsOn, retainedModules),
+			DependedBy: filterRetainedModules(mod.DependedBy, retainedModules),
 			Activity:   activityLevel,
 		}
 	}
@@ -504,14 +552,17 @@ func assembleIndex(
 		if strings.HasPrefix(e.From, "testdata") || strings.HasPrefix(e.To, "testdata") {
 			continue
 		}
+		if !retainedModules[e.From] || !retainedModules[e.To] {
+			continue
+		}
 		schemaEdges = append(schemaEdges, [2]string{e.From, e.To})
 	}
-	mostDepended := g.MostDepended()
+	mostDepended := rankMostDepended(modules)
 	// Cap most-depended list.
 	if len(mostDepended) > 10 {
 		mostDepended = mostDepended[:10]
 	}
-	isolated := g.Isolated()
+	isolated := findIsolatedModules(modules)
 
 	// --- Git ---
 	hotFiles := make([]schema.HotFile, len(activity.HotFiles))
