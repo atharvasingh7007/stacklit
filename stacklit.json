@@ -1,7 +1,7 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-13T00:29:34Z",
+  "generated_at": "2026-04-13T00:33:14Z",
   "stacklit_version": "dev",
   "merkle_hash": "401fb57379393fa0bb33bf340a0a5df4be8ff2f64f01ac48a4e800053070f70a",
   "project": {
@@ -422,15 +422,15 @@
         "type Project"
       ],
       "type_defs": {
+        "Architecture": "Pattern string, Summary string",
         "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
         "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
-        "LangStats": "Files int, Lines int",
+        "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
         "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
-        "RepoSummary": "Name string, Path string, PrimaryLanguage string, TotalFiles int, TotalLines int, Modules map[string]ModuleInfo, Frameworks []string, Entrypoints []string",
-        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
+        "Project": "Name string, Root string, Type string, Workspaces []string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
@@ -668,11 +668,11 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 25
+        "commits_90d": 26
       },
       {
         "path": "README.md",
-        "commits_90d": 14
+        "commits_90d": 15
       },
       {
         "path": "internal/engine/engine.go",
@@ -748,9 +748,9 @@
       }
     ],
     "recent": [
-      ".github/workflows/stacklit-index.yml",
       "README.md",
       "stacklit.json",
+      ".github/workflows/stacklit-index.yml",
       "docs/superpowers/plans/2026-04-12-growth-package.md",
       "docs/superpowers/specs/2026-04-12-growth-package-design.md",
       "internal/cli/diff.go",
