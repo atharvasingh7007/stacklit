@@ -393,6 +393,19 @@ func assembleIndex(
 
 	// --- Frameworks ---
 	frameworks := detect.DetectFrameworks(root, allImports)
+	detectedPatterns := detect.DetectFrameworkPatterns(root)
+	frameworkPatterns := make([]schema.FrameworkPattern, len(detectedPatterns))
+	for i, p := range detectedPatterns {
+		frameworkPatterns[i] = schema.FrameworkPattern{
+			Name:       p.Name,
+			Config:     p.Config,
+			Routes:     p.Routes,
+			API:        p.API,
+			Middleware: p.Middleware,
+			Models:     p.Models,
+			Entry:      p.Entry,
+		}
+	}
 	primaryLang := ""
 	primaryCount := 0
 	for lang, ls := range langStats {
@@ -527,9 +540,10 @@ func assembleIndex(
 			Workspaces: workspaces,
 		},
 		Tech: schema.Tech{
-			PrimaryLanguage: primaryLang,
-			Languages:       langStats,
-			Frameworks:      frameworks,
+			PrimaryLanguage:   primaryLang,
+			Languages:         langStats,
+			Frameworks:        frameworks,
+			FrameworkPatterns: frameworkPatterns,
 		},
 		Structure: schema.Structure{
 			TotalFiles:  len(files),

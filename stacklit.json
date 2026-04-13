@@ -1,7 +1,7 @@
 {
   "$schema": "https://stacklit.dev/schema/v1.json",
   "version": "1",
-  "generated_at": "2026-04-13T00:33:14Z",
+  "generated_at": "2026-04-13T00:35:00Z",
   "stacklit_version": "dev",
   "merkle_hash": "401fb57379393fa0bb33bf340a0a5df4be8ff2f64f01ac48a4e800053070f70a",
   "project": {
@@ -66,7 +66,7 @@
       "depended_by": [
         "internal/renderer"
       ],
-      "activity": "medium"
+      "activity": "high"
     },
     "cmd/stacklit": {
       "purpose": "Stacklit",
@@ -424,13 +424,13 @@
       "type_defs": {
         "Architecture": "Pattern string, Summary string",
         "Dependencies": "Edges [][]string, Entrypoints []string, MostDepended []string, Isolated []string",
-        "GitInfo": "HotFiles []HotFile, Recent []string, Stable []string",
         "Hints": "AddFeature string, TestCmd string, EnvVars []string, DoNotTouch []string",
         "HotFile": "Path string, Commits90d int",
         "Index": "Schema string, Version string, GeneratedAt string, StacklitVersion string, MerkleHash string, Project Project, Tech Tech, Structure Structure, Modules map[string]ModuleInfo, Dependencies Dependenci...",
+        "LangStats": "Files int, Lines int",
         "ModuleInfo": "Purpose string, Language string, Files int, Lines int, FileList []string, Exports []string, TypeDefs map[string]string, DependsOn []string, DependedBy []string, Activity string",
-        "MultiIndex": "Schema string, Version string, Type string, GeneratedAt string, TotalFiles int, TotalLines int, TotalModules int, Repos []RepoSummary",
         "Project": "Name string, Root string, Type string, Workspaces []string",
+        "Structure": "Entrypoints []string, TotalFiles int, TotalLines int, KeyDirectories map[string]string",
         "Tech": "PrimaryLanguage string, Languages map[string]LangStats, Frameworks []string"
       },
       "depended_by": [
@@ -668,7 +668,7 @@
     "hot_files": [
       {
         "path": "stacklit.json",
-        "commits_90d": 26
+        "commits_90d": 27
       },
       {
         "path": "README.md",
@@ -684,7 +684,7 @@
       },
       {
         "path": "assets/template.html",
-        "commits_90d": 10
+        "commits_90d": 11
       },
       {
         "path": "internal/graph/graph.go",
@@ -748,16 +748,16 @@
       }
     ],
     "recent": [
-      "README.md",
+      "assets/template.html",
       "stacklit.json",
+      "README.md",
       ".github/workflows/stacklit-index.yml",
       "docs/superpowers/plans/2026-04-12-growth-package.md",
       "docs/superpowers/specs/2026-04-12-growth-package-design.md",
       "internal/cli/diff.go",
       "internal/config/config.go",
       "internal/config/config_test.go",
-      "internal/engine/engine.go",
-      "internal/renderer/html.go"
+      "internal/engine/engine.go"
     ],
     "stable": [
       ".github/workflows/stacklit-index.yml",

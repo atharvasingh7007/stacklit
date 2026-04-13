@@ -29,9 +29,21 @@ type Project struct {
 }
 
 type Tech struct {
-	PrimaryLanguage string               `json:"primary_language"`
-	Languages       map[string]LangStats `json:"languages"`
-	Frameworks      []string             `json:"frameworks,omitempty"`
+	PrimaryLanguage   string               `json:"primary_language"`
+	Languages         map[string]LangStats `json:"languages"`
+	Frameworks        []string             `json:"frameworks,omitempty"`
+	FrameworkPatterns []FrameworkPattern   `json:"framework_patterns,omitempty"`
+}
+
+// FrameworkPattern holds detected structural patterns for a framework.
+type FrameworkPattern struct {
+	Name       string   `json:"name"`
+	Config     []string `json:"config_files,omitempty"`
+	Routes     string   `json:"routes,omitempty"`
+	API        string   `json:"api,omitempty"`
+	Middleware string   `json:"middleware,omitempty"`
+	Models     string   `json:"models,omitempty"`
+	Entry      string   `json:"entry,omitempty"`
 }
 
 type LangStats struct {
